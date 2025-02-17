@@ -5,7 +5,7 @@ package org.asdfformat.asdf.ndarray;
  * int elements.
  */
 public interface IntNdArray extends NdArray<IntNdArray> {
-    int getScalar(long... indices);
+    int get(long... indices);
 
     int[] toArray(int[] array);
 

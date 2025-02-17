@@ -5,7 +5,7 @@ package org.asdfformat.asdf.ndarray;
  * byte elements.
  */
 public interface ByteNdArray extends NdArray<ByteNdArray> {
-    byte getScalar(long... indices);
+    byte get(long... indices);
 
     byte[] toArray(byte[] array);
 

@@ -7,7 +7,7 @@ import java.math.BigInteger;
  * BigInteger elements.
  */
 public interface BigIntegerNdArray extends NdArray<BigIntegerNdArray> {
-    BigInteger getScalar(long... indices);
+    BigInteger get(long... indices);
 
     BigInteger[] toArray(BigInteger[] array);
 

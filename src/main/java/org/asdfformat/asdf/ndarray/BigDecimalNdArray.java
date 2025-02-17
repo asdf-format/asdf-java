@@ -7,7 +7,7 @@ import java.math.BigDecimal;
  * BigDecimal elements.
  */
 public interface BigDecimalNdArray extends NdArray<BigDecimalNdArray> {
-    BigDecimal getScalar(long... indices);
+    BigDecimal get(long... indices);
 
     BigDecimal[] toArray(BigDecimal[] array);
 

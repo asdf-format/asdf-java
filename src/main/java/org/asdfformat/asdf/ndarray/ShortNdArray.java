@@ -5,7 +5,7 @@ package org.asdfformat.asdf.ndarray;
  * array elements as shorts.
  */
 public interface ShortNdArray extends NdArray<ShortNdArray> {
-    short getScalar(long... indices);
+    short get(long... indices);
 
     short[] toArray(short[] array);
 

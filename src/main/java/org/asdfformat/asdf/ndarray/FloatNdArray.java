@@ -5,7 +5,7 @@ package org.asdfformat.asdf.ndarray;
  * float elements.
  */
 public interface FloatNdArray extends NdArray<FloatNdArray> {
-    float getScalar(long... indices);
+    float get(long... indices);
 
     float[] toArray(float[] array);
 
