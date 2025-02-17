@@ -1,4 +1,4 @@
-# Proposed API for a Java implementation of an ASDF reader
+# Proposed API
 
 This repo contains an interface proposal for a Java implementation of an
 [ASDF](https://www.asdf-format.org/en/latest/) reader.
@@ -6,7 +6,7 @@ This repo contains an interface proposal for a Java implementation of an
 ## Examples
 
 The following examples reference the Roman Space Telescope's
-[wfi_mosaic-1.0.0](https://github.com/spacetelescope/rad/blob/0.23.1/src/rad/resources/schemas/wfi_mosaic-1.0.0.yaml) schema, which describes the structure of L3 mosaic images for the WFI instrument.
+[wfi_mosaic-1.0.0](https://github.com/spacetelescope/rad/blob/0.23.1/src/rad/resources/schemas/wfi_mosaic-1.0.0.yaml) schema, which describes the structure of L3 mosaic image files for the WFI instrument.
 
 Here's a partial visualization of an ASDF file containing a wfi_mosaic-1.0.0 object:
 
@@ -32,7 +32,8 @@ root
   └─context (3D 32-bit unsigned int array, 1 x 3564 x 3564)
 ```
 
-Note that all Roman ASDF files contain a top-level `roman` object, which is what the schema describes.
+Note that all Roman ASDF files contain a top-level `roman` object, which is the object that
+the schema describes.
 
 ### Open an ASDF file for reading
 
@@ -103,7 +104,7 @@ resample
 ### Fetching values
 
 In order to make use of the information in the file, we're going to need to
-convert the nodes familiar types such as String, double, int, List, etc.
+convert the nodes to familiar types such as String, double, int, List, etc.
 
 For example, we know from the schema that the roman.meta.telescope node
 is a string, so we can descend into the "meta" node and fetch the string
@@ -125,8 +126,8 @@ if (telescopeNode.getNodeType() == AsdfNodeType.STRING) {
 ```
 
 Numeric values require more judgement.  Since numbers in an ASDF tree
-are written as text, it's unclear without the schema what Java datatype
-is appropriate.  For example, the roman.meta.basic.time_last_mjd
+are written as text, it's unclear without the schema what Java primitive
+type is appropriate.  For example, the roman.meta.basic.time_last_mjd
 node is numeric:
 
 ```java
@@ -301,6 +302,25 @@ The ASDF format is capable of storing array data in little-endian or big-endian
 byte order.  Since Java's native byte order is big-endian, any arrays stored
 in little-endian are automatically converted before any array data is returned
 to the user.
+
+#### Note on strides
+
+The ASDF format is capable of storing array data in row-major or column-major
+order, as well as more exotic stride configurations.  Java, on the other hand,
+does not support multi-dimensional primitive arrays stored in contiguous memory.
+For example, this array:
+
+```java
+byte[][] data = new byte[5][4];
+```
+
+is not stored in a single 20-byte block of memory, but instead is
+an array of pointers to 5 distinct 4-byte blocks of memory.
+
+When this library returns Java primitive arrays, they will be allocated in
+this way regardless of the underlying storage configuration of the ASDF file.
+
+Array indexing is always row-first.
 
 #### Note on compression
 
