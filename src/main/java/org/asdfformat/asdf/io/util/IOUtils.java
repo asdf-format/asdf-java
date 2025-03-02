@@ -54,6 +54,10 @@ public class IOUtils {
         return readUntil(input, endSequence, NULL_OUTPUT_STREAM, Long.MAX_VALUE);
     }
 
+    public static long seekUntil(final DataInput input, final byte[] endSequence, final long limit) throws IOException {
+        return readUntil(input, endSequence, NULL_OUTPUT_STREAM, limit);
+    }
+
     public static void closeQuietly(final AutoCloseable autoCloseable) {
         try {
             autoCloseable.close();

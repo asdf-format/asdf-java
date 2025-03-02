@@ -7,7 +7,7 @@ import java.nio.channels.FileChannel.MapMode;
 
 import org.asdfformat.asdf.io.Block;
 
-public class BlockV1Impl implements Block {
+public class BlockV1 implements Block {
     public static final byte[] START_OF_BLOCK_SEQUENCE = { -45, 66, 76, 75 };
     private static final byte[] NO_COMPRESSION = { 0, 0, 0, 0 };
 
@@ -37,7 +37,7 @@ public class BlockV1Impl implements Block {
         final long dataPosition = headerPosition + START_OF_BLOCK_SEQUENCE.length + 2 + headerSize;
         final long endPosition = dataPosition + allocatedSize;
 
-        return new BlockV1Impl(
+        return new BlockV1(
             file,
             headerPosition,
             headerSize,
@@ -64,7 +64,7 @@ public class BlockV1Impl implements Block {
     private final long dataPosition;
     private final long endPosition;
 
-    public BlockV1Impl(final RandomAccessFile file, final long headerPosition, final int headerSize, final byte[] compression, final long allocatedSize, final long usedSize, final long dataSize, final byte[] checksum, final long dataPosition, final long endPosition) {
+    public BlockV1(final RandomAccessFile file, final long headerPosition, final int headerSize, final byte[] compression, final long allocatedSize, final long usedSize, final long dataSize, final byte[] checksum, final long dataPosition, final long endPosition) {
         this.file = file;
         this.headerPosition = headerPosition;
         this.headerSize = headerSize;
