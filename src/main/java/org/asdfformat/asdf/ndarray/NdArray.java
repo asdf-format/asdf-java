@@ -1,6 +1,8 @@
 package org.asdfformat.asdf.ndarray;
 
 
+import java.nio.ByteOrder;
+
 /**
  * Class for accessing ASDF n-dimensional array data.
  */
@@ -96,4 +98,19 @@ public interface NdArray<T> {
      * @return short array view
      */
     ShortNdArray asShortNdArray();
+
+    /**
+     * Get the byte order of the raw array data.
+     * @return byte order
+     */
+    ByteOrder getRawByteOrder();
+
+    /**
+     * Get the raw array data as a 1-dimensional array of bytes.  The data type, shape, and byte order
+     * are needed to properly interpret this array.  This method always returns contiguous array data
+     * in row-major order, regardless of the strides configuration of the array on disk.
+     *
+     * @return raw array bytes
+     */
+    byte[] toRawArray();
 }
