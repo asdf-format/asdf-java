@@ -4,28 +4,38 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
-import java.nio.LongBuffer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.asdfformat.asdf.impl.AsdfFileImpl;
 import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.io.LowLevelFormats;
 import org.asdfformat.asdf.io.util.IOUtils;
+import org.asdfformat.asdf.metadata.AsdfMetadata;
+import org.asdfformat.asdf.metadata.Extension;
+import org.asdfformat.asdf.metadata.HistoryEntry;
+import org.asdfformat.asdf.metadata.Software;
+import org.asdfformat.asdf.metadata.impl.AsdfMetadataImpl;
+import org.asdfformat.asdf.metadata.impl.Extension100;
+import org.asdfformat.asdf.metadata.impl.HistoryEntry100;
+import org.asdfformat.asdf.metadata.impl.Software100;
+import org.asdfformat.asdf.node.AsdfNode;
+import org.asdfformat.asdf.node.impl.MappingAsdfNode;
+import org.asdfformat.asdf.node.impl.constructor.AsdfNodeConstructor;
+import org.asdfformat.asdf.util.Version;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.comments.CommentLine;
 import org.yaml.snakeyaml.nodes.MappingNode;
-import org.yaml.snakeyaml.nodes.Node;
-import org.yaml.snakeyaml.nodes.NodeTuple;
-import org.yaml.snakeyaml.nodes.ScalarNode;
 
 /**
  * Main entry into this ASDF library.
  */
 public class Asdf {
+    private final String ASDF_TAG = "tag:stsci.edu:asdf/core/asdf-1.1.0";
 
     /**
      * Read an ASDF file from the specified filesystem path.
@@ -38,57 +48,59 @@ public class Asdf {
             final LowLevelFormat lowLevelFormat = LowLevelFormats.fromFile(file);
 
             final LoaderOptions options = new LoaderOptions();
-            options.setProcessComments(true);
-            final Yaml yaml = new Yaml(options);
+            options.setAllowRecursiveKeys(true);
+            final Yaml yaml = new Yaml(new AsdfNodeConstructor(options));
 
-            System.out.println(new String(lowLevelFormat.getTreeBytes(), StandardCharsets.UTF_8));
+            final AsdfNode tree = yaml.load(new InputStreamReader(new ByteArrayInputStream(lowLevelFormat.getTreeBytes())));
+            if (!ASDF_TAG.equals(tree.getTag())) {
+                throw new IllegalStateException(String.format("Unhandled top-level tag: %s", tree.getTag()));
+            }
+            if (!tree.isMapping()) {
+                throw new IllegalStateException("Corrupted ASDF file: Top-level node must be a mapping");
+            }
 
-            final Node node = yaml.compose(new InputStreamReader(new ByteArrayInputStream(lowLevelFormat.getTreeBytes())));
+            final MappingAsdfNode mappingTree = (MappingAsdfNode) tree;
+            final Map<AsdfNode, AsdfNode> value = mappingTree.getValue();
 
-            if (node instanceof MappingNode) {
-                final MappingNode mappingNode = (MappingNode)node;
+            final AsdfNode asdfLibraryNode = value.remove("asdf_library");
+            final AsdfNode historyNode = value.remove("history");
+            final AsdfNode extensionsNode = Optional.ofNullable(historyNode)
+                .map(n -> n.get("extensions"))
+                .orElse(null);
+            final AsdfNode entriesNode = Optional.ofNullable(historyNode)
+                .map(n -> n.get("entries"))
+                .orElse(null);
 
-                System.out.println("Block comments:");
-                for (final CommentLine comment : Optional.ofNullable(node.getBlockComments()).orElseGet(Collections::emptyList)) {
-                    System.out.println(comment.getValue());
-                }
+            final Software asdfLibrary = Optional.ofNullable(asdfLibraryNode)
+                .map(Software100::new)
+                .orElse(null);
 
-                System.out.println("Inline comments:");
-                for (final CommentLine comment : Optional.ofNullable(node.getInLineComments()).orElseGet(Collections::emptyList)) {
-                    System.out.println(comment.getValue());
-                }
+            final String asdfVersion = "1.0.0";
+            final String asdfStandardVersion = lowLevelFormat.getAsdfStandardVersion().toString();
 
-                System.out.println("End comments:");
-                for (final CommentLine comment : Optional.ofNullable(node.getEndComments()).orElseGet(Collections::emptyList)) {
-                    System.out.println(comment.getValue());
-                }
-
-                for (final NodeTuple tuple : mappingNode.getValue()) {
-                    final Node keyNode = tuple.getKeyNode();
-                    if (keyNode instanceof ScalarNode) {
-                        final ScalarNode scalarNode = (ScalarNode)keyNode;
-                        System.out.println(scalarNode.getValue());
-                    }
-                    final Node valueNode = tuple.getValueNode();
-                    if (valueNode instanceof ScalarNode) {
-                        final ScalarNode scalarValueNode = (ScalarNode)valueNode;
-                        System.out.println(scalarValueNode);
-                        System.out.println(scalarValueNode.getValue());
-                    }
-                    System.out.println(tuple.getKeyNode());
+            final List<Extension> extensions = new ArrayList<>();
+            if (extensionsNode != null) {
+                for (final AsdfNode extensionNode : extensionsNode) {
+                    extensions.add(new Extension100(extensionNode));
                 }
             }
-            System.out.println(node.getTag().getValue());
-            System.out.println(node.getClass().getCanonicalName());
 
-            //final Block block = lowLevelFormat.getBlock(0);
-//            final LongBuffer longBuffer = block.getDataBuffer().asLongBuffer();
-//            for (int i = 0; i < longBuffer.limit(); i++) {
-//                System.out.println(Long.reverseBytes(longBuffer.get(i)));
-//            }
+            final List<HistoryEntry> historyEntries = new ArrayList<>();
+            if (entriesNode != null) {
+                for (final AsdfNode entryNode : entriesNode) {
+                    historyEntries.add(new HistoryEntry100(entryNode));
+                }
+            }
 
+            final AsdfMetadata metadata = new AsdfMetadataImpl(
+                asdfVersion,
+                asdfStandardVersion,
+                asdfLibrary,
+                extensions,
+                historyEntries
+            );
 
-            return null;
+            return new AsdfFileImpl(metadata, tree);
         } catch (final Exception e) {
             IOUtils.closeQuietly(file);
             throw e;
@@ -100,7 +112,7 @@ public class Asdf {
 
         final Asdf asdf = new Asdf();
         try (final AsdfFile asdfFile = asdf.open(path)) {
-
+            System.out.println("Here it be!");
         }
     }
 }

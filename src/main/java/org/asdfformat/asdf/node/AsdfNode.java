@@ -28,6 +28,76 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     AsdfNodeType getNodeType();
 
     /**
+     * Is this a BOOLEAN type node?
+     * @return true if BOOLEAN
+     */
+    boolean isBoolean();
+
+    /**
+     * Is this a MAPPING type node?
+     * @return true if MAPPING
+     */
+    boolean isMapping();
+
+    /**
+     * Is this a NDARRAY type node?
+     * @return true if NDARRAY
+     */
+    boolean isNdArray();
+
+    /**
+     * Is this a NULL type node?
+     * @return true if NULL
+     */
+    boolean isNull();
+
+    /**
+     * Is this a NUMBER type node?
+     * @return true if NUMBER
+     */
+    boolean isNumber();
+
+    /**
+     * Is this a SEQUENCE type node?
+     * @return true if SEQUENCE
+     */
+    boolean isSequence();
+
+    /**
+     * Is this a SEQUENCE type node?
+     * @return true if SEQUENCE
+     */
+    boolean isString();
+
+    /**
+     * Does this MAPPING node contain the specified String key?
+     * @param key mapping key
+     * @return true if key is present
+     */
+    boolean containsKey(String key);
+
+    /**
+     * Does this MAPPING node contain the specified long key?
+     * @param key mapping key
+     * @return true if key is present
+     */
+    boolean containsKey(long key);
+
+    /**
+     * Does this MAPPING node contain the specified boolean key?
+     * @param key mapping key
+     * @return true if key is present
+     */
+    boolean containsKey(boolean key);
+
+    /**
+     * Does this MAPPING node contain the specified AsdfNode key?
+     * @param key mapping key
+     * @return true if key is present
+     */
+    boolean containsKey(AsdfNode key);
+
+    /**
      * Get a mapping value as AsdfNode, indexed by String key.
      * @param key mapping key
      * @return value
@@ -279,6 +349,15 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     <T> List<T> getList(boolean key, Class<T> elementClass);
 
     /**
+     * Get a SEQUENCE sequence value or mapping value as List, indexed by AsdfNode key.
+     * @param key sequence index or mapping key
+     * @param elementClass element class
+     * @return value
+     * @param <T> List element
+     */
+    <T> List<T> getList(AsdfNode key, Class<T> elementClass);
+
+    /**
      * Get a NUMBER mapping value as long, indexed by String key.
      * @param key mapping key
      * @return value
@@ -368,6 +447,17 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     <K, V> Map<K, V> getMap(boolean key, Class<K> keyClass, Class<V> valueClass);
 
     /**
+     * Get a MAPPING mapping value as Map, indexed by AsdfNode key.
+     * @param key sequence index or mapping key
+     * @param keyClass key class
+     * @param valueClass value class
+     * @return value
+     * @param <K> Map key
+     * @param <V> Map value
+     */
+    <K, V> Map<K, V> getMap(AsdfNode key, Class<K> keyClass, Class<V> valueClass);
+
+    /**
      * Get a NDARRAY mapping value, indexed by String key.
      * @param key mapping key
      * @return value
@@ -387,6 +477,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @return value
      */
     NdArray<?> getNdArray(boolean key);
+
+    /**
+     * Get a NDARRAY mapping value, indexed by AsdfNode key.
+     * @param key mapping key
+     * @return value
+     */
+    NdArray<?> getNdArray(AsdfNode key);
 
     /**
      * Get a NUMBER mapping value as short, indexed by String key.
@@ -501,7 +598,7 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     long asLong();
 
     /**
-     * Get this NUMBER or BOOLEAN node's value as Number.
+     * Get this NUMBER node's value as Number.
      * @return value
      */
     Number asNumber();

@@ -2,6 +2,8 @@ package org.asdfformat.asdf.metadata;
 
 import java.util.List;
 
+import org.asdfformat.asdf.util.Version;
+
 /**
  * ASDF file metadata.
  */

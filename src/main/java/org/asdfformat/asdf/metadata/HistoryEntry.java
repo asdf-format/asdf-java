@@ -9,17 +9,17 @@ import java.util.List;
 public interface HistoryEntry {
 
     /**
-     * Get the description of the modification.
+     * A description of the transformation performed.
      */
     String getDescription();
 
     /**
-     * Get the time of modification.
+     * A timestamp for the operation, in UTC.
      */
     OffsetDateTime getTime();
 
     /**
-     * Get a list of software packages used to make the modification.
+     * Descriptions of the software that performed the operation.
      */
     List<Software> getSoftwares();
 }

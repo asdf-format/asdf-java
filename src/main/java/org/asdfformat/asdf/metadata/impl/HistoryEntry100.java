@@ -1,0 +1,49 @@
+package org.asdfformat.asdf.metadata.impl;
+
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.asdfformat.asdf.metadata.HistoryEntry;
+import org.asdfformat.asdf.metadata.Software;
+import org.asdfformat.asdf.node.AsdfNode;
+
+public class HistoryEntry100 implements HistoryEntry {
+    public static final String TAG = "tag:stsci.edu:asdf/core/history_entry-1.0.0";
+
+    private final AsdfNode inner;
+
+    public HistoryEntry100(final AsdfNode inner) {
+        this.inner = inner;
+    }
+
+    @Override
+    public String getDescription() {
+        return inner.containsKey("description") ? inner.getString("description") : null;
+    }
+
+    @Override
+    public OffsetDateTime getTime() {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
+    public List<Software> getSoftwares() {
+        final List<Software> result = new ArrayList<>();
+
+        if (!inner.containsKey("software")) {
+            return result;
+        }
+
+        final AsdfNode softwareNode = inner.get("software");
+        if (softwareNode.isMapping()) {
+            result.add(new Software100(softwareNode));
+        } else if (softwareNode.isSequence()) {
+            for (final AsdfNode softwareElementNode : softwareNode) {
+                result.add(new Software100(softwareElementNode));
+            }
+        }
+
+        return result;
+    }
+}
