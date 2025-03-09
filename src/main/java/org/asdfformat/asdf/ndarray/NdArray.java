@@ -21,6 +21,12 @@ public interface NdArray<T> {
     Shape getShape();
 
     /**
+     * Flag indicating if the array is compressed on disk.
+     * @return true if compressed, false otherwise
+     */
+    boolean isCompressed();
+
+    /**
      * View a portion of the array defined by one or
      * more slices.
      * @param slices 1 or more array slices (maximum one per dimension)
