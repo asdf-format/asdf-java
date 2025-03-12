@@ -2,17 +2,28 @@ package org.asdfformat.asdf.node.impl;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 
 import org.asdfformat.asdf.node.AsdfNodeType;
-import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.ScalarNode;
+import org.yaml.snakeyaml.nodes.Tag;
 
 
 public class NumberAsdfNode extends AsdfNodeBase {
-    private final ScalarNode inner;
+    private final String tag;
+    private final String value;
 
-    public NumberAsdfNode(final ScalarNode inner) {
-        this.inner = inner;
+    public static NumberAsdfNode of(final ScalarNode scalarNode) {
+        return new NumberAsdfNode(scalarNode.getTag().getValue(), scalarNode.getValue());
+    }
+
+    public static NumberAsdfNode of(final long value) {
+        return new NumberAsdfNode(Tag.INT.getValue(), Long.toString(value));
+    }
+
+    public NumberAsdfNode(final String tag, final String value) {
+        this.tag = tag;
+        this.value = value;
     }
 
     @Override
@@ -21,13 +32,8 @@ public class NumberAsdfNode extends AsdfNodeBase {
     }
 
     @Override
-    protected Node getInner() {
-        return inner;
-    }
-
-    @Override
-    public boolean isNumber() {
-        return true;
+    public String getTag() {
+        return tag;
     }
 
     @Override
@@ -62,7 +68,8 @@ public class NumberAsdfNode extends AsdfNodeBase {
 
     @Override
     public long asLong() {
-        throw new RuntimeException("Not yet implemented");    }
+        throw new RuntimeException("Not yet implemented");
+    }
 
     @Override
     public Number asNumber() {
@@ -72,5 +79,24 @@ public class NumberAsdfNode extends AsdfNodeBase {
     @Override
     public short asShort() {
         throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        final NumberAsdfNode typedOther = (NumberAsdfNode) other;
+        // TODO: Not correct yet
+        return Objects.equals(tag, typedOther.tag) && Objects.equals(value, typedOther.value);
+    }
+
+    @Override
+    public int hashCode() {
+        // TODO: Not correct yet
+        return Objects.hash(tag, value);
     }
 }

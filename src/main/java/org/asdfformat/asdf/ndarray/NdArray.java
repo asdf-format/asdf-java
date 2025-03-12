@@ -40,7 +40,7 @@ public interface NdArray<T> {
      * @param indices 1 or more array indices
      * @return resulting array view
      */
-    T index(long... indices);
+    T index(int... indices);
 
     /**
      * View of this array that returns BigDecimal

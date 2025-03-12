@@ -25,6 +25,7 @@ import org.asdfformat.asdf.metadata.impl.HistoryEntry100;
 import org.asdfformat.asdf.metadata.impl.Software100;
 import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.impl.MappingAsdfNode;
+import org.asdfformat.asdf.node.impl.StringAsdfNode;
 import org.asdfformat.asdf.node.impl.constructor.AsdfNodeConstructor;
 import org.asdfformat.asdf.util.Version;
 import org.yaml.snakeyaml.LoaderOptions;
@@ -62,13 +63,13 @@ public class Asdf {
             final MappingAsdfNode mappingTree = (MappingAsdfNode) tree;
             final Map<AsdfNode, AsdfNode> value = mappingTree.getValue();
 
-            final AsdfNode asdfLibraryNode = value.remove("asdf_library");
-            final AsdfNode historyNode = value.remove("history");
+            final AsdfNode asdfLibraryNode = value.remove(StringAsdfNode.of("asdf_library"));
+            final AsdfNode historyNode = value.remove(StringAsdfNode.of("history"));
             final AsdfNode extensionsNode = Optional.ofNullable(historyNode)
-                .map(n -> n.get("extensions"))
+                .flatMap(n ->n.containsKey("extension") ? Optional.of(n.get("extensions")) : Optional.empty())
                 .orElse(null);
             final AsdfNode entriesNode = Optional.ofNullable(historyNode)
-                .map(n -> n.get("entries"))
+                .flatMap(n -> n.containsKey("entries") ? Optional.of(n.get("entries")) : Optional.empty())
                 .orElse(null);
 
             final Software asdfLibrary = Optional.ofNullable(asdfLibraryNode)

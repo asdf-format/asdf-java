@@ -3,14 +3,24 @@ package org.asdfformat.asdf.node.impl;
 import java.util.Objects;
 
 import org.asdfformat.asdf.node.AsdfNodeType;
-import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.ScalarNode;
+import org.yaml.snakeyaml.nodes.Tag;
 
 public class StringAsdfNode extends AsdfNodeBase {
-    private final ScalarNode inner;
+    public static StringAsdfNode of(final ScalarNode node) {
+        return new StringAsdfNode(node.getTag().getValue(), node.getValue());
+    }
 
-    public StringAsdfNode(final ScalarNode inner) {
-        this.inner = inner;
+    public static StringAsdfNode of(final String value) {
+        return new StringAsdfNode(Tag.STR.getValue(), value);
+    }
+
+    private final String tag;
+    private final String value;
+
+    public StringAsdfNode(final String tag, final String value) {
+        this.tag = tag;
+        this.value = value;
     }
 
     @Override
@@ -19,13 +29,13 @@ public class StringAsdfNode extends AsdfNodeBase {
     }
 
     @Override
-    protected Node getInner() {
-        return inner;
+    public String getTag() {
+        return tag;
     }
 
     @Override
     public String asString() {
-        return inner.getValue();
+        return value;
     }
 
     @Override
@@ -33,25 +43,23 @@ public class StringAsdfNode extends AsdfNodeBase {
         if (this == other) {
             return true;
         }
-
-        if (other == null) {
+        if (other == null || getClass() != other.getClass()) {
             return false;
         }
-
-        if (other instanceof String) {
-            return Objects.equals(asString(), other);
-        }
-
-        if (getClass() != other.getClass()) {
-            return false;
-        }
-
-        final StringAsdfNode stringAsdfNode = (StringAsdfNode) other;
-        return Objects.equals(asString(), stringAsdfNode.asString());
+        final StringAsdfNode typedOther = (StringAsdfNode) other;
+        return Objects.equals(tag, typedOther.tag) && Objects.equals(value, typedOther.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(asString());
+        return Objects.hash(tag, value);
+    }
+
+    @Override
+    public String toString() {
+        return "StringAsdfNode{" +
+            "tag='" + tag + '\'' +
+            ", value='" + value + '\'' +
+            '}';
     }
 }

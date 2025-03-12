@@ -6,5 +6,7 @@ import java.nio.ByteBuffer;
 public interface Block {
     long getEndPosition();
 
-    ByteBuffer getDataBuffer() throws IOException;
+    ByteBuffer getDataBuffer();
+
+    boolean isCompressed();
 }

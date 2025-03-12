@@ -1,9 +1,12 @@
 package org.asdfformat.asdf.node.impl.constructor;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.impl.BooleanAsdfNode;
 import org.asdfformat.asdf.node.impl.MappingAsdfNode;
@@ -25,7 +28,7 @@ import org.yaml.snakeyaml.nodes.Tag;
 
 public class AsdfNodeConstructor extends BaseConstructor {
 
-    public AsdfNodeConstructor(final LoaderOptions loaderOptions) {
+    public AsdfNodeConstructor(final LoaderOptions loaderOptions, final LowLevelFormat lowLevelFormat) {
         super(loaderOptions);
         this.yamlConstructors.put(Tag.BOOL, new ConstructBooleanAsdfNode());
         this.yamlConstructors.put(Tag.INT, new ConstructNumberAsdfNode());
@@ -39,6 +42,10 @@ public class AsdfNodeConstructor extends BaseConstructor {
 
         this.yamlConstructors.put(Tag.MAP, new ConstructMappingAsdfNode());
         this.yamlClassConstructors.put(NodeId.mapping, new ConstructMappingAsdfNode());
+
+        for (final String tag : NdArrayAsdfNode.TAGS) {
+            this.yamlConstructors.put(new Tag(tag), new ConstructNdArrayAsdfNode(lowLevelFormat));
+        }
     }
 
     @Override
@@ -64,7 +71,7 @@ public class AsdfNodeConstructor extends BaseConstructor {
 
         @Override
         public Object construct(final Node node) {
-            return new BooleanAsdfNode((ScalarNode) node);
+            return BooleanAsdfNode.of((ScalarNode) node);
         }
     }
 
@@ -75,19 +82,25 @@ public class AsdfNodeConstructor extends BaseConstructor {
             assert !node.isTwoStepsConstruction();
 
             final Map<AsdfNode, AsdfNode> value = new LinkedHashMap<>();
-            for (final Entry<Object, Object> entry : AsdfNodeConstructor.this.constructMapping((MappingNode)node).entrySet()) {
-                value.put((AsdfNode)entry.getKey(), (AsdfNode)entry.getValue());
+            for (final Entry<Object, Object> entry : AsdfNodeConstructor.this.constructMapping((MappingNode) node).entrySet()) {
+                value.put((AsdfNode) entry.getKey(), (AsdfNode) entry.getValue());
             }
 
-            return new MappingAsdfNode((MappingNode) node, value);
+            return MappingAsdfNode.of(node, value);
         }
     }
 
     public class ConstructNdArrayAsdfNode extends AbstractConstruct {
 
+        private final LowLevelFormat lowLevelFormat;
+
+        public ConstructNdArrayAsdfNode(final LowLevelFormat lowLevelFormat) {
+            this.lowLevelFormat = lowLevelFormat;
+        }
+
         @Override
         public Object construct(final Node node) {
-            return new NdArrayAsdfNode((MappingNode) node);
+            return new NdArrayAsdfNode((MappingNode) node, lowLevelFormat);
         }
     }
 
@@ -95,7 +108,7 @@ public class AsdfNodeConstructor extends BaseConstructor {
 
         @Override
         public Object construct(final Node node) {
-            return new NullAsdfNode((ScalarNode) node);
+            return NullAsdfNode.of(node);
         }
     }
 
@@ -103,7 +116,7 @@ public class AsdfNodeConstructor extends BaseConstructor {
 
         @Override
         public Object construct(final Node node) {
-            return new NumberAsdfNode((ScalarNode) node);
+            return NumberAsdfNode.of((ScalarNode) node);
         }
     }
 
@@ -111,16 +124,22 @@ public class AsdfNodeConstructor extends BaseConstructor {
 
         @Override
         public Object construct(final Node node) {
-            return new SequenceAsdfNode((SequenceNode) node);
+            assert !node.isTwoStepsConstruction();
+
+            final List<AsdfNode> value = new ArrayList<>();
+            for (final Object element : AsdfNodeConstructor.this.constructSequence((SequenceNode) node)) {
+                value.add((AsdfNode) element);
+            }
+
+            return SequenceAsdfNode.of((SequenceNode) node, value);
         }
     }
-
 
     public class ConstructStringAsdfNode extends AbstractConstruct {
 
         @Override
         public Object construct(final Node node) {
-            return new StringAsdfNode((ScalarNode) node);
+            return StringAsdfNode.of((ScalarNode) node);
         }
     }
 

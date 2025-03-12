@@ -83,7 +83,11 @@ public class BlockV1 implements Block {
     }
 
     @Override
-    public ByteBuffer getDataBuffer() throws IOException {
-        return file.getChannel().map(MapMode.READ_ONLY, dataPosition, usedSize);
+    public ByteBuffer getDataBuffer() {
+        try {
+            return file.getChannel().map(MapMode.READ_ONLY, dataPosition, usedSize);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

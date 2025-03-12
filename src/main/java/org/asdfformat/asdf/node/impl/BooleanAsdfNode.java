@@ -2,10 +2,12 @@ package org.asdfformat.asdf.node.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.asdfformat.asdf.node.AsdfNodeType;
-import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.ScalarNode;
+import org.yaml.snakeyaml.nodes.Tag;
+
 
 public class BooleanAsdfNode extends AsdfNodeBase {
     public static final Map<String, Boolean> BOOLEAN_VALUES = new HashMap<>();
@@ -17,10 +19,21 @@ public class BooleanAsdfNode extends AsdfNodeBase {
         BOOLEAN_VALUES.put("on", Boolean.TRUE);
         BOOLEAN_VALUES.put("off", Boolean.FALSE);
     }
-    private final ScalarNode inner;
 
-    public BooleanAsdfNode(final ScalarNode inner) {
-        this.inner = inner;
+    public static BooleanAsdfNode of(final ScalarNode node) {
+        return new BooleanAsdfNode(node.getTag().getValue(), node.getValue());
+    }
+
+    public static BooleanAsdfNode of(final boolean value) {
+        return new BooleanAsdfNode(Tag.BOOL.getValue(), Boolean.toString(value));
+    }
+
+    private final String tag;
+    private final String value;
+
+    public BooleanAsdfNode(final String tag, final String value) {
+        this.tag = tag;
+        this.value = value;
     }
 
     @Override
@@ -29,16 +42,33 @@ public class BooleanAsdfNode extends AsdfNodeBase {
     }
 
     @Override
-    protected Node getInner() {
-        return inner;
+    public String getTag() {
+        return tag;
     }
 
     @Override
     public boolean asBoolean() {
-        final Boolean value = BOOLEAN_VALUES.get(inner.getValue());
-        if (value == null) {
-            throw new RuntimeException(String.format("Unrecognized boolean value: %s", inner.getValue()));
+        final Boolean result = BOOLEAN_VALUES.get(value.toLowerCase());
+        if (result == null) {
+            throw new RuntimeException(String.format("Unrecognized boolean value: %s", result));
         }
-        return value;
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        final BooleanAsdfNode typedOther = (BooleanAsdfNode) other;
+        return Objects.equals(tag, typedOther.tag) && Objects.equals(asBoolean(), typedOther.asBoolean());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tag, value);
     }
 }

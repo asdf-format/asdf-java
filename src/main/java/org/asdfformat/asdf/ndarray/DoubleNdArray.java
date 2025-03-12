@@ -5,7 +5,7 @@ package org.asdfformat.asdf.ndarray;
  * double elements.
  */
 public interface DoubleNdArray extends NdArray<DoubleNdArray> {
-    double get(long... indices);
+    double get(int... indices);
 
     double[] toArray(double[] array);
 

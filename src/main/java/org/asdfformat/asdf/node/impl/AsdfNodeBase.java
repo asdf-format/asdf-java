@@ -10,16 +10,8 @@ import java.util.Map;
 import org.asdfformat.asdf.ndarray.NdArray;
 import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.AsdfNodeType;
-import org.yaml.snakeyaml.nodes.Node;
 
 public abstract class AsdfNodeBase implements AsdfNode {
-
-    protected abstract Node getInner();
-
-    @Override
-    public String getTag() {
-        return getInner().getTag().getValue();
-    }
 
     @Override
     public boolean isBoolean() {
@@ -58,17 +50,17 @@ public abstract class AsdfNodeBase implements AsdfNode {
 
     @Override
     public boolean containsKey(final String key) {
-        return false;
+        return containsKey(StringAsdfNode.of(key));
     }
 
     @Override
     public boolean containsKey(final long key) {
-        return false;
+        return containsKey(NumberAsdfNode.of(key));
     }
 
     @Override
     public boolean containsKey(final boolean key) {
-        return false;
+        return containsKey(BooleanAsdfNode.of(key));
     }
 
     @Override
@@ -98,288 +90,287 @@ public abstract class AsdfNodeBase implements AsdfNode {
 
     @Override
     public BigDecimal getBigDecimal(final String key) {
-        throw new IllegalStateException(makeGetErrorMessage("String"));
+        return get(key).asBigDecimal();
     }
 
     @Override
     public BigDecimal getBigDecimal(final long key) {
-        throw new IllegalStateException(makeGetErrorMessage("long"));
+        return get(key).asBigDecimal();
     }
 
     @Override
     public BigDecimal getBigDecimal(final boolean key) {
-        throw new IllegalStateException(makeGetErrorMessage("boolean"));
+        return get(key).asBigDecimal();
     }
 
     @Override
     public BigDecimal getBigDecimal(final AsdfNode key) {
-        throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+        return get(key).asBigDecimal();
     }
 
     @Override
     public BigInteger getBigInteger(final String key) {
-        throw new IllegalStateException(makeGetErrorMessage("String"));
+        return get(key).asBigInteger();
     }
 
     @Override
     public BigInteger getBigInteger(final long key) {
-        throw new IllegalStateException(makeGetErrorMessage("long"));
+        return get(key).asBigInteger();
     }
 
     @Override
     public BigInteger getBigInteger(final boolean key) {
-        throw new IllegalStateException(makeGetErrorMessage("boolean"));
+        return get(key).asBigInteger();
     }
 
     @Override
     public BigInteger getBigInteger(final AsdfNode key) {
-        throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+        return get(key).asBigInteger();
     }
 
     @Override
     public boolean getBoolean(final String key) {
-        throw new IllegalStateException(makeGetErrorMessage("String"));
+        return get(key).asBoolean();
     }
 
     @Override
     public boolean getBoolean(final long key) {
-        throw new IllegalStateException(makeGetErrorMessage("long"));
+        return get(key).asBoolean();
     }
 
     @Override
     public boolean getBoolean(final boolean key) {
-        throw new IllegalStateException(makeGetErrorMessage("boolean"));
+        return get(key).asBoolean();
     }
 
     @Override
     public boolean getBoolean(final AsdfNode key) {
-        throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+        return get(key).asBoolean();
     }
 
     @Override
     public byte getByte(final String key) {
-        throw new IllegalStateException(makeGetErrorMessage("String"));
+        return get(key).asByte();
     }
 
     @Override
     public byte getByte(final long key) {
-        throw new IllegalStateException(makeGetErrorMessage("long"));
+        return get(key).asByte();
     }
 
     @Override
     public byte getByte(final boolean key) {
-        throw new IllegalStateException(makeGetErrorMessage("boolean"));
+        return get(key).asByte();
     }
 
     @Override
     public byte getByte(final AsdfNode key) {
-        throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+        return get(key).asByte();
     }
 
     @Override
     public double getDouble(final String key) {
-        throw new IllegalStateException(makeGetErrorMessage("String"));
+        return get(key).asDouble();
     }
 
     @Override
     public double getDouble(final long key) {
-        throw new IllegalStateException(makeGetErrorMessage("long"));
+        return get(key).asDouble();
     }
 
     @Override
     public double getDouble(final boolean key) {
-        throw new IllegalStateException(makeGetErrorMessage("boolean"));
+        return get(key).asDouble();
     }
 
     @Override
     public double getDouble(final AsdfNode key) {
-        throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+        return get(key).asDouble();
     }
 
     @Override
     public float getFloat(final String key) {
-        throw new IllegalStateException(makeGetErrorMessage("String"));
+        return get(key).asFloat();
     }
 
     @Override
     public float getFloat(final long key) {
-        throw new IllegalStateException(makeGetErrorMessage("long"));
+        return get(key).asFloat();
     }
 
     @Override
     public float getFloat(final boolean key) {
-        throw new IllegalStateException(makeGetErrorMessage("boolean"));
+        return get(key).asFloat();
     }
 
     @Override
     public float getFloat(final AsdfNode key) {
-        throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+        return get(key).asFloat();
     }
 
     @Override
     public int getInt(final String key) {
-        throw new IllegalStateException(makeGetErrorMessage("String"));
+        return get(key).asInt();
     }
 
     @Override
     public int getInt(final long key) {
-        throw new IllegalStateException(makeGetErrorMessage("long"));
+        return get(key).asInt();
     }
 
     @Override
     public int getInt(final boolean key) {
-        throw new IllegalStateException(makeGetErrorMessage("boolean"));
+        return get(key).asInt();
     }
 
     @Override
     public int getInt(final AsdfNode key) {
-        throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+        return get(key).asInt();
     }
 
     @Override
     public <T> List<T> getList(final String key, final Class<T> elementClass) {
-        throw new IllegalStateException(makeGetErrorMessage("String"));
+        return get(key).asList(elementClass);
     }
 
     @Override
     public <T> List<T> getList(final long key, final Class<T> elementClass) {
-        throw new IllegalStateException(makeGetErrorMessage("long"));
+        return get(key).asList(elementClass);
     }
 
     @Override
     public <T> List<T> getList(final boolean key, final Class<T> elementClass) {
-        throw new IllegalStateException(makeGetErrorMessage("boolean"));
+        return get(key).asList(elementClass);
     }
 
     @Override
     public <T> List<T> getList(final AsdfNode key, final Class<T> elementClass) {
-        throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+        return get(key).asList(elementClass);
     }
 
     @Override
     public long getLong(final String key) {
-        throw new IllegalStateException(makeGetErrorMessage("String"));
+        return get(key).asLong();
     }
 
     @Override
     public long getLong(final long key) {
-        throw new IllegalStateException(makeGetErrorMessage("long"));
+        return get(key).asLong();
     }
 
     @Override
     public long getLong(final boolean key) {
-        throw new IllegalStateException(makeGetErrorMessage("boolean"));
+        return get(key).asLong();
     }
 
     @Override
     public long getLong(final AsdfNode key) {
-        throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+        return get(key).asLong();
     }
 
     @Override
     public Number getNumber(final String key) {
-        throw new IllegalStateException(makeGetErrorMessage("String"));
+        return get(key).asNumber();
     }
 
     @Override
     public Number getNumber(final long key) {
-        throw new IllegalStateException(makeGetErrorMessage("long"));
+        return get(key).asNumber();
     }
 
     @Override
     public Number getNumber(final boolean key) {
-        throw new IllegalStateException(makeGetErrorMessage("boolean"));
+        return get(key).asNumber();
     }
 
     @Override
     public Number getNumber(final AsdfNode key) {
-        throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+        return get(key).asNumber();
     }
 
     @Override
     public <K, V> Map<K, V> getMap(final String key, final Class<K> keyClass, final Class<V> valueClass) {
-        throw new IllegalStateException(makeGetErrorMessage("String"));
+        return get(key).asMap(keyClass, valueClass);
     }
 
     @Override
     public <K, V> Map<K, V> getMap(final long key, final Class<K> keyClass, final Class<V> valueClass) {
-        throw new IllegalStateException(makeGetErrorMessage("long"));
+        return get(key).asMap(keyClass, valueClass);
     }
 
     @Override
     public <K, V> Map<K, V> getMap(final boolean key, final Class<K> keyClass, final Class<V> valueClass) {
-        throw new IllegalStateException(makeGetErrorMessage("boolean"));
+        return get(key).asMap(keyClass, valueClass);
     }
 
     @Override
     public <K, V> Map<K, V> getMap(final AsdfNode key, final Class<K> keyClass, final Class<V> valueClass) {
-        throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+        return get(key).asMap(keyClass, valueClass);
     }
 
     @Override
     public NdArray<?> getNdArray(final String key) {
-        throw new IllegalStateException(makeGetErrorMessage("String"));
+        return get(key).asNdArray();
     }
 
     @Override
     public NdArray<?> getNdArray(final long key) {
-        throw new IllegalStateException(makeGetErrorMessage("long"));
+        return get(key).asNdArray();
     }
 
     @Override
     public NdArray<?> getNdArray(final boolean key) {
-        throw new IllegalStateException(makeGetErrorMessage("boolean"));
+        return get(key).asNdArray();
     }
 
     @Override
     public NdArray<?> getNdArray(final AsdfNode key) {
-        throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+        return get(key).asNdArray();
     }
 
     @Override
     public short getShort(final String key) {
-        throw new IllegalStateException(makeGetErrorMessage("String"));
+        return get(key).asShort();
     }
 
     @Override
     public short getShort(final long key) {
-        throw new IllegalStateException(makeGetErrorMessage("long"));
+        return get(key).asShort();
     }
 
     @Override
     public short getShort(final boolean key) {
-        throw new IllegalStateException(makeGetErrorMessage("boolean"));
+        return get(key).asShort();
     }
 
     @Override
     public short getShort(final AsdfNode key) {
-        throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+        return get(key).asShort();
     }
 
     @Override
     public String getString(final String key) {
-        throw new IllegalStateException(makeGetErrorMessage("String"));
+        return get(key).asString();
     }
 
     @Override
     public String getString(final long key) {
-        throw new IllegalStateException(makeGetErrorMessage("long"));
+        return get(key).asString();
     }
 
     @Override
     public String getString(final boolean key) {
-        throw new IllegalStateException(makeGetErrorMessage("boolean"));
+        return get(key).asString();
     }
 
     @Override
     public String getString(final AsdfNode key) {
-        throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+        return get(key).asString();
     }
 
     @Override
     public BigDecimal asBigDecimal() {
         throw new IllegalStateException(makeAsErrorMessage("BigDecimal"));
-
     }
 
     @Override
@@ -453,7 +444,7 @@ public abstract class AsdfNodeBase implements AsdfNode {
 
     @Override
     public String asString() {
-        throw new IllegalStateException(makeIteratorErrorMessage());
+        throw new IllegalStateException(makeAsErrorMessage("short"));
     }
 
     @Override
@@ -467,9 +458,5 @@ public abstract class AsdfNodeBase implements AsdfNode {
 
     protected String makeAsErrorMessage(final String asType) {
         return String.format("%s node cannot be represented as %s", getNodeType(), asType);
-    }
-
-    protected String makeIteratorErrorMessage() {
-        return String.format("%s node cannot be iterated", getNodeType());
     }
 }

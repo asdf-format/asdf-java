@@ -3,10 +3,10 @@ package org.asdfformat.asdf.node.impl;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.ndarray.NdArray;
 import org.asdfformat.asdf.node.AsdfNodeType;
 import org.yaml.snakeyaml.nodes.MappingNode;
-import org.yaml.snakeyaml.nodes.Node;
 
 
 public class NdArrayAsdfNode extends AsdfNodeBase {
@@ -16,10 +16,12 @@ public class NdArrayAsdfNode extends AsdfNodeBase {
         TAGS.add("tag:stsci.edu:asdf/core/ndarray-1.1.0");
     }
 
-    private final MappingNode inner;
+    private final MappingNode    inner;
+    private final LowLevelFormat lowLevelFormat;
 
-    public NdArrayAsdfNode(final MappingNode inner) {
+    public NdArrayAsdfNode(final MappingNode inner, final LowLevelFormat lowLevelFormat) {
         this.inner = inner;
+        this.lowLevelFormat = lowLevelFormat;
     }
 
     @Override
@@ -28,8 +30,8 @@ public class NdArrayAsdfNode extends AsdfNodeBase {
     }
 
     @Override
-    protected Node getInner() {
-        return inner;
+    public String getTag() {
+        return inner.getTag().getValue();
     }
 
     @Override

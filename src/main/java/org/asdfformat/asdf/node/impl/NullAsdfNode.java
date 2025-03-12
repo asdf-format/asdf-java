@@ -1,19 +1,20 @@
 package org.asdfformat.asdf.node.impl;
 
+import java.util.Objects;
+
 import org.asdfformat.asdf.node.AsdfNodeType;
 import org.yaml.snakeyaml.nodes.Node;
-import org.yaml.snakeyaml.nodes.ScalarNode;
 
 public class NullAsdfNode extends AsdfNodeBase {
-    private final ScalarNode inner;
 
-    public NullAsdfNode(final ScalarNode inner) {
-        this.inner = inner;
+    public static NullAsdfNode of(final Node node) {
+        return new NullAsdfNode(node.getTag().getValue());
     }
 
-    @Override
-    protected Node getInner() {
-        return inner;
+    private final String tag;
+
+    public NullAsdfNode(final String tag) {
+        this.tag = tag;
     }
 
     @Override
@@ -22,7 +23,29 @@ public class NullAsdfNode extends AsdfNodeBase {
     }
 
     @Override
+    public String getTag() {
+        return tag;
+    }
+
+    @Override
     public boolean isNull() {
         return true;
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        final NullAsdfNode typedOther = (NullAsdfNode) other;
+        return Objects.equals(tag, typedOther.tag);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(tag);
     }
 }
