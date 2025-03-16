@@ -19,7 +19,7 @@ public class Slices {
      * @param endIndexExclusive exclusive end index
      * @return slice
      */
-    public static Slice range(long startIndexInclusive, long endIndexExclusive) {
+    public static Slice range(int startIndexInclusive, int endIndexExclusive) {
         throw new RuntimeException("Not implemented");
     }
 
@@ -30,7 +30,7 @@ public class Slices {
      * @param step spacing between values
      * @return slice
      */
-    public static Slice range(long startIndexInclusive, long endIndexExclusive, long step) {
+    public static Slice range(int startIndexInclusive, int endIndexExclusive, int step) {
         throw new RuntimeException("Not implemented");
     }
 
@@ -40,7 +40,7 @@ public class Slices {
      * @param index selected index
      * @return slice
      */
-    public static Slice at(long index) {
+    public static Slice at(int index) {
         throw new RuntimeException("Not implemented");
     }
 }
