@@ -1,11 +1,11 @@
 package org.asdfformat.asdf.node;
 
+import org.asdfformat.asdf.ndarray.NdArray;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
-
-import org.asdfformat.asdf.ndarray.NdArray;
 
 
 /**
@@ -96,6 +96,12 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @return true if key is present
      */
     boolean containsKey(AsdfNode key);
+
+    /**
+     * Get the size of this MAPPING or SEQUENCE node.
+     * @return size
+     */
+    int size();
 
     /**
      * Get a mapping value as AsdfNode, indexed by String key.

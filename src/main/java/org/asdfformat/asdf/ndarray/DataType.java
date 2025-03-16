@@ -1,31 +1,46 @@
 package org.asdfformat.asdf.ndarray;
 
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.*;
+
 /**
  * Element datatype of an n-dimensional array.
  */
 public enum DataType {
-    INT8(1),
-    INT16(2),
-    INT32(4),
-    INT64(8),
-    UINT8(1),
-    UINT16(2),
-    UINT32(4),
-    UINT64(8),
-    FLOAT32(4),
-    FLOAT64(8),
-    COMPLEX64(8),
-    COMPLEX128(16),
-    BOOL8(1),
+    INT8(1, new HashSet<>(Arrays.asList(Byte.TYPE, Short.TYPE, Integer.TYPE, Long.TYPE, BigInteger.class))),
+    INT16(2, new HashSet<>(Arrays.asList(Short.TYPE, Integer.TYPE, Long.TYPE, BigInteger.class))),
+    INT32(4, new HashSet<>(Arrays.asList(Integer.TYPE, Long.TYPE, BigInteger.class))),
+    INT64(8, new HashSet<>(Arrays.asList(Long.TYPE, BigInteger.class))),
+    UINT8(1, new HashSet<>(Arrays.asList(Byte.TYPE, Short.TYPE, Integer.TYPE, Long.TYPE, BigInteger.class))),
+    UINT16(2, new HashSet<>(Arrays.asList(Short.TYPE, Integer.TYPE, Long.TYPE, BigInteger.class))),
+    UINT32(4, new HashSet<>(Arrays.asList(Integer.TYPE, Long.TYPE, BigInteger.class))),
+    UINT64(8, new HashSet<>(Arrays.asList(Long.TYPE, BigInteger.class))),
+    FLOAT32(4, new HashSet<>(Arrays.asList(Float.TYPE, Double.TYPE, BigDecimal.class))),
+    FLOAT64(8, new HashSet<>(Arrays.asList(Double.TYPE, BigDecimal.class))),
+    COMPLEX64(8, Collections.emptySet()),
+    COMPLEX128(16, Collections.emptySet()),
+    BOOL8(1, new HashSet<>(Arrays.asList(Boolean.TYPE))),
     ;
 
-    private final int widthBytes;
+    public static DataType fromString(final String value) {
+        return DataType.valueOf(value.toUpperCase());
+    }
 
-    DataType(int widthBytes) {
+    private final int widthBytes;
+    private final Set<Type> compatibleTypes;
+
+    DataType(final int widthBytes, final Set<Type> compatibleTypes) {
         this.widthBytes = widthBytes;
+        this.compatibleTypes = compatibleTypes;
     }
 
     public int getWidthBytes() {
         return widthBytes;
+    }
+
+    public boolean isCompatibleWith(final Class<?> type) {
+        return compatibleTypes.contains(type);
     }
 }

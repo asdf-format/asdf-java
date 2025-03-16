@@ -6,25 +6,8 @@ import org.asdfformat.asdf.ndarray.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Set;
 
 public abstract class NdArrayBase<T> implements NdArray<T> {
-    private static final Set<DataType> FLOATING_POINT_DATA_TYPES = EnumSet.of(
-            DataType.FLOAT32,
-            DataType.FLOAT64
-    );
-    private static final Set<DataType> INTEGRAL_DATA_TYPES = EnumSet.of(
-            DataType.INT8,
-            DataType.INT16,
-            DataType.INT32,
-            DataType.INT64,
-            DataType.UINT8,
-            DataType.UINT16,
-            DataType.UINT32,
-            DataType.UINT64
-    );
-
     protected final DataType dataType;
     protected final int[] shape;
     protected final ByteOrder byteOrder;
@@ -91,65 +74,42 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
 
     @Override
     public BigIntegerNdArray asBigIntegerNdArray() {
-        if (!INTEGRAL_DATA_TYPES.contains(dataType)) {
-            throw new IllegalStateException(String.format("Cannot represent datatype %s as BigInteger", dataType));
-        }
         throw new RuntimeException("Not implemented yet");
     }
 
     @Override
     public BooleanNdArray asBooleanNdArray() {
-        if (dataType != DataType.BOOL8) {
-            throw new IllegalStateException(String.format("Cannot represent datatype %s as boolean", dataType));
-        }
         throw new RuntimeException("Not implemented yet");
     }
 
     @Override
     public ByteNdArray asByteNdArray() {
-        if (!(INTEGRAL_DATA_TYPES.contains(dataType) && dataType.getWidthBytes() <= 1)) {
-            throw new IllegalStateException(String.format("Cannot represent datatype %s as byte", dataType));
-        }
         throw new RuntimeException("Not implemented yet");
     }
 
     @Override
     public DoubleNdArray asDoubleNdArray() {
-        if (!(FLOATING_POINT_DATA_TYPES.contains(dataType))) {
-            throw new IllegalStateException(String.format("Cannot represent datatype %s as double", dataType));
-        }
         return new DoubleNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
     }
 
     @Override
     public FloatNdArray asFloatNdArray() {
-        if (dataType != DataType.FLOAT32) {
-            throw new IllegalStateException(String.format("Cannot represent datatype %s as float", dataType));
-        }
         throw new RuntimeException("Not implemented yet");
     }
 
     @Override
     public IntNdArray asIntNdArray() {
-        if (!(INTEGRAL_DATA_TYPES.contains(dataType) && dataType.getWidthBytes() <= 4)) {
-            throw new IllegalStateException(String.format("Cannot represent datatype %s as int", dataType));
-        }
         throw new RuntimeException("Not implemented yet");
     }
 
     @Override
     public LongNdArray asLongNdArray() {
-        if (!(INTEGRAL_DATA_TYPES.contains(dataType))) {
-            throw new IllegalStateException(String.format("Cannot represent datatype %s as long", dataType));
-        }
-        throw new RuntimeException("Not implemented yet");
+        return new LongNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
     }
 
     @Override
     public ShortNdArray asShortNdArray() {
-        if (!(INTEGRAL_DATA_TYPES.contains(dataType) && dataType.getWidthBytes() <= 2)) {
-            throw new IllegalStateException(String.format("Cannot represent datatype %s as short", dataType));
-        }
+        throw new RuntimeException("Not implemented yet");
     }
 
     @Override
@@ -160,11 +120,15 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
     @Override
     public byte[] toRawArray() {
         if (isCContiguous()) {
-            int limit = dataType.getWidthBytes();
+            int length = dataType.getWidthBytes();
             for (int i = 0; i < shape.length; i++) {
-                limit *= shape[i];
+                length *= shape[i];
             }
-            return getByteBuffer().position(offset).limit(limit).array();
+            final byte[] result = new byte[length];
+            final ByteBuffer byteBuffer = getByteBuffer();
+            byteBuffer.position(offset);
+            byteBuffer.get(result);
+            return result;
         } else {
             throw new RuntimeException("Not implemented yet");
         }
@@ -175,12 +139,12 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
     }
 
     protected boolean isCContiguous() {
-        int previousLength = 1;
-        for (int i = 0; i < shape.length; i++) {
-            if (strides[i] != previousLength * dataType.getWidthBytes()) {
+        int nextStrides = dataType.getWidthBytes();
+        for (int i = shape.length - 1; i >= 0; i--) {
+            if (strides[i] != nextStrides) {
                 return false;
             }
-            previousLength *= shape.length * dataType.getWidthBytes();
+            nextStrides *= shape[i];
         }
         return true;
     }

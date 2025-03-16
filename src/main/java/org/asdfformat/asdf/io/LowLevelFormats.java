@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.asdfformat.asdf.io.impl.LowLevelFormatV1;
+import org.asdfformat.asdf.io.impl.LowLevelFormatV1_0_0;
 import org.asdfformat.asdf.io.util.IOUtils;
 import org.asdfformat.asdf.util.Version;
 
@@ -21,7 +21,7 @@ public class LowLevelFormats {
     private static final Map<Version, LowLevelFormatFunction> LOW_LEVEL_FORMATS;
     static {
         LOW_LEVEL_FORMATS = new HashMap<>();
-        LOW_LEVEL_FORMATS.put(LowLevelFormatV1.VERSION, LowLevelFormatV1::fromFile);
+        LOW_LEVEL_FORMATS.put(LowLevelFormatV1_0_0.VERSION, LowLevelFormatV1_0_0::fromFile);
     }
 
     public static LowLevelFormat fromFile(final RandomAccessFile file) throws IOException {

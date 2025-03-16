@@ -1,13 +1,13 @@
 package org.asdfformat.asdf.node.impl;
 
+import org.asdfformat.asdf.node.AsdfNode;
+import org.asdfformat.asdf.node.AsdfNodeType;
+import org.yaml.snakeyaml.nodes.SequenceNode;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
-
-import org.asdfformat.asdf.node.AsdfNode;
-import org.asdfformat.asdf.node.AsdfNodeType;
-import org.yaml.snakeyaml.nodes.SequenceNode;
 
 public class SequenceAsdfNode extends AsdfNodeBase {
 
@@ -21,6 +21,16 @@ public class SequenceAsdfNode extends AsdfNodeBase {
     public SequenceAsdfNode(final String tag, final List<AsdfNode> value) {
         this.tag = tag;
         this.value = value;
+    }
+
+    @Override
+    public boolean containsKey(final AsdfNode key) {
+        return key.isNumber() && key.asInt() >= 0 && key.asInt() < value.size();
+    }
+
+    @Override
+    public int size() {
+        return value.size();
     }
 
     @Override

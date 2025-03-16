@@ -1,13 +1,14 @@
 package org.asdfformat.asdf.io.impl;
 
+import org.asdfformat.asdf.io.Block;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel.MapMode;
+import java.util.Arrays;
 
-import org.asdfformat.asdf.io.Block;
-
-public class BlockV1 implements Block {
+public class BlockV1_0_0 implements Block {
     public static final byte[] START_OF_BLOCK_SEQUENCE = { -45, 66, 76, 75 };
     private static final byte[] NO_COMPRESSION = { 0, 0, 0, 0 };
 
@@ -37,7 +38,7 @@ public class BlockV1 implements Block {
         final long dataPosition = headerPosition + START_OF_BLOCK_SEQUENCE.length + 2 + headerSize;
         final long endPosition = dataPosition + allocatedSize;
 
-        return new BlockV1(
+        return new BlockV1_0_0(
             file,
             headerPosition,
             headerSize,
@@ -64,7 +65,7 @@ public class BlockV1 implements Block {
     private final long dataPosition;
     private final long endPosition;
 
-    public BlockV1(final RandomAccessFile file, final long headerPosition, final int headerSize, final byte[] compression, final long allocatedSize, final long usedSize, final long dataSize, final byte[] checksum, final long dataPosition, final long endPosition) {
+    public BlockV1_0_0(final RandomAccessFile file, final long headerPosition, final int headerSize, final byte[] compression, final long allocatedSize, final long usedSize, final long dataSize, final byte[] checksum, final long dataPosition, final long endPosition) {
         this.file = file;
         this.headerPosition = headerPosition;
         this.headerSize = headerSize;
@@ -84,10 +85,19 @@ public class BlockV1 implements Block {
 
     @Override
     public ByteBuffer getDataBuffer() {
+        if (isCompressed()) {
+            throw new RuntimeException("Not implemented yet");
+        }
+        
         try {
             return file.getChannel().map(MapMode.READ_ONLY, dataPosition, usedSize);
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public boolean isCompressed() {
+        return !Arrays.equals(compression, NO_COMPRESSION);
     }
 }

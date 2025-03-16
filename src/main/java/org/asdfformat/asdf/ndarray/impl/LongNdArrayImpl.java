@@ -2,28 +2,28 @@ package org.asdfformat.asdf.ndarray.impl;
 
 import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.ndarray.DataType;
-import org.asdfformat.asdf.ndarray.DoubleNdArray;
+import org.asdfformat.asdf.ndarray.LongNdArray;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.DoubleBuffer;
+import java.nio.LongBuffer;
 
-public class DoubleNdArrayImpl extends NdArrayBase<DoubleNdArray> implements DoubleNdArray {
-    public DoubleNdArrayImpl(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
+public class LongNdArrayImpl extends NdArrayBase<LongNdArray> implements LongNdArray {
+    public LongNdArrayImpl(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
         super(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
 
-        if (!dataType.isCompatibleWith(Double.TYPE)) {
-            throw new IllegalStateException(String.format("Data type %s is not compatible with Java double", dataType));
+        if (!dataType.isCompatibleWith(Long.TYPE)) {
+            throw new IllegalStateException(String.format("Data type %s is not compatible with Java long", dataType));
         }
     }
 
     @Override
-    protected DoubleNdArray newInstance(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
-        return new DoubleNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+    protected LongNdArray newInstance(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
+        return new LongNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
     }
 
     @Override
-    public double get(int... indices) {
+    public long get(int... indices) {
         if (indices.length != shape.length) {
             throw new IllegalArgumentException("Number of indices must match array rank");
         }
@@ -39,30 +39,34 @@ public class DoubleNdArrayImpl extends NdArrayBase<DoubleNdArray> implements Dou
 
         byteBuffer.position(offset);
         byteBuffer.order(byteOrder);
-        if (dataType == DataType.FLOAT64) {
-            return byteBuffer.getDouble();
-        } else if (dataType == DataType.FLOAT32) {
-            return byteBuffer.getFloat();
+        if (dataType == DataType.INT8 || dataType == DataType.UINT8) {
+            return byteBuffer.get();
+        } else if (dataType == DataType.INT16 || dataType == DataType.UINT16) {
+            return byteBuffer.getShort();
+        } else if (dataType == DataType.INT32 || dataType == DataType.UINT32) {
+            return byteBuffer.getInt();
+        } else if (dataType == DataType.INT64 || dataType == DataType.UINT64) {
+            return byteBuffer.getLong();
         } else {
             throw new RuntimeException("Unhandled datatype: " + dataType);
         }
     }
 
     @Override
-    public double[] toArray(double[] array) {
+    public long[] toArray(long[] array) {
         int length = 1;
         for (int i = 0; i < shape.length; i++) {
             length *= shape[i];
         }
 
-        final double[] result = new double[length];
+        final long[] result = new long[length];
 
         final ByteBuffer byteBuffer = getByteBuffer();
         if (isCContiguous()) {
             byteBuffer.position(offset);
             byteBuffer.order(byteOrder);
-            final DoubleBuffer doubleBuffer = byteBuffer.asDoubleBuffer();
-            doubleBuffer.get(result);
+            final LongBuffer longBuffer = byteBuffer.asLongBuffer();
+            longBuffer.get(result);
             return result;
         } else {
             throw new RuntimeException("Support for non-C-continguous arrays not implemented yet");
@@ -88,31 +92,31 @@ public class DoubleNdArrayImpl extends NdArrayBase<DoubleNdArray> implements Dou
     }
 
     @Override
-    public double[][] toArray(double[][] array) {
+    public long[][] toArray(long[][] array) {
         if (shape.length != 2) {
             throw new IllegalStateException(String.format("Array rank %d not compatible with a 2D Java array", shape.length));
         }
 
-        final double[][] result = new double[shape[0]][];
+        final long[][] result = new long[shape[0]][];
 
         for (int i = 0; i < shape[0]; i++) {
-            result[i] = index(i).toArray(new double[0]);
+            result[i] = index(i).toArray(new long[0]);
         }
 
         return result;
     }
 
     @Override
-    public double[][][] toArray(double[][][] array) {
+    public long[][][] toArray(long[][][] array) {
         if (shape.length != 3) {
             throw new IllegalStateException(String.format("Array rank %d not compatible with a 3D Java array", shape.length));
         }
 
-        final double[][][] result = new double[shape[0]][shape[1]][];
+        final long[][][] result = new long[shape[0]][shape[1]][];
 
         for (int i = 0; i < shape[0]; i++) {
             for (int j = 0; j < shape[1]; j++) {
-                result[i][j] = index(i, j).toArray(new double[0]);
+                result[i][j] = index(i, j).toArray(new long[0]);
             }
         }
 

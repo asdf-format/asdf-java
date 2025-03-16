@@ -6,16 +6,17 @@ import org.asdfformat.asdf.metadata.AsdfMetadata;
 import org.asdfformat.asdf.metadata.Extension;
 import org.asdfformat.asdf.metadata.HistoryEntry;
 import org.asdfformat.asdf.metadata.Software;
+import org.asdfformat.asdf.util.Version;
 
 
 public class AsdfMetadataImpl implements AsdfMetadata {
-    private final String asdfVersion;
-    private final String asdfStandardVersion;
+    private final Version asdfVersion;
+    private final Version asdfStandardVersion;
     private final Software asdfLibrary;
     private final List<Extension> extensions;
     private final List<HistoryEntry> history;
 
-    public AsdfMetadataImpl(final String asdfVersion, final String asdfStandardVersion, final Software asdfLibrary, final List<Extension> extensions, final List<HistoryEntry> history) {
+    public AsdfMetadataImpl(final Version asdfVersion, final Version asdfStandardVersion, final Software asdfLibrary, final List<Extension> extensions, final List<HistoryEntry> history) {
         this.asdfVersion = asdfVersion;
         this.asdfStandardVersion = asdfStandardVersion;
         this.asdfLibrary = asdfLibrary;
@@ -25,12 +26,12 @@ public class AsdfMetadataImpl implements AsdfMetadata {
 
     @Override
     public String getAsdfVersion() {
-        return asdfVersion;
+        return asdfVersion.toString();
     }
 
     @Override
     public String getAsdfStandardVersion() {
-        return asdfStandardVersion;
+        return asdfStandardVersion.toString();
     }
 
     @Override

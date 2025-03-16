@@ -1,15 +1,15 @@
 package org.asdfformat.asdf.node.impl;
 
+import org.asdfformat.asdf.ndarray.NdArray;
+import org.asdfformat.asdf.node.AsdfNode;
+import org.asdfformat.asdf.node.AsdfNodeType;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.asdfformat.asdf.ndarray.NdArray;
-import org.asdfformat.asdf.node.AsdfNode;
-import org.asdfformat.asdf.node.AsdfNodeType;
 
 public abstract class AsdfNodeBase implements AsdfNode {
 
@@ -66,6 +66,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public boolean containsKey(final AsdfNode key) {
         return false;
+    }
+
+    @Override
+    public int size() {
+        return 0;
     }
 
     @Override

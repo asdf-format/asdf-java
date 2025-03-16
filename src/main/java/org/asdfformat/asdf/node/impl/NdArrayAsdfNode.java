@@ -1,27 +1,27 @@
 package org.asdfformat.asdf.node.impl;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.ndarray.NdArray;
+import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.AsdfNodeType;
-import org.yaml.snakeyaml.nodes.MappingNode;
+import org.asdfformat.asdf.standard.AsdfStandard;
+
+import java.util.Map;
 
 
-public class NdArrayAsdfNode extends AsdfNodeBase {
-    public static final Set<String> TAGS = new HashSet<>();
-    static {
-        TAGS.add("tag:stsci.edu:asdf/core/ndarray-1.0.0");
-        TAGS.add("tag:stsci.edu:asdf/core/ndarray-1.1.0");
-    }
-
-    private final MappingNode    inner;
+public class NdArrayAsdfNode extends MappingAsdfNode {
     private final LowLevelFormat lowLevelFormat;
+    private final AsdfStandard asdfStandard;
 
-    public NdArrayAsdfNode(final MappingNode inner, final LowLevelFormat lowLevelFormat) {
-        this.inner = inner;
+    public NdArrayAsdfNode(final String tag, final Map<AsdfNode, AsdfNode> value, final LowLevelFormat lowLevelFormat, final AsdfStandard asdfStandard) {
+        super(tag, value);
+
         this.lowLevelFormat = lowLevelFormat;
+        this.asdfStandard = asdfStandard;
+
+        if (!asdfStandard.getNdArrayTags().contains(getTag())) {
+            throw new IllegalStateException(String.format("Tag %s is not a valid ndarray tag for ASDF Standard version %s", getTag(), asdfStandard.getVersion()));
+        }
     }
 
     @Override
@@ -30,12 +30,7 @@ public class NdArrayAsdfNode extends AsdfNodeBase {
     }
 
     @Override
-    public String getTag() {
-        return inner.getTag().getValue();
-    }
-
-    @Override
     public NdArray<?> asNdArray() {
-        throw new RuntimeException("Not implemented yet");
+        return asdfStandard.createNdArray(lowLevelFormat, this);
     }
 }

@@ -1,27 +1,53 @@
 package org.asdfformat.asdf.node.impl;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Objects;
-
 import org.asdfformat.asdf.node.AsdfNodeType;
 import org.yaml.snakeyaml.nodes.ScalarNode;
 import org.yaml.snakeyaml.nodes.Tag;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+
 
 public class NumberAsdfNode extends AsdfNodeBase {
+    private static final Map<Class<?>, Function<Object, BigDecimal>> BIG_DECIMAL_CONVERTERS;
+    static {
+        BIG_DECIMAL_CONVERTERS = new HashMap<>();
+        BIG_DECIMAL_CONVERTERS.put(BigDecimal.class, o -> (BigDecimal) o);
+        BIG_DECIMAL_CONVERTERS.put(Double.class, o -> BigDecimal.valueOf((Double) o));
+        BIG_DECIMAL_CONVERTERS.put(Float.class, o -> BigDecimal.valueOf((Float) o));
+        BIG_DECIMAL_CONVERTERS.put(BigInteger.class, o -> new BigDecimal((BigInteger) o));
+        BIG_DECIMAL_CONVERTERS.put(Long.class, o -> BigDecimal.valueOf((Long) o));
+        BIG_DECIMAL_CONVERTERS.put(Integer.class, o -> BigDecimal.valueOf((Integer) o));
+        BIG_DECIMAL_CONVERTERS.put(Short.class, o -> BigDecimal.valueOf((Short) o));
+        BIG_DECIMAL_CONVERTERS.put(Byte.class, o -> BigDecimal.valueOf((Byte) o));
+    }
+
+    private static final Map<Class<?>, Function<Object, BigInteger>> BIG_INTEGER_CONVERTERS;
+    static {
+        BIG_INTEGER_CONVERTERS = new HashMap<>();
+        BIG_INTEGER_CONVERTERS.put(BigInteger.class, o -> (BigInteger) o);
+        BIG_INTEGER_CONVERTERS.put(Long.class, o -> BigInteger.valueOf((Long) o));
+        BIG_INTEGER_CONVERTERS.put(Integer.class, o -> BigInteger.valueOf((Integer) o));
+        BIG_INTEGER_CONVERTERS.put(Short.class, o -> BigInteger.valueOf((Short) o));
+        BIG_INTEGER_CONVERTERS.put(Byte.class, o -> BigInteger.valueOf((Byte) o));
+    }
+
+    public static NumberAsdfNode of(final ScalarNode scalarNode, final Number value) {
+        return new NumberAsdfNode(scalarNode.getTag().getValue(), value);
+    }
+
+    public static NumberAsdfNode of(final Number value) {
+        return new NumberAsdfNode(Tag.INT.getValue(), value);
+    }
+
     private final String tag;
-    private final String value;
+    private final Number value;
 
-    public static NumberAsdfNode of(final ScalarNode scalarNode) {
-        return new NumberAsdfNode(scalarNode.getTag().getValue(), scalarNode.getValue());
-    }
-
-    public static NumberAsdfNode of(final long value) {
-        return new NumberAsdfNode(Tag.INT.getValue(), Long.toString(value));
-    }
-
-    public NumberAsdfNode(final String tag, final String value) {
+    public NumberAsdfNode(final String tag, final Number value) {
         this.tag = tag;
         this.value = value;
     }
@@ -38,47 +64,55 @@ public class NumberAsdfNode extends AsdfNodeBase {
 
     @Override
     public BigDecimal asBigDecimal() {
-        throw new RuntimeException("Not yet implemented");
+        final Function<Object, BigDecimal> converter = BIG_DECIMAL_CONVERTERS.get(value.getClass());
+        if (converter == null) {
+            throw new RuntimeException("Node cannot be represented as BigDecimal");
+        }
+        return converter.apply(value);
     }
 
     @Override
     public BigInteger asBigInteger() {
-        throw new RuntimeException("Not yet implemented");
+        final Function<Object, BigInteger> converter = BIG_INTEGER_CONVERTERS.get(value.getClass());
+        if (converter == null) {
+            throw new RuntimeException("Node cannot be represented as BigInteger");
+        }
+        return converter.apply(value);
     }
 
     @Override
     public byte asByte() {
-        throw new RuntimeException("Not yet implemented");
+        return value.byteValue();
     }
 
     @Override
     public double asDouble() {
-        throw new RuntimeException("Not yet implemented");
+        return value.doubleValue();
     }
 
     @Override
     public float asFloat() {
-        throw new RuntimeException("Not yet implemented");
+        return value.floatValue();
     }
 
     @Override
     public int asInt() {
-        throw new RuntimeException("Not yet implemented");
+        return value.intValue();
     }
 
     @Override
     public long asLong() {
-        throw new RuntimeException("Not yet implemented");
+        return value.longValue();
     }
 
     @Override
     public Number asNumber() {
-        throw new RuntimeException("Not yet implemented");
+        return value;
     }
 
     @Override
     public short asShort() {
-        throw new RuntimeException("Not yet implemented");
+        return value.shortValue();
     }
 
     @Override
@@ -90,13 +124,11 @@ public class NumberAsdfNode extends AsdfNodeBase {
             return false;
         }
         final NumberAsdfNode typedOther = (NumberAsdfNode) other;
-        // TODO: Not correct yet
         return Objects.equals(tag, typedOther.tag) && Objects.equals(value, typedOther.value);
     }
 
     @Override
     public int hashCode() {
-        // TODO: Not correct yet
         return Objects.hash(tag, value);
     }
 }

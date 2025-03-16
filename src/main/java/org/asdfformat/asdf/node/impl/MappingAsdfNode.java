@@ -1,14 +1,14 @@
 package org.asdfformat.asdf.node.impl;
 
+import org.asdfformat.asdf.node.AsdfNode;
+import org.asdfformat.asdf.node.AsdfNodeType;
+import org.yaml.snakeyaml.nodes.Node;
+
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
-
-import org.asdfformat.asdf.node.AsdfNode;
-import org.asdfformat.asdf.node.AsdfNodeType;
-import org.yaml.snakeyaml.nodes.Node;
 
 public class MappingAsdfNode extends AsdfNodeBase {
 
@@ -41,6 +41,11 @@ public class MappingAsdfNode extends AsdfNodeBase {
     @Override
     public boolean containsKey(final AsdfNode key) {
         return value.containsKey(key);
+    }
+
+    @Override
+    public int size() {
+        return value.size();
     }
 
     @Override

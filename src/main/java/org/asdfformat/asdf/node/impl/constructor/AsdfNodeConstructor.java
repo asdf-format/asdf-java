@@ -1,38 +1,31 @@
 package org.asdfformat.asdf.node.impl.constructor;
 
+import org.asdfformat.asdf.io.LowLevelFormat;
+import org.asdfformat.asdf.node.AsdfNode;
+import org.asdfformat.asdf.node.impl.*;
+import org.asdfformat.asdf.standard.AsdfStandard;
+import org.yaml.snakeyaml.LoaderOptions;
+import org.yaml.snakeyaml.constructor.AbstractConstruct;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
+import org.yaml.snakeyaml.nodes.*;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.asdfformat.asdf.io.LowLevelFormat;
-import org.asdfformat.asdf.node.AsdfNode;
-import org.asdfformat.asdf.node.impl.BooleanAsdfNode;
-import org.asdfformat.asdf.node.impl.MappingAsdfNode;
-import org.asdfformat.asdf.node.impl.NdArrayAsdfNode;
-import org.asdfformat.asdf.node.impl.NullAsdfNode;
-import org.asdfformat.asdf.node.impl.NumberAsdfNode;
-import org.asdfformat.asdf.node.impl.SequenceAsdfNode;
-import org.asdfformat.asdf.node.impl.StringAsdfNode;
-import org.yaml.snakeyaml.LoaderOptions;
-import org.yaml.snakeyaml.constructor.AbstractConstruct;
-import org.yaml.snakeyaml.constructor.BaseConstructor;
+public class AsdfNodeConstructor extends SafeConstructor {
 
-import org.yaml.snakeyaml.nodes.MappingNode;
-import org.yaml.snakeyaml.nodes.Node;
-import org.yaml.snakeyaml.nodes.NodeId;
-import org.yaml.snakeyaml.nodes.ScalarNode;
-import org.yaml.snakeyaml.nodes.SequenceNode;
-import org.yaml.snakeyaml.nodes.Tag;
-
-public class AsdfNodeConstructor extends BaseConstructor {
-
-    public AsdfNodeConstructor(final LoaderOptions loaderOptions, final LowLevelFormat lowLevelFormat) {
+    public AsdfNodeConstructor(final LoaderOptions loaderOptions, final LowLevelFormat lowLevelFormat, final AsdfStandard asdfStandard) {
         super(loaderOptions);
+
+        this.yamlConstructors.clear();
+        this.yamlClassConstructors.clear();
+
         this.yamlConstructors.put(Tag.BOOL, new ConstructBooleanAsdfNode());
-        this.yamlConstructors.put(Tag.INT, new ConstructNumberAsdfNode());
-        this.yamlConstructors.put(Tag.FLOAT, new ConstructNumberAsdfNode());
+        this.yamlConstructors.put(Tag.INT, new ConstructNumberAsdfNode(new ConstructYamlInt()));
+        this.yamlConstructors.put(Tag.FLOAT, new ConstructNumberAsdfNode(new ConstructYamlFloat()));
         this.yamlConstructors.put(Tag.NULL, new ConstructNullAsdfNode());
         this.yamlConstructors.put(Tag.STR, new ConstructStringAsdfNode());
         this.yamlClassConstructors.put(NodeId.scalar, new ConstructScalarAsdfNode());
@@ -43,8 +36,8 @@ public class AsdfNodeConstructor extends BaseConstructor {
         this.yamlConstructors.put(Tag.MAP, new ConstructMappingAsdfNode());
         this.yamlClassConstructors.put(NodeId.mapping, new ConstructMappingAsdfNode());
 
-        for (final String tag : NdArrayAsdfNode.TAGS) {
-            this.yamlConstructors.put(new Tag(tag), new ConstructNdArrayAsdfNode(lowLevelFormat));
+        for (final String tag : asdfStandard.getNdArrayTags()) {
+            this.yamlConstructors.put(new Tag(tag), new ConstructNdArrayAsdfNode(lowLevelFormat, asdfStandard));
         }
     }
 
@@ -93,14 +86,23 @@ public class AsdfNodeConstructor extends BaseConstructor {
     public class ConstructNdArrayAsdfNode extends AbstractConstruct {
 
         private final LowLevelFormat lowLevelFormat;
+        private final AsdfStandard asdfStandard;
 
-        public ConstructNdArrayAsdfNode(final LowLevelFormat lowLevelFormat) {
+        public ConstructNdArrayAsdfNode(final LowLevelFormat lowLevelFormat, final AsdfStandard asdfStandard) {
             this.lowLevelFormat = lowLevelFormat;
+            this.asdfStandard = asdfStandard;
         }
 
         @Override
         public Object construct(final Node node) {
-            return new NdArrayAsdfNode((MappingNode) node, lowLevelFormat);
+            assert !node.isTwoStepsConstruction();
+
+            final Map<AsdfNode, AsdfNode> value = new LinkedHashMap<>();
+            for (final Entry<Object, Object> entry : AsdfNodeConstructor.this.constructMapping((MappingNode) node).entrySet()) {
+                value.put((AsdfNode) entry.getKey(), (AsdfNode) entry.getValue());
+            }
+
+            return new NdArrayAsdfNode(node.getTag().getValue(), value, lowLevelFormat, asdfStandard);
         }
     }
 
@@ -113,10 +115,16 @@ public class AsdfNodeConstructor extends BaseConstructor {
     }
 
     public class ConstructNumberAsdfNode extends AbstractConstruct {
+        private final AbstractConstruct constructYaml;
+
+        public ConstructNumberAsdfNode(final AbstractConstruct constructYaml) {
+            this.constructYaml = constructYaml;
+        }
 
         @Override
         public Object construct(final Node node) {
-            return NumberAsdfNode.of((ScalarNode) node);
+            final Number value = (Number) constructYaml.construct(node);
+            return NumberAsdfNode.of((ScalarNode) node, value);
         }
     }
 
