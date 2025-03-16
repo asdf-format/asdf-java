@@ -1,12 +1,12 @@
 package org.asdfformat.asdf.metadata.impl;
 
-import java.util.List;
-
 import org.asdfformat.asdf.metadata.AsdfMetadata;
 import org.asdfformat.asdf.metadata.Extension;
 import org.asdfformat.asdf.metadata.HistoryEntry;
 import org.asdfformat.asdf.metadata.Software;
 import org.asdfformat.asdf.util.Version;
+
+import java.util.List;
 
 
 public class AsdfMetadataImpl implements AsdfMetadata {
@@ -47,5 +47,14 @@ public class AsdfMetadataImpl implements AsdfMetadata {
     @Override
     public List<HistoryEntry> getHistory() {
         return history;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "AsdfMetadata(asdfVersion=%s, asdfStandardVersion=%s)",
+                asdfVersion,
+                asdfStandardVersion
+        );
     }
 }

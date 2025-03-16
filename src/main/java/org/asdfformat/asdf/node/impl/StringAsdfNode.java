@@ -1,10 +1,12 @@
 package org.asdfformat.asdf.node.impl;
 
-import java.util.Objects;
-
 import org.asdfformat.asdf.node.AsdfNodeType;
 import org.yaml.snakeyaml.nodes.ScalarNode;
 import org.yaml.snakeyaml.nodes.Tag;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class StringAsdfNode extends AsdfNodeBase {
     public static StringAsdfNode of(final ScalarNode node) {
@@ -57,9 +59,16 @@ public class StringAsdfNode extends AsdfNodeBase {
 
     @Override
     public String toString() {
-        return "StringAsdfNode{" +
-            "tag='" + tag + '\'' +
-            ", value='" + value + '\'' +
-            '}';
+        final List<String> fields = new ArrayList<>();
+
+        if (!tag.equals(Tag.STR.getValue())) {
+            fields.add("tag");
+            fields.add(tag);
+        }
+
+        fields.add("value");
+        fields.add(value);
+
+        return NodeUtils.nodeToString(this, fields);
     }
 }

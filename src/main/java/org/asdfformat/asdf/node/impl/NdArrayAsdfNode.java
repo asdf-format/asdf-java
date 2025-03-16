@@ -6,6 +6,8 @@ import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.AsdfNodeType;
 import org.asdfformat.asdf.standard.AsdfStandard;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -32,5 +34,19 @@ public class NdArrayAsdfNode extends MappingAsdfNode {
     @Override
     public NdArray<?> asNdArray() {
         return asdfStandard.createNdArray(lowLevelFormat, this);
+    }
+
+    @Override
+    public String toString() {
+        final List<String> fields = new ArrayList<>();
+
+        final NdArray<?> ndarray = asNdArray();
+
+        fields.add("shape");
+        fields.add(ndarray.getShape().toString());
+        fields.add("datatype");
+        fields.add(ndarray.getDataType().toString());
+
+        return NodeUtils.nodeToString(this, fields);
     }
 }

@@ -2,8 +2,6 @@ package org.asdfformat.asdf.metadata;
 
 import java.util.List;
 
-import org.asdfformat.asdf.util.Version;
-
 /**
  * ASDF file metadata.
  */
@@ -40,4 +38,5 @@ public interface AsdfMetadata {
      * @return list of history entries
      */
     List<HistoryEntry> getHistory();
+
 }

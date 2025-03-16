@@ -3,6 +3,7 @@ package org.asdfformat.asdf.node.impl;
 import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.AsdfNodeType;
 import org.yaml.snakeyaml.nodes.SequenceNode;
+import org.yaml.snakeyaml.nodes.Tag;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -68,5 +69,20 @@ public class SequenceAsdfNode extends AsdfNodeBase {
     @Override
     public Iterator<AsdfNode> iterator() {
         return value.iterator();
+    }
+
+    @Override
+    public String toString() {
+        final List<String> fields = new ArrayList<>();
+
+        if (!tag.equals(Tag.SEQ.getValue())) {
+            fields.add("tag");
+            fields.add(tag);
+        }
+
+        fields.add("size");
+        fields.add(String.valueOf(value.size()));
+
+        return NodeUtils.nodeToString(this, fields);
     }
 }

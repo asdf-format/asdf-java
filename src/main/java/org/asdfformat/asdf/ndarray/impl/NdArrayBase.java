@@ -30,6 +30,8 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
             DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat
     );
 
+    protected abstract String getClassName();
+
     @Override
     public DataType getDataType() {
         return dataType;
@@ -147,5 +149,15 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
             nextStrides *= shape[i];
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "%s(shape=%s, datatype=%s)",
+                getClassName(),
+                getShape(),
+                getDataType()
+        );
     }
 }

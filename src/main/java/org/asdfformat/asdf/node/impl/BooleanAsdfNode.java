@@ -1,12 +1,10 @@
 package org.asdfformat.asdf.node.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 import org.asdfformat.asdf.node.AsdfNodeType;
 import org.yaml.snakeyaml.nodes.ScalarNode;
 import org.yaml.snakeyaml.nodes.Tag;
+
+import java.util.*;
 
 
 public class BooleanAsdfNode extends AsdfNodeBase {
@@ -70,5 +68,20 @@ public class BooleanAsdfNode extends AsdfNodeBase {
     @Override
     public int hashCode() {
         return Objects.hash(tag, value);
+    }
+
+    @Override
+    public String toString() {
+        final List<String> fields = new ArrayList<>();
+
+        if (!tag.equals(Tag.STR.getValue())) {
+            fields.add("tag");
+            fields.add(tag);
+        }
+
+        fields.add("value");
+        fields.add(value);
+
+        return NodeUtils.nodeToString(this, fields);
     }
 }

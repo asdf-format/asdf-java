@@ -22,4 +22,19 @@ public class ShapeImpl implements Shape {
 
         return shape[i];
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("Shape(");
+        for (int i = 0; i < shape.length; i++) {
+            stringBuilder.append(shape[i]);
+            stringBuilder.append(", ");
+        }
+        stringBuilder.setLength(stringBuilder.length() - 2);
+        stringBuilder.append(")");
+
+        return stringBuilder.toString();
+    }
 }

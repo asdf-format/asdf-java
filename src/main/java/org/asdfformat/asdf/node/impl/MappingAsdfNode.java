@@ -3,10 +3,9 @@ package org.asdfformat.asdf.node.impl;
 import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.AsdfNodeType;
 import org.yaml.snakeyaml.nodes.Node;
+import org.yaml.snakeyaml.nodes.Tag;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
@@ -100,5 +99,20 @@ public class MappingAsdfNode extends AsdfNodeBase {
     @Override
     public Iterator<AsdfNode> iterator() {
         return value.keySet().iterator();
+    }
+
+    @Override
+    public String toString() {
+        final List<String> fields = new ArrayList<>();
+
+        if (!tag.equals(Tag.MAP.getValue())) {
+            fields.add("tag");
+            fields.add(tag);
+        }
+
+        fields.add("size");
+        fields.add(String.valueOf(value.size()));
+
+        return NodeUtils.nodeToString(this, fields);
     }
 }

@@ -1,9 +1,12 @@
 package org.asdfformat.asdf.node.impl;
 
-import java.util.Objects;
-
 import org.asdfformat.asdf.node.AsdfNodeType;
 import org.yaml.snakeyaml.nodes.Node;
+import org.yaml.snakeyaml.nodes.Tag;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class NullAsdfNode extends AsdfNodeBase {
 
@@ -47,5 +50,17 @@ public class NullAsdfNode extends AsdfNodeBase {
     @Override
     public int hashCode() {
         return Objects.hashCode(tag);
+    }
+
+    @Override
+    public String toString() {
+        final List<String> fields = new ArrayList<>();
+
+        if (!tag.equals(Tag.NULL.getValue())) {
+            fields.add("tag");
+            fields.add(tag);
+        }
+
+        return NodeUtils.nodeToString(this, fields);
     }
 }

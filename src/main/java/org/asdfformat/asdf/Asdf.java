@@ -42,7 +42,7 @@ public class Asdf {
             final AsdfMetadata metadata = asdfStandard.getAsdfMetadata(lowLevelFormat, rawTree);
             final AsdfNode tree = asdfStandard.getTree(rawTree);
 
-            return new AsdfFileImpl(metadata, tree);
+            return new AsdfFileImpl(path, file, metadata, tree);
         } catch (final Exception e) {
             IOUtils.closeQuietly(file);
             throw e;

@@ -6,9 +6,7 @@ import org.yaml.snakeyaml.nodes.Tag;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 
 
@@ -37,18 +35,20 @@ public class NumberAsdfNode extends AsdfNodeBase {
     }
 
     public static NumberAsdfNode of(final ScalarNode scalarNode, final Number value) {
-        return new NumberAsdfNode(scalarNode.getTag().getValue(), value);
+        return new NumberAsdfNode(scalarNode.getTag().getValue(), scalarNode.getValue(), value);
     }
 
     public static NumberAsdfNode of(final Number value) {
-        return new NumberAsdfNode(Tag.INT.getValue(), value);
+        return new NumberAsdfNode(Tag.INT.getValue(), value.toString(), value);
     }
 
     private final String tag;
+    private final String rawValue;
     private final Number value;
 
-    public NumberAsdfNode(final String tag, final Number value) {
+    public NumberAsdfNode(final String tag, final String rawValue, final Number value) {
         this.tag = tag;
+        this.rawValue = rawValue;
         this.value = value;
     }
 
@@ -130,5 +130,20 @@ public class NumberAsdfNode extends AsdfNodeBase {
     @Override
     public int hashCode() {
         return Objects.hash(tag, value);
+    }
+
+    @Override
+    public String toString() {
+        final List<String> fields = new ArrayList<>();
+
+        if (!(tag.equals(Tag.INT.getValue()) || tag.equals(Tag.FLOAT.getValue()))) {
+            fields.add("tag");
+            fields.add(tag);
+        }
+
+        fields.add("value");
+        fields.add(rawValue);
+
+        return NodeUtils.nodeToString(this, fields);
     }
 }

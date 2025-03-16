@@ -23,6 +23,11 @@ public class LongNdArrayImpl extends NdArrayBase<LongNdArray> implements LongNdA
     }
 
     @Override
+    protected String getClassName() {
+        return "LongNdArray";
+    }
+
+    @Override
     public long get(int... indices) {
         if (indices.length != shape.length) {
             throw new IllegalArgumentException("Number of indices must match array rank");

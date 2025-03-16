@@ -1,12 +1,12 @@
 package org.asdfformat.asdf.metadata.impl;
 
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.asdfformat.asdf.metadata.HistoryEntry;
 import org.asdfformat.asdf.metadata.Software;
 import org.asdfformat.asdf.node.AsdfNode;
+
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HistoryEntry100 implements HistoryEntry {
     public static final String TAG = "tag:stsci.edu:asdf/core/history_entry-1.0.0";
@@ -45,5 +45,13 @@ public class HistoryEntry100 implements HistoryEntry {
         }
 
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "HistoryEntry(description=%s)",
+                getDescription()
+        );
     }
 }

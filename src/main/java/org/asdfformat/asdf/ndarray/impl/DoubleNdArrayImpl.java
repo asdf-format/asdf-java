@@ -23,6 +23,11 @@ public class DoubleNdArrayImpl extends NdArrayBase<DoubleNdArray> implements Dou
     }
 
     @Override
+    protected String getClassName() {
+        return "DoubleNdArray";
+    }
+
+    @Override
     public double get(int... indices) {
         if (indices.length != shape.length) {
             throw new IllegalArgumentException("Number of indices must match array rank");

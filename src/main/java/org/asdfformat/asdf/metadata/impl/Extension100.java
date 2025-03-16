@@ -27,4 +27,12 @@ public class Extension100 implements Extension {
     public Software getSoftware() {
         return inner.containsKey("software") ? new Software100(inner.get("software")) : null;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Extension(extensionUri=%s)",
+                getExtensionUri()
+        );
+    }
 }

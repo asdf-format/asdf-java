@@ -31,4 +31,13 @@ public class Software100 implements Software {
     public String getVersion() {
         return inner.containsKey("version") ? inner.getString("version") : null;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Software(name=%s, version=%s)",
+                getName(),
+                getVersion()
+        );
+    }
 }

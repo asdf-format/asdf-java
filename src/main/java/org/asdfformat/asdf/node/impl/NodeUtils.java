@@ -1,13 +1,14 @@
 package org.asdfformat.asdf.node.impl;
 
+import org.asdfformat.asdf.ndarray.NdArray;
+import org.asdfformat.asdf.node.AsdfNode;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-
-import org.asdfformat.asdf.ndarray.NdArray;
-import org.asdfformat.asdf.node.AsdfNode;
 
 public class NodeUtils {
     private static final Map<Class<?>, Function<AsdfNode, Object>> CONVERTERS;
@@ -34,5 +35,22 @@ public class NodeUtils {
             throw new IllegalArgumentException("Cannot represent node as " + clazz.getName());
         }
         return n -> clazz.cast(converterFunc.apply(n));
+    }
+
+    public static String nodeToString(final AsdfNode node, final List<String> fields) {
+        final StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(node.getClass().getSimpleName());
+        stringBuilder.append("(");
+        for (int i = 0; i < fields.size(); i+= 2) {
+            stringBuilder.append(fields.get(i));
+            stringBuilder.append("=");
+            stringBuilder.append(fields.get(i + 1));
+            stringBuilder.append(", ");
+        }
+        stringBuilder.setLength(stringBuilder.length() - 2);
+        stringBuilder.append(")");
+
+        return stringBuilder.toString();
     }
 }
