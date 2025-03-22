@@ -99,6 +99,6 @@ public class BigDecimalNdArrayImpl extends NdArrayBase<BigDecimalNdArray> implem
             throw new RuntimeException("Unhandled datatype: " + dataType);
         }
 
-        return toArray(array, BigInteger.class, setter);
+        return toArray(array, BigDecimal.class, setter);
     }
 }

@@ -1,7 +1,6 @@
 package org.asdfformat.asdf.node;
 
 import org.asdfformat.asdf.ndarray.NdArray;
-import org.asdfformat.asdf.ndarray.UntypedNdArray;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -624,7 +623,7 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * Get this NDARRAY node's value.
      * @return value
      */
-    UntypedNdArray asNdArray();
+    NdArray<?> asNdArray();
 
     /**
      * Get this NUMBER node's value as short.

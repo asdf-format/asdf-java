@@ -44,7 +44,7 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
         this.cContiguous = computeCContiguous();
     }
 
-    protected abstract T newInstance(
+    protected abstract NdArray<T> newInstance(
             DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat
     );
 
@@ -71,7 +71,7 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
     }
 
     @Override
-    public T slice(final Slice... slices) {
+    public NdArray<T> slice(final Slice... slices) {
         if (slices.length > shape.length) {
             throw new IllegalArgumentException(String.format("Too many slices (%d) for array of rank %d", slices.length, shape.length));
         }
@@ -109,7 +109,7 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
     }
 
     @Override
-    public T index(final int... indices) {
+    public NdArray<T> index(final int... indices) {
         if (indices.length >= shape.length - 1) {
             throw new IllegalArgumentException(String.format("Too many indices (%d) for array of rank %d", indices.length, shape.length));
         }

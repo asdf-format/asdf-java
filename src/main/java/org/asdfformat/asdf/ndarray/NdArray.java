@@ -38,7 +38,7 @@ public interface NdArray<T> {
      * @param slices 1 or more array slices (maximum one per dimension)
      * @return resulting array view
      */
-    T slice(Slice... slices);
+    NdArray<T> slice(Slice... slices);
 
     /**
      * View a portion of the array defined by one
@@ -46,7 +46,7 @@ public interface NdArray<T> {
      * @param indices 1 or more array indices
      * @return resulting array view
      */
-    T index(int... indices);
+    NdArray<T> index(int... indices);
 
     /**
      * Get array data as an N-dimensional Java array.  If the array

@@ -5,7 +5,7 @@ import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.io.LowLevelFormats;
 import org.asdfformat.asdf.io.util.IOUtils;
 import org.asdfformat.asdf.metadata.AsdfMetadata;
-import org.asdfformat.asdf.ndarray.Slices;
+import org.asdfformat.asdf.ndarray.NdArray;
 import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.impl.constructor.AsdfNodeConstructor;
 import org.asdfformat.asdf.standard.AsdfStandard;
@@ -55,7 +55,8 @@ public class Asdf {
 
         final Asdf asdf = new Asdf();
         try (final AsdfFile asdfFile = asdf.open(path)) {
-            asdfFile.getTree().get("foo").asNdArray().slice(Slices.range(0, 50)).asLongNdArray().toArray(new long[0]);
+            final NdArray<?> ndArray = asdfFile.getTree().get("foo").asNdArray();
+            System.out.println("ready");
         }
     }
 }

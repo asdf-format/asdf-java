@@ -2,7 +2,7 @@ package org.asdfformat.asdf.standard;
 
 import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.metadata.AsdfMetadata;
-import org.asdfformat.asdf.ndarray.UntypedNdArray;
+import org.asdfformat.asdf.ndarray.NdArray;
 import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.impl.NdArrayAsdfNode;
 import org.asdfformat.asdf.util.Version;
@@ -18,5 +18,5 @@ public interface AsdfStandard {
 
     Set<String> getNdArrayTags();
 
-    UntypedNdArray createNdArray(LowLevelFormat lowLevelFormat, NdArrayAsdfNode node);
+    NdArray<?> createNdArray(LowLevelFormat lowLevelFormat, NdArrayAsdfNode node);
 }

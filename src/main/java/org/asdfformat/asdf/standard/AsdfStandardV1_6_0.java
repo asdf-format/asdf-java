@@ -10,8 +10,8 @@ import org.asdfformat.asdf.metadata.impl.Extension100;
 import org.asdfformat.asdf.metadata.impl.HistoryEntry100;
 import org.asdfformat.asdf.metadata.impl.Software100;
 import org.asdfformat.asdf.ndarray.DataType;
-import org.asdfformat.asdf.ndarray.UntypedNdArray;
-import org.asdfformat.asdf.ndarray.impl.UntypedNdArrayImpl;
+import org.asdfformat.asdf.ndarray.NdArray;
+import org.asdfformat.asdf.ndarray.impl.NdArrayImpl;
 import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.impl.MappingAsdfNode;
 import org.asdfformat.asdf.node.impl.NdArrayAsdfNode;
@@ -104,7 +104,7 @@ public class AsdfStandardV1_6_0 implements AsdfStandard {
     }
 
     @Override
-    public UntypedNdArray createNdArray(final LowLevelFormat lowLevelFormat, final NdArrayAsdfNode node) {
+    public NdArray<?> createNdArray(final LowLevelFormat lowLevelFormat, final NdArrayAsdfNode node) {
         if (node.containsKey("data")) {
             throw new RuntimeException("Support for ndarray with inline data is not implemented yet");
         }
@@ -164,7 +164,7 @@ public class AsdfStandardV1_6_0 implements AsdfStandard {
             throw new RuntimeException("Support for masked ndarray not implemented yet");
         }
 
-        return new UntypedNdArrayImpl(
+        return new NdArrayImpl(
                 dataType,
                 shape,
                 byteOrder,
