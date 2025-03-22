@@ -28,6 +28,26 @@ public enum DataType {
     BOOL8(1, new HashSet<>(Arrays.asList(Boolean.TYPE))),
     ;
 
+    public static final Set<DataType> SIGNED_INTEGRAL_TYPES = EnumSet.of(
+            DataType.INT8,
+            DataType.INT16,
+            DataType.INT32,
+            DataType.INT64
+    );
+
+    public static final Set<DataType> UNSIGNED_INTEGRAL_TYPES = EnumSet.of(
+            DataType.UINT8,
+            DataType.UINT16,
+            DataType.UINT32,
+            DataType.UINT64
+    );
+
+    public static final Set<DataType> INTEGRAL_TYPES = EnumSet.noneOf(DataType.class);
+    static {
+        INTEGRAL_TYPES.addAll(SIGNED_INTEGRAL_TYPES);
+        INTEGRAL_TYPES.addAll(UNSIGNED_INTEGRAL_TYPES);
+    }
+
     public static DataType fromString(final String value) {
         return DataType.valueOf(value.toUpperCase());
     }

@@ -3,7 +3,6 @@ package org.asdfformat.asdf.ndarray.impl;
 import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.ndarray.BigDecimalNdArray;
 import org.asdfformat.asdf.ndarray.BigIntegerNdArray;
-import org.asdfformat.asdf.ndarray.BooleanNdArray;
 import org.asdfformat.asdf.ndarray.ByteNdArray;
 import org.asdfformat.asdf.ndarray.DataType;
 import org.asdfformat.asdf.ndarray.DoubleNdArray;
@@ -61,6 +60,11 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
         return new ShapeImpl(shape);
     }
 
+    @Override
+    public ByteOrder getByteOrder() {
+        return byteOrder;
+    }
+    
     @Override
     public boolean isCompressed() {
         return lowLevelFormat.getBlock(source).isCompressed();
@@ -132,11 +136,6 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
     }
 
     @Override
-    public BooleanNdArray asBooleanNdArray() {
-        return new BooleanNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
-    }
-
-    @Override
     public ByteNdArray asByteNdArray() {
         return new ByteNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
     }
@@ -164,11 +163,6 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
     @Override
     public ShortNdArray asShortNdArray() {
         return new ShortNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
-    }
-
-    @Override
-    public ByteOrder getRawByteOrder() {
-        return byteOrder;
     }
 
     @Override
