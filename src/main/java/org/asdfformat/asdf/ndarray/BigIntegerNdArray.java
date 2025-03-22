@@ -7,11 +7,5 @@ import java.math.BigInteger;
  * BigInteger elements.
  */
 public interface BigIntegerNdArray extends NdArray<BigIntegerNdArray> {
-    BigInteger get(long... indices);
-
-    BigInteger[] toArray(BigInteger[] array);
-
-    BigInteger[][] toArray(BigInteger[][] array);
-
-    BigInteger[][][] toArray(BigInteger[][][] array);
+    BigInteger get(int... indices);
 }

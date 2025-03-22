@@ -1,5 +1,12 @@
 package org.asdfformat.asdf.io.impl;
 
+import lombok.RequiredArgsConstructor;
+import org.asdfformat.asdf.io.Block;
+import org.asdfformat.asdf.io.LowLevelFormat;
+import org.asdfformat.asdf.io.LowLevelFormats;
+import org.asdfformat.asdf.io.util.IOUtils;
+import org.asdfformat.asdf.util.Version;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataInput;
 import java.io.IOException;
@@ -9,23 +16,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.asdfformat.asdf.io.Block;
-import org.asdfformat.asdf.io.LowLevelFormats;
-import org.asdfformat.asdf.io.util.IOUtils;
-import org.asdfformat.asdf.io.LowLevelFormat;
-import org.asdfformat.asdf.util.Version;
-
+@RequiredArgsConstructor
 public class LowLevelFormatV1_0_0 implements LowLevelFormat {
     public static final Version VERSION = new Version(1, 0, 0);
 
     private static final byte[] END_OF_YAML_SEQUENCE = "\n...\n".getBytes(StandardCharsets.UTF_8);
     private static final byte[] ASDF_STANDARD_VERSION_SEQUENCE = "#ASDF_STANDARD ".getBytes(StandardCharsets.UTF_8);
     private static final byte[] END_OF_VERSION = "\n".getBytes(StandardCharsets.UTF_8);
-
-    @Override
-    public Version getVersion() {
-        return VERSION;
-    }
 
     public static LowLevelFormat fromFile(final RandomAccessFile file) throws IOException {
         file.seek(0);
@@ -92,10 +89,9 @@ public class LowLevelFormatV1_0_0 implements LowLevelFormat {
     private final byte[] treeBytes;
     private final List<Block> blocks;
 
-    public LowLevelFormatV1_0_0(final Version asdfStandardVersion, final byte[] treeBytes, final List<Block> blocks) {
-        this.asdfStandardVersion = asdfStandardVersion;
-        this.treeBytes = treeBytes;
-        this.blocks = blocks;
+    @Override
+    public Version getVersion() {
+        return VERSION;
     }
 
     @Override

@@ -1,5 +1,8 @@
 package org.asdfformat.asdf.ndarray;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -8,6 +11,7 @@ import java.util.*;
 /**
  * Element datatype of an n-dimensional array.
  */
+@RequiredArgsConstructor
 public enum DataType {
     INT8(1, new HashSet<>(Arrays.asList(Byte.TYPE, Short.TYPE, Integer.TYPE, Long.TYPE, BigInteger.class))),
     INT16(2, new HashSet<>(Arrays.asList(Short.TYPE, Integer.TYPE, Long.TYPE, BigInteger.class))),
@@ -28,17 +32,9 @@ public enum DataType {
         return DataType.valueOf(value.toUpperCase());
     }
 
+    @Getter
     private final int widthBytes;
     private final Set<Type> compatibleTypes;
-
-    DataType(final int widthBytes, final Set<Type> compatibleTypes) {
-        this.widthBytes = widthBytes;
-        this.compatibleTypes = compatibleTypes;
-    }
-
-    public int getWidthBytes() {
-        return widthBytes;
-    }
 
     public boolean isCompatibleWith(final Class<?> type) {
         return compatibleTypes.contains(type);

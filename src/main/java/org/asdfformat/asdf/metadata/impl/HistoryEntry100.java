@@ -1,5 +1,6 @@
 package org.asdfformat.asdf.metadata.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.asdfformat.asdf.metadata.HistoryEntry;
 import org.asdfformat.asdf.metadata.Software;
 import org.asdfformat.asdf.node.AsdfNode;
@@ -8,14 +9,11 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
 public class HistoryEntry100 implements HistoryEntry {
     public static final String TAG = "tag:stsci.edu:asdf/core/history_entry-1.0.0";
 
     private final AsdfNode inner;
-
-    public HistoryEntry100(final AsdfNode inner) {
-        this.inner = inner;
-    }
 
     @Override
     public String getDescription() {

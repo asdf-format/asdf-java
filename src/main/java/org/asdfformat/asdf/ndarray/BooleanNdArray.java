@@ -5,11 +5,5 @@ package org.asdfformat.asdf.ndarray;
  * boolean elements.
  */
 public interface BooleanNdArray extends NdArray<BooleanNdArray> {
-    boolean get(long... indices);
-
-    boolean[] toArray(boolean[] array);
-
-    boolean[][] toArray(boolean[][] array);
-
-    boolean[][][] toArray(boolean[][][] array);
+    boolean get(int... indices);
 }

@@ -1,16 +1,14 @@
 package org.asdfformat.asdf.metadata.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.asdfformat.asdf.metadata.Software;
 import org.asdfformat.asdf.node.AsdfNode;
 
+@RequiredArgsConstructor
 public class Software100 implements Software {
     public static final String TAG = "tag:stsci.edu:asdf/core/software-1.0.0";
 
     private final AsdfNode inner;
-
-    public Software100(final AsdfNode inner) {
-        this.inner = inner;
-    }
 
     @Override
     public String getName() {

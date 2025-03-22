@@ -1,17 +1,15 @@
 package org.asdfformat.asdf.metadata.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.asdfformat.asdf.metadata.Extension;
 import org.asdfformat.asdf.metadata.Software;
 import org.asdfformat.asdf.node.AsdfNode;
 
+@RequiredArgsConstructor
 public class Extension100 implements Extension {
     public static final String TAG = "tag:stsci.edu:asdf/core/extension_metadata-1.0.0";
 
     private final AsdfNode inner;
-
-    public Extension100(final AsdfNode inner) {
-        this.inner = inner;
-    }
 
     @Override
     public String getExtensionClass() {

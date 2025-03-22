@@ -2,32 +2,32 @@ package org.asdfformat.asdf.ndarray.impl;
 
 import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.ndarray.DataType;
-import org.asdfformat.asdf.ndarray.LongNdArray;
+import org.asdfformat.asdf.ndarray.IntNdArray;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class LongNdArrayImpl extends NdArrayBase<LongNdArray> implements LongNdArray {
-    public LongNdArrayImpl(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
+public class IntNdArrayImpl extends NdArrayBase<IntNdArray> implements IntNdArray {
+    public IntNdArrayImpl(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final int source, final LowLevelFormat lowLevelFormat) {
         super(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
 
-        if (!dataType.isCompatibleWith(Long.TYPE)) {
-            throw new IllegalStateException(String.format("Data type %s is not compatible with Java long", dataType));
+        if (!dataType.isCompatibleWith(Integer.TYPE)) {
+            throw new IllegalStateException(String.format("Data type %s is not compatible with Java int", dataType));
         }
     }
 
     @Override
-    protected LongNdArray newInstance(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
-        return new LongNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+    protected IntNdArray newInstance(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final int source, final LowLevelFormat lowLevelFormat) {
+        return new IntNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
     }
 
     @Override
     protected String getClassName() {
-        return "LongNdArray";
+        return "IntNdArray";
     }
 
     @Override
-    public long get(int... indices) {
+    public int get(int... indices) {
         final ByteBuffer byteBuffer = getByteBufferAt(indices);
         if (dataType == DataType.INT8) {
             return byteBuffer.get();
@@ -37,12 +37,8 @@ public class LongNdArrayImpl extends NdArrayBase<LongNdArray> implements LongNdA
             return byteBuffer.getShort();
         } else if (dataType == DataType.UINT16) {
             return byteBuffer.getShort() & 0xFFFF;
-        } else if (dataType == DataType.INT32) {
+        } else if (dataType == DataType.INT32 || dataType == DataType.UINT32) {
             return byteBuffer.getInt();
-        } else if (dataType == DataType.UINT32) {
-            return byteBuffer.getInt() & 0xFFFFFFFFL;
-        } else if (dataType == DataType.INT64 || dataType == DataType.UINT64) {
-            return byteBuffer.getLong();
         } else {
             throw new RuntimeException("Unhandled datatype: " + dataType);
         }
@@ -50,7 +46,7 @@ public class LongNdArrayImpl extends NdArrayBase<LongNdArray> implements LongNdA
 
     @Override
     public <ARRAY> ARRAY toArray(final ARRAY array) {
-        final ArraySetter<long[]> setter;
+        final ArraySetter<int[]> setter;
         if (dataType == DataType.INT8) {
             setter = (byteBuffer, arr, index, length) -> {
                 for (int i = index; i < length; i++) {
@@ -75,24 +71,12 @@ public class LongNdArrayImpl extends NdArrayBase<LongNdArray> implements LongNdA
                     arr[i] = byteBuffer.getShort() & 0xFFFF;
                 }
             };
-        } else if (dataType == DataType.INT32) {
-            setter = (byteBuffer, arr, index, length) -> {
-                for (int i = index; i < length; i++) {
-                    arr[i] = byteBuffer.getInt();
-                }
-            };
-        } else if (dataType == DataType.UINT32) {
-            setter = (byteBuffer, arr, index, length) -> {
-                for (int i = index; i < length; i++) {
-                    arr[i] = byteBuffer.getInt() & 0xFFFFFFFFL;
-                }
-            };
-        } else if (dataType == DataType.INT64 || dataType == DataType.UINT64) {
-            setter = (byteBuffer, arr, index, length) -> byteBuffer.asLongBuffer().get(arr, index, length);
+        } else if (dataType == DataType.INT32 || dataType == DataType.UINT32) {
+            setter = (byteBuffer, arr, index, length) -> byteBuffer.asIntBuffer().get(arr, index, length);
         } else {
             throw new RuntimeException("Unhandled datatype: " + dataType);
         }
 
-        return toArray(array, Long.TYPE, setter);
+        return toArray(array, Integer.TYPE, setter);
     }
 }

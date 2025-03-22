@@ -1,5 +1,6 @@
 package org.asdfformat.asdf.io.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.asdfformat.asdf.io.Block;
 
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.Arrays;
 
+@RequiredArgsConstructor
 public class BlockV1_0_0 implements Block {
     public static final byte[] START_OF_BLOCK_SEQUENCE = { -45, 66, 76, 75 };
     private static final byte[] NO_COMPRESSION = { 0, 0, 0, 0 };
@@ -64,19 +66,6 @@ public class BlockV1_0_0 implements Block {
 
     private final long dataPosition;
     private final long endPosition;
-
-    public BlockV1_0_0(final RandomAccessFile file, final long headerPosition, final int headerSize, final byte[] compression, final long allocatedSize, final long usedSize, final long dataSize, final byte[] checksum, final long dataPosition, final long endPosition) {
-        this.file = file;
-        this.headerPosition = headerPosition;
-        this.headerSize = headerSize;
-        this.compression = compression;
-        this.allocatedSize = allocatedSize;
-        this.usedSize = usedSize;
-        this.dataSize = dataSize;
-        this.checksum = checksum;
-        this.dataPosition = dataPosition;
-        this.endPosition = endPosition;
-    }
 
     @Override
     public long getEndPosition() {

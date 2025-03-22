@@ -6,10 +6,4 @@ package org.asdfformat.asdf.ndarray;
  */
 public interface LongNdArray extends NdArray<LongNdArray> {
     long get(int... indices);
-
-    long[] toArray(long[] array);
-
-    long[][] toArray(long[][] array);
-
-    long[][][] toArray(long[][][] array);
 }

@@ -42,6 +42,9 @@ public interface NdArray<T> {
      */
     T index(int... indices);
 
+    // TOOD: Docs
+    <ARRAY> ARRAY toArray(ARRAY array);
+
     /**
      * View of this array that returns BigDecimal
      * elements.
