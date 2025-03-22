@@ -41,7 +41,7 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
         this.source = source;
         this.lowLevelFormat = lowLevelFormat;
 
-        this.cContiguous = getCContiguous();
+        this.cContiguous = computeCContiguous();
     }
 
     protected abstract T newInstance(
@@ -64,7 +64,7 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
     public ByteOrder getByteOrder() {
         return byteOrder;
     }
-    
+
     @Override
     public boolean isCompressed() {
         return lowLevelFormat.getBlock(source).isCompressed();
@@ -365,7 +365,7 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
         return totalLength;
     }
 
-    private boolean[] getCContiguous() {
+    private boolean[] computeCContiguous() {
         final boolean[] result = new boolean[shape.length];
         Arrays.fill(result, false);
 
