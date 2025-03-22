@@ -2,6 +2,7 @@ package org.asdfformat.asdf.node.impl;
 
 import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.ndarray.NdArray;
+import org.asdfformat.asdf.ndarray.UntypedNdArray;
 import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.AsdfNodeType;
 import org.asdfformat.asdf.standard.AsdfStandard;
@@ -32,7 +33,7 @@ public class NdArrayAsdfNode extends MappingAsdfNode {
     }
 
     @Override
-    public NdArray<?> asNdArray() {
+    public UntypedNdArray asNdArray() {
         return asdfStandard.createNdArray(lowLevelFormat, this);
     }
 

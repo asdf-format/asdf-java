@@ -2,21 +2,21 @@ package org.asdfformat.asdf.ndarray.impl;
 
 import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.ndarray.DataType;
-import org.asdfformat.asdf.ndarray.NdArray;
+import org.asdfformat.asdf.ndarray.UntypedNdArray;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.ByteOrder;
 
 
-public class NdArrayImpl extends NdArrayBase<NdArray<?>> implements NdArray<NdArray<?>> {
-    public NdArrayImpl(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
+public class UntypedNdArrayImpl extends NdArrayBase<UntypedNdArray> implements UntypedNdArray {
+    public UntypedNdArrayImpl(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
         super(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
     }
 
     @Override
-    protected NdArray<?> newInstance(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
-        return new NdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+    protected UntypedNdArray newInstance(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
+        return new UntypedNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
     }
 
     @Override
@@ -32,8 +32,6 @@ public class NdArrayImpl extends NdArrayBase<NdArray<?>> implements NdArray<NdAr
             return asBigDecimalNdArray().toArray(array);
         } else if (elementType == BigInteger.class) {
             return asBigIntegerNdArray().toArray(array);
-        } else if (elementType == Boolean.TYPE) {
-            return asBooleanNdArray().toArray(array);
         } else if (elementType == Byte.TYPE) {
             return asByteNdArray().toArray(array);
         } else if (elementType == Double.TYPE) {

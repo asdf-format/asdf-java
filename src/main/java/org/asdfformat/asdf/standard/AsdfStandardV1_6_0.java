@@ -10,8 +10,8 @@ import org.asdfformat.asdf.metadata.impl.Extension100;
 import org.asdfformat.asdf.metadata.impl.HistoryEntry100;
 import org.asdfformat.asdf.metadata.impl.Software100;
 import org.asdfformat.asdf.ndarray.DataType;
-import org.asdfformat.asdf.ndarray.NdArray;
-import org.asdfformat.asdf.ndarray.impl.NdArrayImpl;
+import org.asdfformat.asdf.ndarray.UntypedNdArray;
+import org.asdfformat.asdf.ndarray.impl.UntypedNdArrayImpl;
 import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.impl.MappingAsdfNode;
 import org.asdfformat.asdf.node.impl.NdArrayAsdfNode;
@@ -19,7 +19,14 @@ import org.asdfformat.asdf.node.impl.StringAsdfNode;
 import org.asdfformat.asdf.util.Version;
 
 import java.nio.ByteOrder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public class AsdfStandardV1_6_0 implements AsdfStandard {
     public static final Version VERSION = Version.fromString("1.6.0");
@@ -97,7 +104,7 @@ public class AsdfStandardV1_6_0 implements AsdfStandard {
     }
 
     @Override
-    public NdArray<?> createNdArray(final LowLevelFormat lowLevelFormat, final NdArrayAsdfNode node) {
+    public UntypedNdArray createNdArray(final LowLevelFormat lowLevelFormat, final NdArrayAsdfNode node) {
         if (node.containsKey("data")) {
             throw new RuntimeException("Support for ndarray with inline data is not implemented yet");
         }
@@ -157,7 +164,7 @@ public class AsdfStandardV1_6_0 implements AsdfStandard {
             throw new RuntimeException("Support for masked ndarray not implemented yet");
         }
 
-        return new NdArrayImpl(
+        return new UntypedNdArrayImpl(
                 dataType,
                 shape,
                 byteOrder,

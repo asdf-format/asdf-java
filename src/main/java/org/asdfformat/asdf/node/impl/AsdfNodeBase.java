@@ -1,6 +1,7 @@
 package org.asdfformat.asdf.node.impl;
 
 import org.asdfformat.asdf.ndarray.NdArray;
+import org.asdfformat.asdf.ndarray.UntypedNdArray;
 import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.AsdfNodeType;
 
@@ -438,7 +439,7 @@ public abstract class AsdfNodeBase implements AsdfNode {
     }
 
     @Override
-    public NdArray<?> asNdArray() {
+    public UntypedNdArray asNdArray() {
         throw new IllegalStateException(makeAsErrorMessage("NdArray"));
     }
 

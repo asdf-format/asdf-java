@@ -239,11 +239,14 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
             dest = (ARRAY) Array.newInstance(elementType, destShape);
         }
 
+        final ByteBuffer byteBuffer = getByteBuffer();
+        byteBuffer.order(byteOrder);
+
         copyToArray(
                 0,
                 offset,
                 getTotalLength(),
-                getByteBuffer(),
+                byteBuffer,
                 destShape,
                 0,
                 dest,
