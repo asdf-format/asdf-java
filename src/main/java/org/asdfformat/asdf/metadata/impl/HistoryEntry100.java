@@ -5,7 +5,7 @@ import org.asdfformat.asdf.metadata.HistoryEntry;
 import org.asdfformat.asdf.metadata.Software;
 import org.asdfformat.asdf.node.AsdfNode;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +21,8 @@ public class HistoryEntry100 implements HistoryEntry {
     }
 
     @Override
-    public OffsetDateTime getTime() {
-        throw new RuntimeException("Not implemented yet");
+    public Instant getTime() {
+        return inner.containsKey("time") ? inner.getInstant("time") : null;
     }
 
     @Override

@@ -2,14 +2,28 @@ package org.asdfformat.asdf.node.impl.constructor;
 
 import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.node.AsdfNode;
-import org.asdfformat.asdf.node.impl.*;
+import org.asdfformat.asdf.node.impl.BooleanAsdfNode;
+import org.asdfformat.asdf.node.impl.MappingAsdfNode;
+import org.asdfformat.asdf.node.impl.NdArrayAsdfNode;
+import org.asdfformat.asdf.node.impl.NullAsdfNode;
+import org.asdfformat.asdf.node.impl.NumberAsdfNode;
+import org.asdfformat.asdf.node.impl.SequenceAsdfNode;
+import org.asdfformat.asdf.node.impl.StringAsdfNode;
+import org.asdfformat.asdf.node.impl.TimestampAsdfNode;
 import org.asdfformat.asdf.standard.AsdfStandard;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.constructor.AbstractConstruct;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
-import org.yaml.snakeyaml.nodes.*;
+import org.yaml.snakeyaml.nodes.MappingNode;
+import org.yaml.snakeyaml.nodes.Node;
+import org.yaml.snakeyaml.nodes.NodeId;
+import org.yaml.snakeyaml.nodes.ScalarNode;
+import org.yaml.snakeyaml.nodes.SequenceNode;
+import org.yaml.snakeyaml.nodes.Tag;
+import org.yaml.snakeyaml.resolver.Resolver;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +31,7 @@ import java.util.Map.Entry;
 
 public class AsdfNodeConstructor extends SafeConstructor {
 
-    public AsdfNodeConstructor(final LoaderOptions loaderOptions, final LowLevelFormat lowLevelFormat, final AsdfStandard asdfStandard) {
+    public AsdfNodeConstructor(final LoaderOptions loaderOptions, final Resolver resolver, final LowLevelFormat lowLevelFormat, final AsdfStandard asdfStandard) {
         super(loaderOptions);
 
         this.yamlConstructors.clear();
@@ -28,7 +42,8 @@ public class AsdfNodeConstructor extends SafeConstructor {
         this.yamlConstructors.put(Tag.FLOAT, new ConstructNumberAsdfNode(new ConstructYamlFloat()));
         this.yamlConstructors.put(Tag.NULL, new ConstructNullAsdfNode());
         this.yamlConstructors.put(Tag.STR, new ConstructStringAsdfNode());
-        this.yamlClassConstructors.put(NodeId.scalar, new ConstructScalarAsdfNode());
+        this.yamlConstructors.put(Tag.TIMESTAMP, new ConstructTimestampAsdfNode(new ConstructYamlTimestamp()));
+        this.yamlClassConstructors.put(NodeId.scalar, new ConstructScalarAsdfNode(resolver));
 
         this.yamlConstructors.put(Tag.SEQ, new ConstructSequenceAsdfNode());
         this.yamlClassConstructors.put(NodeId.sequence, new ConstructSequenceAsdfNode());
@@ -151,13 +166,44 @@ public class AsdfNodeConstructor extends SafeConstructor {
         }
     }
 
-    public class ConstructScalarAsdfNode extends AbstractConstruct {
+    public class ConstructTimestampAsdfNode extends AbstractConstruct {
+        private final AbstractConstruct constructYaml;
+
+        public ConstructTimestampAsdfNode(final AbstractConstruct constructYaml) {
+            this.constructYaml = constructYaml;
+        }
 
         @Override
         public Object construct(final Node node) {
-            throw new RuntimeException("Not implemented yet");
+            final Date value = (Date) constructYaml.construct(node);
+
+            return TimestampAsdfNode.of((ScalarNode) node, value.toInstant());
         }
     }
+
+    public class ConstructScalarAsdfNode extends AbstractConstruct {
+        private final Resolver resolver;
+
+        public ConstructScalarAsdfNode(final Resolver resolver) {
+            this.resolver = resolver;
+        }
+
+        @Override
+        public Object construct(final Node node) {
+            final ScalarNode scalarNode = (ScalarNode) node;
+
+            final Tag tag = resolver.resolve(NodeId.scalar, scalarNode.getValue(), true);
+
+            try {
+                return AsdfNodeConstructor.this.yamlConstructors.get(tag).construct(node);
+            } catch (final NullPointerException e) {
+                System.out.println("Ut oh");
+                throw e;
+            }
+        }
+    }
+
+
 
     public class ConstructUnsupportedAsdfNode extends AbstractConstruct {
 

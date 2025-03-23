@@ -4,6 +4,7 @@ import org.asdfformat.asdf.ndarray.NdArray;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -300,6 +301,34 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     float getFloat(AsdfNode key);
 
     /**
+     * Get a TIMESTAMP mapping value as Instant, indexed by String key.
+     * @param key mapping key
+     * @return value
+     */
+    Instant getInstant(String key);
+
+    /**
+     * Get a TIMESTAMP sequence value or mapping value as Instant, indexed by long key.
+     * @param key sequence index or mapping key
+     * @return value
+     */
+    Instant getInstant(long key);
+
+    /**
+     * Get a TIMESTAMP mapping value as Instant, indexed by boolean key.
+     * @param key mapping key
+     * @return value
+     */
+    Instant getInstant(boolean key);
+
+    /**
+     * Get a TIMESTAMP sequence value or mapping value as Instant, indexed by AsdfNode key.
+     * @param key mapping key
+     * @return value
+     */
+    Instant getInstant(AsdfNode key);
+
+    /**
      * Get a NUMBER mapping value as int, indexed by String key.
      * @param key mapping key
      * @return value
@@ -582,6 +611,12 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @return value
      */
     float asFloat();
+
+    /**
+     * Get this TIMESTAMP node's value as Instant.
+     * @return value
+     */
+    Instant asInstant();
 
     /**
      * Get this NUMBER node's value as int.

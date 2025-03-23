@@ -1,6 +1,6 @@
 package org.asdfformat.asdf.metadata;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -14,9 +14,9 @@ public interface HistoryEntry {
     String getDescription();
 
     /**
-     * A timestamp for the operation, in UTC.
+     * A timestamp for the operation.
      */
-    OffsetDateTime getTime();
+    Instant getTime();
 
     /**
      * Descriptions of the software that performed the operation.

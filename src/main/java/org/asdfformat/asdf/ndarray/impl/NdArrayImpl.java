@@ -4,9 +4,11 @@ import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.ndarray.DataType;
 import org.asdfformat.asdf.ndarray.NdArray;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.ByteOrder;
 
-
+@SuppressWarnings("rawtypes")
 public class NdArrayImpl extends NdArrayBase {
     public NdArrayImpl(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
         super(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
@@ -23,34 +25,29 @@ public class NdArrayImpl extends NdArrayBase {
     }
 
     @Override
-    public Object toArray(final Object o) {
-        return null;
-    }
+    public Object toArray(final Object array) {
+        final Class<?> elementType = getElementType(array.getClass());
 
-    //    @Override
-//    public <ARRAY> ARRAY toArray(final ARRAY array) {
-//        final Class<?> elementType = getElementType(array.getClass());
-//
-//        if (elementType == BigDecimal.class) {
-//            return asBigDecimalNdArray().toArray(array);
-//        } else if (elementType == BigInteger.class) {
-//            return asBigIntegerNdArray().toArray(array);
-//        } else if (elementType == Byte.TYPE) {
-//            return asByteNdArray().toArray(array);
-//        } else if (elementType == Double.TYPE) {
-//            return asDoubleNdArray().toArray(array);
-//        } else if (elementType == Float.TYPE) {
-//            return asFloatNdArray().toArray(array);
-//        } else if (elementType == Integer.TYPE) {
-//            return asIntNdArray().toArray(array);
-//        } else if (elementType == Long.TYPE) {
-//            return asLongNdArray().toArray(array);
-//        } else if (elementType == Short.TYPE) {
-//            return asShortNdArray().toArray(array);
-//        } else {
-//            throw new IllegalArgumentException("Unhandled Java array element type: " + elementType.getName());
-//        }
-//    }
+        if (elementType == BigDecimal.class) {
+            return asBigDecimalNdArray().toArray(array);
+        } else if (elementType == BigInteger.class) {
+            return asBigIntegerNdArray().toArray(array);
+        } else if (elementType == Byte.TYPE) {
+            return asByteNdArray().toArray(array);
+        } else if (elementType == Double.TYPE) {
+            return asDoubleNdArray().toArray(array);
+        } else if (elementType == Float.TYPE) {
+            return asFloatNdArray().toArray(array);
+        } else if (elementType == Integer.TYPE) {
+            return asIntNdArray().toArray(array);
+        } else if (elementType == Long.TYPE) {
+            return asLongNdArray().toArray(array);
+        } else if (elementType == Short.TYPE) {
+            return asShortNdArray().toArray(array);
+        } else {
+            throw new IllegalArgumentException("Unhandled Java array element type: " + elementType.getName());
+        }
+    }
 
     private Class<?> getElementType(final Class<?> clazz) {
         if (clazz.isArray()) {

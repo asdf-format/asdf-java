@@ -10,6 +10,7 @@ public class AsdfStandards {
     static {
         ASDF_STANDARDS = new HashMap<>();
         ASDF_STANDARDS.put(AsdfStandardV1_6_0.VERSION, new AsdfStandardV1_6_0());
+        ASDF_STANDARDS.put(AsdfStandardV1_5_0.VERSION, new AsdfStandardV1_5_0());
     }
 
     public static AsdfStandard of(final Version version) {

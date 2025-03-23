@@ -6,6 +6,7 @@ import org.asdfformat.asdf.node.AsdfNodeType;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -214,6 +215,26 @@ public abstract class AsdfNodeBase implements AsdfNode {
     }
 
     @Override
+    public Instant getInstant(final String key) {
+        return get(key).asInstant();
+    }
+
+    @Override
+    public Instant getInstant(final long key) {
+        return get(key).asInstant();
+    }
+
+    @Override
+    public Instant getInstant(final boolean key) {
+        return get(key).asInstant();
+    }
+
+    @Override
+    public Instant getInstant(final AsdfNode key) {
+        return get(key).asInstant();
+    }
+
+    @Override
     public int getInt(final String key) {
         return get(key).asInt();
     }
@@ -406,6 +427,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     public float asFloat() {
         throw new IllegalStateException(makeAsErrorMessage("float"));
 
+    }
+
+    @Override
+    public Instant asInstant() {
+        throw new IllegalStateException(makeAsErrorMessage("Instant"));
     }
 
     @Override

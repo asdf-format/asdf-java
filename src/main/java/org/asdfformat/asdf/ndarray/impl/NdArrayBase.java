@@ -305,7 +305,7 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
                         byteBuffer,
                         destShape,
                         0,
-                        dest,
+                        Array.get(dest, i),
                         setter
                 );
             }
