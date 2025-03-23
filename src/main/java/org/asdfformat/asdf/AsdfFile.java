@@ -1,9 +1,9 @@
 package org.asdfformat.asdf;
 
-import java.io.IOException;
-
 import org.asdfformat.asdf.metadata.AsdfMetadata;
 import org.asdfformat.asdf.node.AsdfNode;
+
+import java.io.IOException;
 
 
 /**

@@ -1,5 +1,9 @@
 package org.asdfformat.asdf.io;
 
+import org.asdfformat.asdf.io.impl.LowLevelFormatV1_0_0;
+import org.asdfformat.asdf.io.util.IOUtils;
+import org.asdfformat.asdf.util.Version;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -7,10 +11,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.asdfformat.asdf.io.impl.LowLevelFormatV1_0_0;
-import org.asdfformat.asdf.io.util.IOUtils;
-import org.asdfformat.asdf.util.Version;
 
 public class LowLevelFormats {
     private static final byte[] ASDF_MAGIC = "#ASDF ".getBytes(StandardCharsets.UTF_8);
