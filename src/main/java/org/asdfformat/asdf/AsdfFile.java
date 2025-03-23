@@ -1,5 +1,7 @@
 package org.asdfformat.asdf;
 
+import java.io.IOException;
+
 import org.asdfformat.asdf.metadata.AsdfMetadata;
 import org.asdfformat.asdf.node.AsdfNode;
 
@@ -22,4 +24,7 @@ public interface AsdfFile extends AutoCloseable {
      * @return root node of the ASDF tree
      */
     AsdfNode getTree();
+
+    @Override
+    void close() throws IOException;
 }

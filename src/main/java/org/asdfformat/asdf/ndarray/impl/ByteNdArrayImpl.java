@@ -1,0 +1,44 @@
+package org.asdfformat.asdf.ndarray.impl;
+
+import org.asdfformat.asdf.io.LowLevelFormat;
+import org.asdfformat.asdf.ndarray.ByteNdArray;
+import org.asdfformat.asdf.ndarray.DataType;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+public class ByteNdArrayImpl extends NdArrayBase<ByteNdArray> implements ByteNdArray {
+    public ByteNdArrayImpl(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final int source, final LowLevelFormat lowLevelFormat) {
+        super(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+
+        if (!dataType.isCompatibleWith(Byte.TYPE)) {
+            throw new IllegalStateException(String.format("Data type %s is not compatible with Java byte", dataType));
+        }
+    }
+
+    @Override
+    protected ByteNdArray newInstance(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final int source, final LowLevelFormat lowLevelFormat) {
+        return new ByteNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+    }
+
+    @Override
+    protected String getClassName() {
+        return "ByteNdArray";
+    }
+
+    @Override
+    public byte get(int... indices) {
+        final ByteBuffer byteBuffer = getByteBufferAt(indices);
+        if (dataType == DataType.INT8 || dataType == DataType.UINT8) {
+            return byteBuffer.get();
+        } else {
+            throw new RuntimeException("Unhandled datatype: " + dataType);
+        }
+    }
+
+    @Override
+    public <ARRAY> ARRAY toArray(final ARRAY array) {
+        final ArraySetter<byte[]> setter = ByteBuffer::get;
+        return toArray(array, Byte.TYPE, setter);
+    }
+}

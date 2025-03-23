@@ -1,5 +1,9 @@
 package org.asdfformat.asdf.ndarray;
 
+import org.asdfformat.asdf.ndarray.impl.AllSlice;
+import org.asdfformat.asdf.ndarray.impl.AtSlice;
+import org.asdfformat.asdf.ndarray.impl.RangeSlice;
+
 /**
  * Methods for defining n-dimensional array slices.
  */
@@ -10,7 +14,7 @@ public class Slices {
      * @return slice
      */
     public static Slice all() {
-        throw new RuntimeException("Not implemented");
+        return AllSlice.instance();
     }
 
     /**
@@ -19,8 +23,8 @@ public class Slices {
      * @param endIndexExclusive exclusive end index
      * @return slice
      */
-    public static Slice range(long startIndexInclusive, long endIndexExclusive) {
-        throw new RuntimeException("Not implemented");
+    public static Slice range(int startIndexInclusive, int endIndexExclusive) {
+        return RangeSlice.of(startIndexInclusive, endIndexExclusive);
     }
 
     /**
@@ -30,8 +34,8 @@ public class Slices {
      * @param step spacing between values
      * @return slice
      */
-    public static Slice range(long startIndexInclusive, long endIndexExclusive, long step) {
-        throw new RuntimeException("Not implemented");
+    public static Slice range(int startIndexInclusive, int endIndexExclusive, int step) {
+        return RangeSlice.of(startIndexInclusive, endIndexExclusive, step);
     }
 
     /**
@@ -40,7 +44,7 @@ public class Slices {
      * @param index selected index
      * @return slice
      */
-    public static Slice at(long index) {
-        throw new RuntimeException("Not implemented");
+    public static Slice at(int index) {
+        return AtSlice.of(index);
     }
 }

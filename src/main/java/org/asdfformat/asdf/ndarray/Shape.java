@@ -17,5 +17,5 @@ public interface Shape {
      * @param i dimension index (zero-based)
      * @return dimension length
      */
-    long get(int i);
+    int get(int i);
 }

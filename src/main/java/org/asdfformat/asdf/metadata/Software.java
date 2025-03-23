@@ -6,12 +6,22 @@ package org.asdfformat.asdf.metadata;
 public interface Software {
 
     /**
-     * Get the name of the software package.
+     * The name of the application or library.
      */
     String getName();
 
     /**
-     * Get the version of the software package.
+     * The author (or institution) that produced the software package.
+     */
+    String getAuthor();
+
+    /**
+     * A URI to the homepage of the software.
+     */
+    String getHomepage();
+
+    /**
+     * The version of the software used.
      */
     String getVersion();
 }
