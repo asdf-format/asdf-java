@@ -20,7 +20,7 @@ public class AllSlice implements Slice {
     }
 
     @Override
-    public int computeNewOffset(final int originalOffset, final int originalStride) {
+    public int computeNewOffset(final int originalLength, final int originalOffset, final int originalStride) {
         return originalOffset;
     }
 

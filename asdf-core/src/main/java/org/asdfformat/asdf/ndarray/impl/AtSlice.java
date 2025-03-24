@@ -9,10 +9,6 @@ import org.asdfformat.asdf.ndarray.Slice;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AtSlice implements Slice {
     public static AtSlice of(final int index) {
-        if (index < 0) {
-            throw new IllegalArgumentException("Cannot slice at index < 0");
-        }
-
         return new AtSlice(index);
     }
 
@@ -20,7 +16,9 @@ public class AtSlice implements Slice {
 
     @Override
     public void validate(final int originalLength) {
-        if (index >= originalLength) {
+        final int resolvedIndex = resolveIndex(originalLength);
+
+        if (resolvedIndex < 0 || resolvedIndex >= originalLength) {
             throw new IllegalArgumentException(
                     String.format(
                             "%s out of range for dimension of length %d",
@@ -32,8 +30,9 @@ public class AtSlice implements Slice {
     }
 
     @Override
-    public int computeNewOffset(final int originalOffset, final int originalStride) {
-        return originalOffset + index * originalStride;
+    public int computeNewOffset(final int originalLength, final int originalOffset, final int originalStride) {
+        final int resolvedIndex = resolveIndex(originalLength);
+        return originalOffset + resolvedIndex * originalStride;
     }
 
     @Override
@@ -44,5 +43,13 @@ public class AtSlice implements Slice {
     @Override
     public int computeNewStride(final int originalStride) {
         return originalStride;
+    }
+
+    private int resolveIndex(final int length) {
+        if (index >= 0) {
+            return index;
+        }
+
+        return length + index;
     }
 }

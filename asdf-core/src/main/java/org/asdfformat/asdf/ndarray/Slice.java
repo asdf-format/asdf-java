@@ -7,7 +7,7 @@ package org.asdfformat.asdf.ndarray;
 public interface Slice {
     void validate(int originalLength);
 
-    int computeNewOffset(int originalOffset, int originalStride);
+    int computeNewOffset(int originalLength, int originalOffset, int originalStride);
 
     int computeNewLength(int originalLength);
 

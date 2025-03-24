@@ -28,7 +28,7 @@ public class Asdf {
      * @param path path to a .asdf file
      * @return open ASDF file
      */
-    AsdfFile open(final Path path) throws IOException {
+    public static AsdfFile open(final Path path) throws IOException {
         final RandomAccessFile file = new RandomAccessFile(path.toFile(), "r");
         try {
             final LowLevelFormat lowLevelFormat = LowLevelFormats.fromFile(file);

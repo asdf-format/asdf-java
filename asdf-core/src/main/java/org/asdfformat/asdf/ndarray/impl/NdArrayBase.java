@@ -81,7 +81,15 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
             sliceList.add(Slices.all());
         }
 
-        final int newOffset = sliceList.get(sliceList.size() - 1).computeNewOffset(offset, strides[strides.length - 1]);
+        for (int i = 0; i < shape.length; i++) {
+            sliceList.get(i).validate(shape[i]);
+        }
+
+        int newOffset = offset;
+        for (int i = 0; i < shape.length; i++) {
+            newOffset += sliceList.get(i).computeNewOffset(shape[i], 0, strides[i]);
+        }
+
         final List<Integer> newShape = new ArrayList<>(shape.length);
         final List<Integer> newStrides = new ArrayList<>(shape.length);
 
