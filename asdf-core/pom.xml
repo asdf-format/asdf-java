@@ -10,6 +10,7 @@
     <artifactId>asdf-core</artifactId>
 
     <name>asdf-core</name>
+    <description>Core ASDF functionality</description>
 
     <dependencies>
         <dependency>
