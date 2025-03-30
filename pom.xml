@@ -5,7 +5,31 @@
   <version>${revision}</version>
 
   <name>asdf</name>
+  <description>Java implementation of the Advanced Scientific Data Format.</description>
   <url>https://www.asdf-format.org</url>
+
+  <licenses>
+    <license>
+      <name>The 3-Clause BSD License</name>
+      <url>https://opensource.org/license/BSD-3-clause</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>The ASDF Developers</name>
+      <email>help@stsci.edu</email>
+      <organization>Space Telescope Science Institute</organization>
+      <organizationUrl>https://www.stsci.edu</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/asdf-format/asdf-java.git</connection>
+    <developerConnection>scm:git:ssh://github.com/asdf-format/asdf-java.git</developerConnection>
+    <url>https://github.com/asdf-format/asdf-java/tree/main</url>
+  </scm>
+
   <packaging>pom</packaging>
 
   <properties>
@@ -18,7 +42,10 @@
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
     <maven-install-plugin.version>3.1.2</maven-install-plugin.version>
-    <maven-deploy-plugin.version>3.1.2</maven-deploy-plugin.version>
+    <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
+    <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+    <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
+    <central-publishing-plugin.version>0.7.0</central-publishing-plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -54,8 +81,53 @@
           <version>${maven-install-plugin.version}</version>
         </plugin>
         <plugin>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>${maven-deploy-plugin.version}</version>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${maven-source-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <goals>
+                <goal>jar-no-fork</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${maven-javadoc-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>attach-javadocs</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>${maven-gpg-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>sign-artifacts</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sign</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>${central-publishing-plugin.version}</version>
+          <extensions>true</extensions>
+          <configuration>
+            <publishingServerId>central</publishingServerId>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -64,12 +136,4 @@
   <modules>
     <module>asdf-core</module>
   </modules>
-
-  <distributionManagement>
-    <repository>
-      <id>github</id>
-      <name>GitHub Packages</name>
-      <url>https://maven.pkg.github.com/asdf-format/asdf-java</url>
-    </repository>
-  </distributionManagement>
 </project>
