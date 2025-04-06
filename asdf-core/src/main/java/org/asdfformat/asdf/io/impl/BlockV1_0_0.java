@@ -7,7 +7,6 @@ import org.asdfformat.asdf.io.compression.Compressor;
 import org.asdfformat.asdf.io.compression.Compressors;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;

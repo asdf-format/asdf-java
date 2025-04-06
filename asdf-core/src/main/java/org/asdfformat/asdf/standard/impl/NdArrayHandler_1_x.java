@@ -11,9 +11,7 @@ import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.impl.NdArrayAsdfNode;
 
 import java.nio.ByteOrder;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -45,14 +43,7 @@ public class NdArrayHandler_1_x implements NdArrayHandler {
 
         final int source = node.getInt("source");
 
-        final int[] shape = new int[node.get("shape").size()];
-        for (int i = 0; i < shape.length; i++) {
-            final AsdfNode shapeNode = node.get("shape").get(i);
-            if (shapeNode.isString()) {
-                throw new RuntimeException("Support for streaming ndarray is not implemented yet");
-            }
-            shape[i] = shapeNode.asInt();
-        }
+        final int[] shape = createShape(node.get("shape"));
 
         final String byteOrderValue = node.getString("byteorder");
         final ByteOrder byteOrder;
@@ -102,13 +93,7 @@ public class NdArrayHandler_1_x implements NdArrayHandler {
 
         final DataType dataType = DataType.fromString(node.getString("datatype"));
 
-        final List<Integer> shapeList = new ArrayList<>();
-        AsdfNode nextNode = node.get("data");
-        while (nextNode.isSequence()) {
-            shapeList.add(nextNode.size());
-            nextNode = nextNode.get(0);
-        }
-        final int[] shape = shapeList.stream().mapToInt(i -> i).toArray();
+        final int[] shape = createShape(node.get("shape"));
 
         final int[] strides = createImplicitStrides(dataType, shape);
 
@@ -130,6 +115,20 @@ public class NdArrayHandler_1_x implements NdArrayHandler {
                 0,
                 block
         );
+    }
+
+    private int[] createShape(final AsdfNode shapeNode) {
+        final int[] shape = new int[shapeNode.size()];
+
+        for (int i = 0; i < shape.length; i++) {
+            final AsdfNode element = shapeNode.get(i);
+            if (element.isString()) {
+                throw new RuntimeException("Support for streaming ndarray is not implemented yet");
+            }
+            shape[i] = element.asInt();
+        }
+
+        return shape;
     }
 
     private int[] createImplicitStrides(final DataType dataType, final int[] shape) {

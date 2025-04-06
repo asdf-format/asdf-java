@@ -69,7 +69,7 @@ public class InlineBlockV1_0_0 implements Block {
     private void writeToBuffer(final AsdfNode node, final int[] shape, final ByteBuffer byteBuffer, final BiConsumer<ByteBuffer, AsdfNode> valueWriter) {
         if (shape.length == 1) {
             for (final AsdfNode element : node) {
-                valueWriter.accept(byteBuffer, node);
+                valueWriter.accept(byteBuffer, element);
             }
         } else {
             for (final AsdfNode element : node) {
