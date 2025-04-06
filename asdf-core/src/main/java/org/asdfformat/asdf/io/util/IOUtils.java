@@ -3,9 +3,13 @@ package org.asdfformat.asdf.io.util;
 import java.io.DataInput;
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 public class IOUtils {
+    private static final int DEFAULT_BUFFER_SIZE = 16384;
+
     private static final OutputStream NULL_OUTPUT_STREAM = new NullOutputStream();
 
     public static long readUntil(final DataInput input, final byte[] endSequence, final OutputStream outputStream, final long limit) throws IOException {
@@ -64,5 +68,18 @@ public class IOUtils {
         } catch (final Exception ignored) {
 
         }
+    }
+
+    public static long transferTo(final InputStream inputStream, final ByteBuffer outputBuffer) throws IOException {
+        long bytesTransferred = 0;
+        final byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        int bytesRead;
+
+        while ((bytesRead = inputStream.read(buffer, 0, DEFAULT_BUFFER_SIZE)) >= 0) {
+            outputBuffer.put(buffer, 0, bytesRead);
+            bytesTransferred += bytesRead;
+        }
+
+        return bytesTransferred;
     }
 }

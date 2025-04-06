@@ -40,6 +40,9 @@
     <snakeyaml.version>2.4</snakeyaml.version>
     <maven-clean-plugin.version>3.4.0</maven-clean-plugin.version>
     <flatten-maven-plugin.version>1.7.0</flatten-maven-plugin.version>
+    <commons-compress.version>1.27.1</commons-compress.version>
+    <zstd-jni.version>1.5.7-2</zstd-jni.version>
+    <jblosc.version>1.0.1</jblosc.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
     <maven-install-plugin.version>3.1.2</maven-install-plugin.version>
@@ -124,6 +127,9 @@
         <plugin>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>${maven-javadoc-plugin.version}</version>
+          <configuration>
+            <source>8</source>
+          </configuration>
           <executions>
             <execution>
               <id>attach-javadocs</id>
@@ -196,5 +202,8 @@
 
   <modules>
     <module>asdf-core</module>
+    <module>asdf-compression-commons-compress</module>
+    <module>asdf-compression-zstd</module>
+    <module>asdf-compression-blosc</module>
   </modules>
 </project>
