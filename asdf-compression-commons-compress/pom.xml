@@ -9,7 +9,7 @@
 
     <artifactId>asdf-compression-commons-compress</artifactId>
 
-    <name>asdf-compression</name>
+    <name>asdf-compression-commons-compress</name>
     <description>Support for BZip2 and LZ4 Frame compressed blocks</description>
 
     <dependencies>
