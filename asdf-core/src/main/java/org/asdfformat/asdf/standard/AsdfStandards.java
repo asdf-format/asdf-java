@@ -15,7 +15,7 @@ public class AsdfStandards {
     private static final Map<Version, AsdfStandard> ASDF_STANDARDS;
     static {
         ASDF_STANDARDS = new HashMap<>();
-        
+
         ASDF_STANDARDS.put(
                 new Version(1, 6, 0),
                 new AsdfStandardImpl(
