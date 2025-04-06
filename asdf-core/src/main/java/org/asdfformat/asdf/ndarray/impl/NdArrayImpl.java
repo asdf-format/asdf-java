@@ -1,6 +1,6 @@
 package org.asdfformat.asdf.ndarray.impl;
 
-import org.asdfformat.asdf.io.LowLevelFormat;
+import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.ndarray.DataType;
 import org.asdfformat.asdf.ndarray.NdArray;
 
@@ -10,13 +10,13 @@ import java.nio.ByteOrder;
 
 @SuppressWarnings("rawtypes")
 public class NdArrayImpl extends NdArrayBase {
-    public NdArrayImpl(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
-        super(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+    public NdArrayImpl(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final Block block) {
+        super(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override
-    protected NdArray<?> newInstance(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
-        return new NdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+    protected NdArray<?> newInstance(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final Block block) {
+        return new NdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override

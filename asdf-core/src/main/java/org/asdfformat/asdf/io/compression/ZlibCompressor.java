@@ -22,7 +22,7 @@ public class ZlibCompressor implements Compressor {
                 final ByteBufferInputStream byteBufferInputStream = new ByteBufferInputStream(inputBuffer);
                 final InflaterInputStream inflaterInputStream = new InflaterInputStream(byteBufferInputStream)
         ) {
-            return IOUtils.transferTo(inflaterInputStream, outputBuffer);
+            return IOUtils.transferTo(inflaterInputStream, outputBuffer );
         }
     }
 }

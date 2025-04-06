@@ -1,6 +1,6 @@
 package org.asdfformat.asdf.ndarray.impl;
 
-import org.asdfformat.asdf.io.LowLevelFormat;
+import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.ndarray.BigDecimalNdArray;
 import org.asdfformat.asdf.ndarray.BigIntegerNdArray;
 import org.asdfformat.asdf.ndarray.ByteNdArray;
@@ -28,24 +28,22 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
     protected final ByteOrder byteOrder;
     protected final int[] strides;
     protected final int offset;
-    protected final int source;
-    protected final LowLevelFormat lowLevelFormat;
+    protected final Block block;
     protected final boolean[] cContiguous;
 
-    public NdArrayBase(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
+    public NdArrayBase(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final Block block) {
         this.dataType = dataType;
         this.shape = shape;
         this.byteOrder = byteOrder;
         this.strides = strides;
         this.offset = offset;
-        this.source = source;
-        this.lowLevelFormat = lowLevelFormat;
+        this.block = block;
 
         this.cContiguous = computeCContiguous();
     }
 
     protected abstract NdArray<T> newInstance(
-            DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat
+            DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, Block block
     );
 
     protected abstract String getClassName();
@@ -67,7 +65,7 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
 
     @Override
     public boolean isCompressed() {
-        return lowLevelFormat.getBlock(source).isCompressed();
+        return block.isCompressed();
     }
 
     @Override
@@ -111,8 +109,7 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
                 byteOrder,
                 newStrides.stream().mapToInt(i -> i).toArray(),
                 newOffset,
-                source,
-                lowLevelFormat
+                block
         );
     }
 
@@ -130,47 +127,47 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
             newOffset += strides[i] * indices[i];
         }
 
-        return newInstance(dataType, newShape, byteOrder, newStrides, newOffset, source, lowLevelFormat);
+        return newInstance(dataType, newShape, byteOrder, newStrides, newOffset, block);
     }
 
     @Override
     public BigDecimalNdArray asBigDecimalNdArray() {
-        return new BigDecimalNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+        return new BigDecimalNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override
     public BigIntegerNdArray asBigIntegerNdArray() {
-        return new BigIntegerNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+        return new BigIntegerNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override
     public ByteNdArray asByteNdArray() {
-        return new ByteNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+        return new ByteNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override
     public DoubleNdArray asDoubleNdArray() {
-        return new DoubleNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+        return new DoubleNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override
     public FloatNdArray asFloatNdArray() {
-        return new FloatNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+        return new FloatNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override
     public IntNdArray asIntNdArray() {
-        return new IntNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+        return new IntNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override
     public LongNdArray asLongNdArray() {
-        return new LongNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+        return new LongNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override
     public ShortNdArray asShortNdArray() {
-        return new ShortNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+        return new ShortNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override
@@ -265,7 +262,7 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
     }
 
     private ByteBuffer getByteBuffer() {
-        return lowLevelFormat.getBlock(source).getDataBuffer();
+        return block.getDataBuffer();
     }
 
     @SuppressWarnings("unchecked")

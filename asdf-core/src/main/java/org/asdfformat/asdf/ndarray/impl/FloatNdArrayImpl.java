@@ -1,6 +1,6 @@
 package org.asdfformat.asdf.ndarray.impl;
 
-import org.asdfformat.asdf.io.LowLevelFormat;
+import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.ndarray.DataType;
 import org.asdfformat.asdf.ndarray.FloatNdArray;
 
@@ -8,8 +8,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class FloatNdArrayImpl extends NdArrayBase<FloatNdArray> implements FloatNdArray {
-    public FloatNdArrayImpl(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final int source, final LowLevelFormat lowLevelFormat) {
-        super(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+    public FloatNdArrayImpl(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final Block block) {
+        super(dataType, shape, byteOrder, strides, offset, block);
 
         if (!dataType.isCompatibleWith(Float.TYPE)) {
             throw new IllegalStateException(String.format("Data type %s is not compatible with Java float", dataType));
@@ -17,8 +17,8 @@ public class FloatNdArrayImpl extends NdArrayBase<FloatNdArray> implements Float
     }
 
     @Override
-    protected FloatNdArray newInstance(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final int source, final LowLevelFormat lowLevelFormat) {
-        return new FloatNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+    protected FloatNdArray newInstance(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final Block block) {
+        return new FloatNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override

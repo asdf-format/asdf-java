@@ -1,6 +1,6 @@
 package org.asdfformat.asdf.ndarray.impl;
 
-import org.asdfformat.asdf.io.LowLevelFormat;
+import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.ndarray.BigDecimalNdArray;
 import org.asdfformat.asdf.ndarray.DataType;
 
@@ -12,13 +12,13 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class BigDecimalNdArrayImpl extends NdArrayBase<BigDecimalNdArray> implements BigDecimalNdArray {
-    public BigDecimalNdArrayImpl(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final int source, final LowLevelFormat lowLevelFormat) {
-        super(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+    public BigDecimalNdArrayImpl(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final Block block) {
+        super(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override
-    protected BigDecimalNdArray newInstance(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final int source, final LowLevelFormat lowLevelFormat) {
-        return new BigDecimalNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+    protected BigDecimalNdArray newInstance(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final Block block) {
+        return new BigDecimalNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override

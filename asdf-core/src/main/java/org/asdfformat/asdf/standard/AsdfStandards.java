@@ -1,5 +1,8 @@
 package org.asdfformat.asdf.standard;
 
+import org.asdfformat.asdf.standard.impl.AsdfStandardImpl;
+import org.asdfformat.asdf.standard.impl.NdArrayHandler_1_x;
+import org.asdfformat.asdf.standard.impl.TreeHandler_1_1_0;
 import org.asdfformat.asdf.util.Version;
 
 import java.util.HashMap;
@@ -9,8 +12,51 @@ public class AsdfStandards {
     private static final Map<Version, AsdfStandard> ASDF_STANDARDS;
     static {
         ASDF_STANDARDS = new HashMap<>();
-        ASDF_STANDARDS.put(AsdfStandardV1_6_0.VERSION, new AsdfStandardV1_6_0());
-        ASDF_STANDARDS.put(AsdfStandardV1_5_0.VERSION, new AsdfStandardV1_5_0());
+
+        ASDF_STANDARDS.put(
+                new Version(1, 6, 0),
+                new AsdfStandardImpl(
+                        new Version(1, 6, 0),
+                        new TreeHandler_1_1_0(),
+                        new NdArrayHandler_1_x("tag:stsci.edu:asdf/core/ndarray-1.1.0")
+                )
+        );
+
+        ASDF_STANDARDS.put(
+                new Version(1, 5, 0),
+                new AsdfStandardImpl(
+                        new Version(1, 5, 0),
+                        new TreeHandler_1_1_0(),
+                        new NdArrayHandler_1_x("tag:stsci.edu:asdf/core/ndarray-1.0.0")
+                )
+        );
+
+        ASDF_STANDARDS.put(
+                new Version(1, 4, 0),
+                new AsdfStandardImpl(
+                        new Version(1, 4, 0),
+                        new TreeHandler_1_1_0(),
+                        new NdArrayHandler_1_x("tag:stsci.edu:asdf/core/ndarray-1.0.0")
+                )
+        );
+
+        ASDF_STANDARDS.put(
+                new Version(1, 3, 0),
+                new AsdfStandardImpl(
+                        new Version(1, 3, 0),
+                        new TreeHandler_1_1_0(),
+                        new NdArrayHandler_1_x("tag:stsci.edu:asdf/core/ndarray-1.0.0")
+                )
+        );
+
+        ASDF_STANDARDS.put(
+                new Version(1, 2, 0),
+                new AsdfStandardImpl(
+                        new Version(1, 2, 0),
+                        new TreeHandler_1_1_0(),
+                        new NdArrayHandler_1_x("tag:stsci.edu:asdf/core/ndarray-1.0.0")
+                )
+        );
     }
 
     public static AsdfStandard of(final Version version) {

@@ -1,6 +1,6 @@
 package org.asdfformat.asdf.ndarray.impl;
 
-import org.asdfformat.asdf.io.LowLevelFormat;
+import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.ndarray.DataType;
 import org.asdfformat.asdf.ndarray.DoubleNdArray;
 
@@ -8,8 +8,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class DoubleNdArrayImpl extends NdArrayBase<DoubleNdArray> implements DoubleNdArray {
-    public DoubleNdArrayImpl(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
-        super(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+    public DoubleNdArrayImpl(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final Block block) {
+        super(dataType, shape, byteOrder, strides, offset, block);
 
         if (!dataType.isCompatibleWith(Double.TYPE)) {
             throw new IllegalStateException(String.format("Data type %s is not compatible with Java double", dataType));
@@ -17,8 +17,8 @@ public class DoubleNdArrayImpl extends NdArrayBase<DoubleNdArray> implements Dou
     }
 
     @Override
-    protected DoubleNdArray newInstance(DataType dataType, int[] shape, ByteOrder byteOrder, int[] strides, int offset, int source, LowLevelFormat lowLevelFormat) {
-        return new DoubleNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+    protected DoubleNdArray newInstance(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final Block block) {
+        return new DoubleNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package org.asdfformat.asdf.ndarray.impl;
 
-import org.asdfformat.asdf.io.LowLevelFormat;
+import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.ndarray.ByteNdArray;
 import org.asdfformat.asdf.ndarray.DataType;
 
@@ -8,8 +8,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class ByteNdArrayImpl extends NdArrayBase<ByteNdArray> implements ByteNdArray {
-    public ByteNdArrayImpl(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final int source, final LowLevelFormat lowLevelFormat) {
-        super(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+    public ByteNdArrayImpl(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final Block block) {
+        super(dataType, shape, byteOrder, strides, offset, block);
 
         if (!dataType.isCompatibleWith(Byte.TYPE)) {
             throw new IllegalStateException(String.format("Data type %s is not compatible with Java byte", dataType));
@@ -17,8 +17,8 @@ public class ByteNdArrayImpl extends NdArrayBase<ByteNdArray> implements ByteNdA
     }
 
     @Override
-    protected ByteNdArray newInstance(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final int source, final LowLevelFormat lowLevelFormat) {
-        return new ByteNdArrayImpl(dataType, shape, byteOrder, strides, offset, source, lowLevelFormat);
+    protected ByteNdArray newInstance(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final Block block) {
+        return new ByteNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override
