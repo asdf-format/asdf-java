@@ -50,7 +50,9 @@
     <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
     <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
     <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
+    <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
     <central-publishing-plugin.version>0.7.0</central-publishing-plugin.version>
+    <junit.version>5.12.2</junit.version>
   </properties>
 
   <dependencyManagement>
@@ -63,6 +65,20 @@
       <artifactId>lombok</artifactId>
       <version>${lombok.version}</version>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -111,6 +127,10 @@
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
           <version>${maven-deploy-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugin.version}</version>
         </plugin>
         <plugin>
           <artifactId>maven-source-plugin</artifactId>

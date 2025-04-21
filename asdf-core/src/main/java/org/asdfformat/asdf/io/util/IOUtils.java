@@ -82,4 +82,17 @@ public class IOUtils {
 
         return bytesTransferred;
     }
+
+    public static long transferTo(final InputStream inputStream, final OutputStream outputStream) throws IOException {
+        long bytesTransferred = 0;
+        final byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        int bytesRead;
+
+        while ((bytesRead = inputStream.read(buffer, 0, DEFAULT_BUFFER_SIZE)) >= 0) {
+            outputStream.write(buffer, 0, bytesRead);
+            bytesTransferred += bytesRead;
+        }
+
+        return bytesTransferred;
+    }
 }
