@@ -6,7 +6,9 @@ import org.asdfformat.asdf.standard.impl.TreeHandler_1_1_0;
 import org.asdfformat.asdf.util.Version;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class AsdfStandards {
     private static final String NDARRAY_1_1_0_TAG = "tag:stsci.edu:asdf/core/ndarray-1.1.0";
