@@ -52,7 +52,8 @@
     <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
     <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
     <central-publishing-plugin.version>0.7.0</central-publishing-plugin.version>
-    <junit.version>5.12.2</junit.version>
+    <junit.version>5.11.4</junit.version>
+    <junit-pioneer.version>2.3.0</junit-pioneer.version>
   </properties>
 
   <dependencyManagement>
@@ -78,6 +79,13 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
       <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit-pioneer</groupId>
+      <artifactId>junit-pioneer</artifactId>
+      <version>${junit-pioneer.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

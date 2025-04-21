@@ -2,25 +2,28 @@ package org.asdfformat.asdf.ndarray;
 
 import org.asdfformat.asdf.Asdf;
 import org.asdfformat.asdf.AsdfFile;
+import org.asdfformat.asdf.standard.AsdfStandardType;
+import org.asdfformat.asdf.testing.TestConstants;
 import org.asdfformat.asdf.testing.TestFileType;
 import org.asdfformat.asdf.testing.TestFiles;
 import org.asdfformat.asdf.util.Version;
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
+import org.junitpioneer.jupiter.cartesian.CartesianTest;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static org.asdfformat.asdf.testing.Categories.INTEGRATION_TEST;
+import static org.asdfformat.asdf.testing.TestCategories.INTEGRATION_TEST;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Tag(INTEGRATION_TEST)
 public class NdArrayFloat64Test {
-    @ParameterizedTest
-    @EnumSource(value = TestFileType.class, names = {"NDARRAY_FLOAT64_1D_BLOCK_LITTLE", "NDARRAY_FLOAT64_1D_BLOCK_BIG", "NDARRAY_FLOAT64_1D_INLINE"})
-    public void test1dBlock(final TestFileType testFileType) throws IOException {
-        final Path path = TestFiles.getPath(testFileType, Version.fromString("1.6.0"));
+    @CartesianTest
+    public void test1d(
+            @CartesianTest.Enum(value = TestFileType.class, names = {"NDARRAY_FLOAT64_1D_BLOCK_BIG", "NDARRAY_FLOAT64_1D_BLOCK_LITTLE", "NDARRAY_FLOAT64_1D_INLINE"}) final TestFileType testFileType,
+            @CartesianTest.Enum(AsdfStandardType.class) final AsdfStandardType asdfStandardType
+    ) throws IOException {
+        final Path path = TestFiles.getPath(testFileType, asdfStandardType.getVersion());
 
         try (final AsdfFile asdfFile = Asdf.open(path)) {
             final DoubleNdArray doubleNdArray = asdfFile.getTree().get("arr").asNdArray().asDoubleNdArray();
