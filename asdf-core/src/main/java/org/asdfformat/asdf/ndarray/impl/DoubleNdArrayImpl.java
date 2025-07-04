@@ -2,6 +2,7 @@ package org.asdfformat.asdf.ndarray.impl;
 
 import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.ndarray.DataType;
+import org.asdfformat.asdf.ndarray.DataTypes;
 import org.asdfformat.asdf.ndarray.DoubleNdArray;
 
 import java.nio.ByteBuffer;
@@ -29,9 +30,9 @@ public class DoubleNdArrayImpl extends NdArrayBase<DoubleNdArray> implements Dou
     @Override
     public double get(int... indices) {
         final ByteBuffer byteBuffer = getByteBufferAt(indices);
-        if (dataType == DataType.FLOAT64) {
+        if (dataType.equals(DataTypes.FLOAT64)) {
             return byteBuffer.getDouble();
-        } else if (dataType == DataType.FLOAT32) {
+        } else if (dataType.equals(DataTypes.FLOAT32)) {
             return byteBuffer.getFloat();
         } else {
             throw new RuntimeException("Unhandled datatype: " + dataType);
@@ -41,9 +42,9 @@ public class DoubleNdArrayImpl extends NdArrayBase<DoubleNdArray> implements Dou
     @Override
     public <ARRAY> ARRAY toArray(final ARRAY array) {
         final ArraySetter<double[]> setter;
-        if (dataType == DataType.FLOAT64) {
+        if (dataType.equals(DataTypes.FLOAT64)) {
             setter = (byteBuffer, arr, index, length) -> byteBuffer.asDoubleBuffer().get(arr, index, length);
-        } else if (dataType == DataType.FLOAT32) {
+        } else if (dataType.equals(DataTypes.FLOAT32)) {
             setter = (byteBuffer, arr, index, length) -> {
                 final float[] floatArr = new float[length];
                 byteBuffer.asFloatBuffer().get(floatArr);

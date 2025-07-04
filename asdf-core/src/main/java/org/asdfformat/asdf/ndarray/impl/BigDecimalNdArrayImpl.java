@@ -3,6 +3,7 @@ package org.asdfformat.asdf.ndarray.impl;
 import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.ndarray.BigDecimalNdArray;
 import org.asdfformat.asdf.ndarray.DataType;
+import org.asdfformat.asdf.ndarray.DataTypes;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -30,7 +31,7 @@ public class BigDecimalNdArrayImpl extends NdArrayBase<BigDecimalNdArray> implem
     public BigDecimal get(final int... indices) {
         final ByteBuffer byteBuffer = getByteBufferAt(indices);
 
-        if (DataType.INTEGRAL_TYPES.contains(dataType)) {
+        if (DataTypes.INTEGRAL_TYPES.contains(dataType)) {
             final byte[] buffer = new byte[dataType.getWidthBytes()];
             if (byteOrder == ByteOrder.BIG_ENDIAN) {
                 byteBuffer.get(buffer);
@@ -38,16 +39,16 @@ public class BigDecimalNdArrayImpl extends NdArrayBase<BigDecimalNdArray> implem
                 ByteBufferUtils.getReverse(byteBuffer, buffer, 0, buffer.length);
             }
 
-            if (DataType.SIGNED_INTEGRAL_TYPES.contains(dataType)) {
+            if (DataTypes.SIGNED_INTEGRAL_TYPES.contains(dataType)) {
                 return new BigDecimal(new BigInteger(buffer));
-            } else if (DataType.UNSIGNED_INTEGRAL_TYPES.contains(dataType)) {
+            } else if (DataTypes.UNSIGNED_INTEGRAL_TYPES.contains(dataType)) {
                 return new BigDecimal(new BigInteger(1, buffer));
             } else {
                 throw new RuntimeException("Unhandled datatype: " + dataType);
             }
-        } else if (dataType == DataType.FLOAT32) {
+        } else if (dataType.equals(DataTypes.FLOAT32)) {
             return BigDecimal.valueOf(byteBuffer.getFloat());
-        } else if (dataType == DataType.FLOAT64) {
+        } else if (dataType.equals(DataTypes.FLOAT64)) {
             return BigDecimal.valueOf(byteBuffer.getDouble());
         } else {
             throw new RuntimeException("Unhandled datatype: " + dataType);
@@ -58,7 +59,7 @@ public class BigDecimalNdArrayImpl extends NdArrayBase<BigDecimalNdArray> implem
     public <ARRAY> ARRAY toArray(final ARRAY array) {
         final ArraySetter<BigDecimal[]> setter;
 
-        if (DataType.INTEGRAL_TYPES.contains(dataType)) {
+        if (DataTypes.INTEGRAL_TYPES.contains(dataType)) {
             final BiConsumer<ByteBuffer, byte[]> byteGetter;
             if (byteOrder == ByteOrder.BIG_ENDIAN) {
                 byteGetter = ByteBuffer::get;
@@ -67,9 +68,9 @@ public class BigDecimalNdArrayImpl extends NdArrayBase<BigDecimalNdArray> implem
             }
 
             final Function<byte[], BigDecimal> valueCreator;
-            if (DataType.SIGNED_INTEGRAL_TYPES.contains(dataType)) {
+            if (DataTypes.SIGNED_INTEGRAL_TYPES.contains(dataType)) {
                 valueCreator = b -> new BigDecimal(new BigInteger(b));
-            } else if (DataType.UNSIGNED_INTEGRAL_TYPES.contains(dataType)) {
+            } else if (DataTypes.UNSIGNED_INTEGRAL_TYPES.contains(dataType)) {
                 valueCreator = b -> new BigDecimal(new BigInteger(1, b));
             } else {
                 throw new RuntimeException("Unhandled datatype: " + dataType);
@@ -83,13 +84,13 @@ public class BigDecimalNdArrayImpl extends NdArrayBase<BigDecimalNdArray> implem
                     arr[index + i] = valueCreator.apply(buffer);
                 }
             };
-        } else if (dataType == DataType.FLOAT32) {
+        } else if (dataType.equals(DataTypes.FLOAT32)) {
             setter = (byteBuffer, arr, index, length) -> {
                 for (int i = 0; i < length; i++) {
                     arr[index + i] = BigDecimal.valueOf(byteBuffer.getFloat());
                 }
             };
-        } else if (dataType == DataType.FLOAT64) {
+        } else if (dataType.equals(DataTypes.FLOAT64)) {
             setter = (byteBuffer, arr, index, length) -> {
                 for (int i = 0; i < length; i++) {
                     arr[index + i] = BigDecimal.valueOf(byteBuffer.getDouble());

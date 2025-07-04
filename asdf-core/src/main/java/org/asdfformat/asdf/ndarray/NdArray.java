@@ -73,6 +73,13 @@ public interface NdArray<T> {
     BigIntegerNdArray asBigIntegerNdArray();
 
     /**
+     * View of this array that returns boolean
+     * elements.
+     * @return boolean array view
+     */
+    BooleanNdArray asBooleanNdArray();
+
+    /**
      * View of this array that returns byte
      * elements.
      * @return byte array view
@@ -113,6 +120,20 @@ public interface NdArray<T> {
      * @return short array view
      */
     ShortNdArray asShortNdArray();
+
+    /**
+     * View of this array that returns String
+     * elements.
+     * @return String array view
+     */
+    StringNdArray asStringNdArray();
+
+    /**
+     * View of this array that returns Tuple
+     * elements.
+     * @return Tuple array view
+     */
+    TupleNdArray asTupleNdArray();
 
     /**
      * Get the raw array data as a 1-dimensional array of bytes.  The data type, shape, and byte order

@@ -3,6 +3,7 @@ package org.asdfformat.asdf.ndarray.impl;
 import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.ndarray.BigIntegerNdArray;
 import org.asdfformat.asdf.ndarray.DataType;
+import org.asdfformat.asdf.ndarray.DataTypes;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
@@ -36,9 +37,9 @@ public class BigIntegerNdArrayImpl extends NdArrayBase<BigIntegerNdArray> implem
             ByteBufferUtils.getReverse(byteBuffer, buffer, 0, buffer.length);
         }
 
-        if (DataType.SIGNED_INTEGRAL_TYPES.contains(dataType)) {
+        if (DataTypes.SIGNED_INTEGRAL_TYPES.contains(dataType)) {
             return new BigInteger(buffer);
-        } else if (DataType.UNSIGNED_INTEGRAL_TYPES.contains(dataType)) {
+        } else if (DataTypes.UNSIGNED_INTEGRAL_TYPES.contains(dataType)) {
             return new BigInteger(1, buffer);
         } else {
             throw new RuntimeException("Unhandled datatype: " + dataType);
@@ -55,9 +56,9 @@ public class BigIntegerNdArrayImpl extends NdArrayBase<BigIntegerNdArray> implem
         }
 
         final Function<byte[], BigInteger> valueCreator;
-        if (DataType.SIGNED_INTEGRAL_TYPES.contains(dataType)) {
+        if (DataTypes.SIGNED_INTEGRAL_TYPES.contains(dataType)) {
             valueCreator = BigInteger::new;
-        } else if (DataType.UNSIGNED_INTEGRAL_TYPES.contains(dataType)) {
+        } else if (DataTypes.UNSIGNED_INTEGRAL_TYPES.contains(dataType)) {
             valueCreator = b -> new BigInteger(1, b);
         } else {
             throw new RuntimeException("Unhandled datatype: " + dataType);

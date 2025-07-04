@@ -3,6 +3,7 @@ package org.asdfformat.asdf.ndarray.impl;
 import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.ndarray.BigDecimalNdArray;
 import org.asdfformat.asdf.ndarray.BigIntegerNdArray;
+import org.asdfformat.asdf.ndarray.BooleanNdArray;
 import org.asdfformat.asdf.ndarray.ByteNdArray;
 import org.asdfformat.asdf.ndarray.DataType;
 import org.asdfformat.asdf.ndarray.DoubleNdArray;
@@ -14,6 +15,8 @@ import org.asdfformat.asdf.ndarray.Shape;
 import org.asdfformat.asdf.ndarray.ShortNdArray;
 import org.asdfformat.asdf.ndarray.Slice;
 import org.asdfformat.asdf.ndarray.Slices;
+import org.asdfformat.asdf.ndarray.StringNdArray;
+import org.asdfformat.asdf.ndarray.TupleNdArray;
 
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
@@ -100,7 +103,8 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
         }
 
         if (newShape.isEmpty()) {
-            throw new IllegalArgumentException("Cannot slice array down to a scalar");
+            newShape.add(1);
+            newStrides.add(dataType.getWidthBytes());
         }
 
         return newInstance(
@@ -141,6 +145,11 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
     }
 
     @Override
+    public BooleanNdArray asBooleanNdArray() {
+        return new BooleanNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
+    }
+
+    @Override
     public ByteNdArray asByteNdArray() {
         return new ByteNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
@@ -168,6 +177,16 @@ public abstract class NdArrayBase<T> implements NdArray<T> {
     @Override
     public ShortNdArray asShortNdArray() {
         return new ShortNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
+    }
+
+    @Override
+    public StringNdArray asStringNdArray() {
+        return new StringNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
+    }
+
+    @Override
+    public TupleNdArray asTupleNdArray() {
+        return new TupleNdArrayImpl(dataType, shape, byteOrder, strides, offset, block);
     }
 
     @Override

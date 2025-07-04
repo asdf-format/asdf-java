@@ -3,6 +3,7 @@ package org.asdfformat.asdf.ndarray.impl;
 import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.ndarray.ByteNdArray;
 import org.asdfformat.asdf.ndarray.DataType;
+import org.asdfformat.asdf.ndarray.DataTypes;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -29,7 +30,7 @@ public class ByteNdArrayImpl extends NdArrayBase<ByteNdArray> implements ByteNdA
     @Override
     public byte get(int... indices) {
         final ByteBuffer byteBuffer = getByteBufferAt(indices);
-        if (dataType == DataType.INT8 || dataType == DataType.UINT8) {
+        if (dataType.equals(DataTypes.INT8) || dataType.equals(DataTypes.UINT8)) {
             return byteBuffer.get();
         } else {
             throw new RuntimeException("Unhandled datatype: " + dataType);

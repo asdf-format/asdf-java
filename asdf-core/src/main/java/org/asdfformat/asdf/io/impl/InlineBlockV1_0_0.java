@@ -2,7 +2,10 @@ package org.asdfformat.asdf.io.impl;
 
 import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.ndarray.DataType;
+import org.asdfformat.asdf.ndarray.DataTypeFamilyType;
+import org.asdfformat.asdf.ndarray.DataTypes;
 import org.asdfformat.asdf.node.AsdfNode;
+import org.asdfformat.asdf.util.AsdfCharsets;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -12,18 +15,19 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class InlineBlockV1_0_0 implements Block {
-    private static Map<DataType, BiConsumer<ByteBuffer, AsdfNode>> VALUE_WRITERS = new HashMap<>();
+    private static final Map<DataType, BiConsumer<ByteBuffer, AsdfNode>> SIMPLE_VALUE_WRITERS = new HashMap<>();
     static {
-        VALUE_WRITERS.put(DataType.UINT8, (b, n) -> b.put(n.asByte()));
-        VALUE_WRITERS.put(DataType.INT8, (b, n) -> b.put(n.asByte()));
-        VALUE_WRITERS.put(DataType.UINT16, (b, n) -> b.putShort(n.asShort()));
-        VALUE_WRITERS.put(DataType.INT16, (b, n) -> b.putShort(n.asShort()));
-        VALUE_WRITERS.put(DataType.UINT32, (b, n) -> b.putInt(n.asInt()));
-        VALUE_WRITERS.put(DataType.INT32, (b, n) -> b.putInt(n.asInt()));
-        VALUE_WRITERS.put(DataType.UINT64, (b, n) -> b.putLong(n.asLong()));
-        VALUE_WRITERS.put(DataType.INT64, (b, n) -> b.putLong(n.asLong()));
-        VALUE_WRITERS.put(DataType.FLOAT32, (b, n) -> b.putFloat(n.asFloat()));
-        VALUE_WRITERS.put(DataType.FLOAT64, (b, n) -> b.putDouble(n.asDouble()));
+        SIMPLE_VALUE_WRITERS.put(DataTypes.UINT8, (b, n) -> b.put(n.asByte()));
+        SIMPLE_VALUE_WRITERS.put(DataTypes.INT8, (b, n) -> b.put(n.asByte()));
+        SIMPLE_VALUE_WRITERS.put(DataTypes.UINT16, (b, n) -> b.putShort(n.asShort()));
+        SIMPLE_VALUE_WRITERS.put(DataTypes.INT16, (b, n) -> b.putShort(n.asShort()));
+        SIMPLE_VALUE_WRITERS.put(DataTypes.UINT32, (b, n) -> b.putInt(n.asInt()));
+        SIMPLE_VALUE_WRITERS.put(DataTypes.INT32, (b, n) -> b.putInt(n.asInt()));
+        SIMPLE_VALUE_WRITERS.put(DataTypes.UINT64, (b, n) -> b.putLong(n.asLong()));
+        SIMPLE_VALUE_WRITERS.put(DataTypes.INT64, (b, n) -> b.putLong(n.asLong()));
+        SIMPLE_VALUE_WRITERS.put(DataTypes.FLOAT32, (b, n) -> b.putFloat(n.asFloat()));
+        SIMPLE_VALUE_WRITERS.put(DataTypes.FLOAT64, (b, n) -> b.putDouble(n.asDouble()));
+        SIMPLE_VALUE_WRITERS.put(DataTypes.BOOL8, (b, n) -> b.put((byte)(n.asBoolean() ? 1 : 0)));
     }
 
     private final ByteBuffer dataBuffer;
@@ -53,17 +57,39 @@ public class InlineBlockV1_0_0 implements Block {
             totalSizeBytes *= len;
         }
 
-        final BiConsumer<ByteBuffer, AsdfNode> valueWriter = VALUE_WRITERS.get(dataType);
-        if (valueWriter == null) {
-            throw new RuntimeException("Unhandled data type: " + dataType);
-        }
-
         final ByteBuffer byteBuffer = ByteBuffer.allocate(totalSizeBytes);
         byteBuffer.order(ByteOrder.BIG_ENDIAN);
 
-        writeToBuffer(node, shape, byteBuffer, valueWriter);
+        if (SIMPLE_VALUE_WRITERS.containsKey(dataType)) {
+            writeToBuffer(node, shape, byteBuffer, SIMPLE_VALUE_WRITERS.get(dataType));
+            return byteBuffer;
+        }
 
-        return byteBuffer;
+        if (dataType.getFamily() == DataTypeFamilyType.ASCII) {
+            final BiConsumer<ByteBuffer, AsdfNode> valueWriter = (b, valueNode) -> {
+                final byte[] value = valueNode.asString().getBytes(AsdfCharsets.ASCII);
+                b.put(value);
+                for (int i = value.length; i < dataType.getWidthBytes(); i++) {
+                    b.put((byte)0);
+                }
+            };
+            writeToBuffer(node, shape, byteBuffer, valueWriter);
+            return byteBuffer;
+        }
+
+        if (dataType.getFamily() == DataTypeFamilyType.UCS4) {
+            final BiConsumer<ByteBuffer, AsdfNode> valueWriter = (b, valueNode) -> {
+                final byte[] value = valueNode.asString().getBytes(AsdfCharsets.UTF_32BE);
+                b.put(value);
+                for (int i = value.length; i < dataType.getWidthBytes(); i++) {
+                    b.put((byte)0);
+                }
+            };
+            writeToBuffer(node, shape, byteBuffer, valueWriter);
+            return byteBuffer;
+        }
+
+        throw new RuntimeException("Unhandled inline ndarray data type: " + dataType);
     }
 
     private void writeToBuffer(final AsdfNode node, final int[] shape, final ByteBuffer byteBuffer, final BiConsumer<ByteBuffer, AsdfNode> valueWriter) {

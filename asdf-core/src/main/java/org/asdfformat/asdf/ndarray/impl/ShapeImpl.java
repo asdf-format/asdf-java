@@ -1,7 +1,9 @@
 package org.asdfformat.asdf.ndarray.impl;
 
+import lombok.EqualsAndHashCode;
 import org.asdfformat.asdf.ndarray.Shape;
 
+@EqualsAndHashCode
 public class ShapeImpl implements Shape {
     private final int[] shape;
 

@@ -2,6 +2,7 @@ package org.asdfformat.asdf.ndarray.impl;
 
 import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.ndarray.DataType;
+import org.asdfformat.asdf.ndarray.DataTypes;
 import org.asdfformat.asdf.ndarray.FloatNdArray;
 
 import java.nio.ByteBuffer;
@@ -29,7 +30,7 @@ public class FloatNdArrayImpl extends NdArrayBase<FloatNdArray> implements Float
     @Override
     public float get(int... indices) {
         final ByteBuffer byteBuffer = getByteBufferAt(indices);
-        if (dataType == DataType.FLOAT32) {
+        if (dataType.equals(DataTypes.FLOAT32)) {
             return byteBuffer.getFloat();
         } else {
             throw new RuntimeException("Unhandled datatype: " + dataType);
