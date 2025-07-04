@@ -5,17 +5,43 @@ import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.io.impl.InlineBlockV1_0_0;
 import org.asdfformat.asdf.ndarray.DataType;
+import org.asdfformat.asdf.ndarray.DataTypeFamilyType;
+import org.asdfformat.asdf.ndarray.DataTypes;
 import org.asdfformat.asdf.ndarray.NdArray;
+import org.asdfformat.asdf.ndarray.impl.DataTypeFieldImpl;
 import org.asdfformat.asdf.ndarray.impl.NdArrayImpl;
+import org.asdfformat.asdf.ndarray.impl.StringDataTypeImpl;
+import org.asdfformat.asdf.ndarray.impl.TupleDataTypeImpl;
 import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.node.impl.NdArrayAsdfNode;
 
 import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @RequiredArgsConstructor
 public class NdArrayHandler_1_x implements NdArrayHandler {
+    private static final Map<String, DataType> SIMPLE_DATA_TYPES = new HashMap<>();
+    static {
+        SIMPLE_DATA_TYPES.put("int8", DataTypes.INT8);
+        SIMPLE_DATA_TYPES.put("int16", DataTypes.INT16);
+        SIMPLE_DATA_TYPES.put("int32", DataTypes.INT32);
+        SIMPLE_DATA_TYPES.put("int64", DataTypes.INT64);
+        SIMPLE_DATA_TYPES.put("uint8", DataTypes.UINT8);
+        SIMPLE_DATA_TYPES.put("uint16", DataTypes.UINT16);
+        SIMPLE_DATA_TYPES.put("uint32", DataTypes.UINT32);
+        SIMPLE_DATA_TYPES.put("float32", DataTypes.FLOAT32);
+        SIMPLE_DATA_TYPES.put("float64", DataTypes.FLOAT64);
+        SIMPLE_DATA_TYPES.put("complex64", DataTypes.COMPLEX64);
+        SIMPLE_DATA_TYPES.put("complex128", DataTypes.COMPLEX128);
+        SIMPLE_DATA_TYPES.put("bool8", DataTypes.BOOL8);
+    }
+
     private final String ndArrayTag;
 
     @Override
@@ -31,12 +57,6 @@ public class NdArrayHandler_1_x implements NdArrayHandler {
             return createInlineNdArray(node);
         }
 
-        if (!node.get("datatype").isString()) {
-            throw new RuntimeException("Support for ndarray with structured datatype is not implemented yet");
-        }
-
-        final DataType dataType = DataType.fromString(node.getString("datatype"));
-
         if (!node.get("source").isNumber()) {
             throw new RuntimeException("Support for ndarray with external array source is not implemented yet");
         }
@@ -45,15 +65,9 @@ public class NdArrayHandler_1_x implements NdArrayHandler {
 
         final int[] shape = createShape(node.get("shape"));
 
-        final String byteOrderValue = node.getString("byteorder");
-        final ByteOrder byteOrder;
-        if (byteOrderValue.equals("big")) {
-            byteOrder = ByteOrder.BIG_ENDIAN;
-        } else if (byteOrderValue.equals("little")) {
-            byteOrder = ByteOrder.LITTLE_ENDIAN;
-        } else {
-            throw new RuntimeException("Unhandled ndarray byte order: " + byteOrderValue);
-        }
+        final ByteOrder byteOrder = parseByteOrder(node.get("byteorder").asString());
+
+        final DataType dataType = parseDataType(node.get("datatype"), byteOrder);
 
         final int offset;
         if (node.containsKey("offset")) {
@@ -87,11 +101,13 @@ public class NdArrayHandler_1_x implements NdArrayHandler {
     }
 
     public NdArray<?> createInlineNdArray(final NdArrayAsdfNode node) {
-        if (!node.get("datatype").isString()) {
-            throw new RuntimeException("Support for ndarray with structured datatype is not implemented yet");
+        final ByteOrder byteOrder = ByteOrder.BIG_ENDIAN;
+
+        if (!node.containsKey("datatype")) {
+            throw new RuntimeException("Support for implicit inline ndarray datatype not implemented yet");
         }
 
-        final DataType dataType = DataType.fromString(node.getString("datatype"));
+        final DataType dataType = parseDataType(node.get("datatype"), byteOrder);
 
         final int[] shape = createShape(node.get("shape"));
 
@@ -110,7 +126,7 @@ public class NdArrayHandler_1_x implements NdArrayHandler {
         return new NdArrayImpl(
                 dataType,
                 shape,
-                ByteOrder.BIG_ENDIAN,
+                byteOrder,
                 strides,
                 0,
                 block
@@ -141,5 +157,82 @@ public class NdArrayHandler_1_x implements NdArrayHandler {
         }
 
         return strides;
+    }
+
+    private ByteOrder parseByteOrder(final String value) {
+        if (value.equals("big")) {
+            return ByteOrder.BIG_ENDIAN;
+        } else if (value.equals("little")) {
+            return ByteOrder.LITTLE_ENDIAN;
+        } else {
+            throw new RuntimeException("Unhandled ndarray byte order: " + value);
+        }
+    }
+
+    private DataType parseDataType(final AsdfNode node, final ByteOrder defaultByteOrder) {
+        if (node.isString()) {
+            return parseSimpleDataType(node);
+        }
+
+        if (!node.isSequence()) {
+            throw new RuntimeException("Unexpected ASDF node type in dataType field: " + node);
+        }
+
+        if (node.size() == 2 && node.get(0).isString() && node.get(1).isNumber()) {
+            return parseVariableLengthDataType(node);
+        }
+
+        return parseTupleDataType(node, defaultByteOrder);
+    }
+
+    private DataType parseSimpleDataType(final AsdfNode node) {
+        return Optional.ofNullable(SIMPLE_DATA_TYPES.get(node.asString()))
+                .orElseThrow(() -> new RuntimeException("Unrecognized data type: " + node.asString()));
+    }
+
+    private DataType parseVariableLengthDataType(final AsdfNode node) {
+        final String dataTypeName = node.get(0).asString();
+        if (dataTypeName.equals("ucs4")) {
+            return new StringDataTypeImpl(
+                    DataTypeFamilyType.UCS4,
+                    node.get(1).asInt() * 4
+            );
+        } else if (dataTypeName.equals("ascii")) {
+            return new StringDataTypeImpl(
+                    DataTypeFamilyType.ASCII,
+                    node.get(1).asInt()
+            );
+        } else {
+            throw new RuntimeException("Unexpected variable-length data type: " + dataTypeName);
+        }
+    }
+
+    private DataType parseTupleDataType(final AsdfNode node, final ByteOrder defaultByteOrder) {
+        final List<DataType.Field> fields = new ArrayList<>();
+        for (final AsdfNode childNode : node) {
+            if (!childNode.isMapping()) {
+                throw new RuntimeException("Unexpected child node in tuple data type: " + childNode);
+            }
+
+            final ByteOrder byteOrder;
+            if (childNode.containsKey("byteorder")) {
+                byteOrder = parseByteOrder(childNode.get("byteorder").asString());
+            } else {
+                byteOrder = defaultByteOrder;
+            }
+
+            final DataType dataType = parseDataType(childNode.get("datatype"), byteOrder);
+
+            final String name;
+            if (childNode.containsKey("name")) {
+                name = childNode.getString("name");
+            } else {
+                name = null;
+            }
+
+            fields.add(new DataTypeFieldImpl(name, dataType, byteOrder));
+        }
+
+        return new TupleDataTypeImpl(fields);
     }
 }
