@@ -54,6 +54,7 @@
     <central-publishing-plugin.version>0.7.0</central-publishing-plugin.version>
     <junit.version>5.11.4</junit.version>
     <junit-pioneer.version>2.3.0</junit-pioneer.version>
+    <jacoco-plugin.version>0.8.13</jacoco-plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -91,6 +92,7 @@
   </dependencies>
 
   <build>
+    <directory>build</directory>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -225,6 +227,18 @@
         <groupId>org.sonatype.central</groupId>
         <artifactId>central-publishing-maven-plugin</artifactId>
       </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco-plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -233,5 +247,12 @@
     <module>asdf-compression-commons-compress</module>
     <module>asdf-compression-zstd</module>
     <module>asdf-compression-blosc</module>
+    <module>aggregate-report</module>
   </modules>
+
+  <reporting>
+    <outputDirectory>
+      ${project.build.directory}/reports
+    </outputDirectory>
+  </reporting>
 </project>
