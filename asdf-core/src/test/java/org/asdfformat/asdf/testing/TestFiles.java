@@ -13,10 +13,28 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class TestFiles {
-    private static final String PYTHON_PATH = "/opt/homebrew/Caskroom/miniconda/base/envs/asdf-fast/bin/python";
-    private static final String GENERATOR_SCRIPT_PATH = "/Users/eslavich/repos/asdf-java/test-file-generator/test_file_generator.py";
+    private static final String PYTHON_PATH = System.getenv("ASDF_JAVA_TESTS_PYTHON_PATH");
+    private static final Path TEST_FILE_GENERATOR_PY_PATH = getTestFileGeneratorPyPath();
+
+    @SneakyThrows(IOException.class)
+    private static Path getTestFileGeneratorPyPath() {
+        final File file = File.createTempFile("test_file_generator_", ".py");
+        file.deleteOnExit();
+        final Path path = file.toPath();
+
+        try (
+                final InputStream inputStream = Optional.ofNullable(TestFiles.class.getResourceAsStream("/generation/test_file_generator.py"))
+                        .orElseThrow(() -> new RuntimeException("Missing generation/test_file_generator.py"));
+                final OutputStream outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE)
+        ) {
+            IOUtils.transferTo(inputStream, outputStream);
+        }
+
+        return path;
+    }
 
     private static final Map<String, Path> TEST_FILES = new HashMap<>();
 
@@ -41,7 +59,7 @@ public class TestFiles {
             file.deleteOnExit();
             final Path path = file.toPath();
 
-            final Process process = new ProcessBuilder(PYTHON_PATH, GENERATOR_SCRIPT_PATH, "--version", asdfStandardVersion.toString()).start();
+            final Process process = new ProcessBuilder(PYTHON_PATH, TEST_FILE_GENERATOR_PY_PATH.toString(), "--version", asdfStandardVersion.toString()).start();
             try (final OutputStream outputStream = process.getOutputStream()) {
                 IOUtils.transferTo(scriptInputStream, outputStream);
             }

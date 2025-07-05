@@ -8,6 +8,6 @@ public enum TestFileType {
     ;
 
     public String getScriptResourceName() {
-        return String.format("/generation/%s.py", name().toLowerCase());
+        return String.format("/generation/scripts/%s.py", name().toLowerCase());
     }
 }

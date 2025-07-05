@@ -30,12 +30,19 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Locate Python
+        id: locate-python
+        run:
+          echo "python-path=`which python`" >> "$GITHUB_OUTPUT"
+
       - name: Install test file generator requirements
         run: |
-          pip install -r test-file-generator/requirements.txt
+          pip install asdf numpy
 
       - name: Execute tests
         run: mvn clean verify -Dgpg.skip
+        env:
+          ASDF_JAVA_TESTS_PYTHON_PATH: ${{ steps.locate-python.python-path }}
 
       - name: Add code coverage PR comment
         uses: madrapps/jacoco-report@v1.7.2
