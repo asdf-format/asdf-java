@@ -1,6 +1,7 @@
 package org.asdfformat.asdf.testing;
 
 public enum TestFileType {
+    NDARRAY_COMPRESSED_ZLIB,
     NDARRAY_FLOAT64_1D_BLOCK_BIG,
     NDARRAY_FLOAT64_1D_BLOCK_LITTLE,
     NDARRAY_FLOAT64_1D_INLINE,

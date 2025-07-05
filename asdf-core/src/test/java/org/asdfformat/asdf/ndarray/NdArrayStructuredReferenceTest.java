@@ -15,7 +15,7 @@ import static org.asdfformat.asdf.testing.TestCategories.REFERENCE_TESTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Tag(REFERENCE_TESTS)
-public class NdArrayStructuredTest {
+public class NdArrayStructuredReferenceTest {
     @CartesianTest
     public void test1d(
             @CartesianTest.Enum(value = TestFileType.class, names = {"NDARRAY_STRUCTURED_1D_BLOCK"}) final TestFileType testFileType,
