@@ -25,6 +25,15 @@ jobs:
           java-version: 21
           distribution: corretto
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install test file generator requirements
+        run: |
+          pip install -r test-file-generator/requirements.txt
+
       - name: Execute tests
         run: mvn clean verify -Dgpg.skip
 
