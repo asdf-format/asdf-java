@@ -1,6 +1,6 @@
 import argparse
-import sys
 from io import BytesIO
+import sys
 
 import asdf
 import numpy as np
