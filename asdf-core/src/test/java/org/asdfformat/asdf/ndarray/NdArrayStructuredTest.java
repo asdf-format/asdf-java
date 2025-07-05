@@ -11,10 +11,10 @@ import org.junitpioneer.jupiter.cartesian.CartesianTest;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static org.asdfformat.asdf.testing.TestCategories.INTEGRATION_TEST;
+import static org.asdfformat.asdf.testing.TestCategories.REFERENCE_TESTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Tag(INTEGRATION_TEST)
+@Tag(REFERENCE_TESTS)
 public class NdArrayStructuredTest {
     @CartesianTest
     public void test1d(

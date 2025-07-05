@@ -3,20 +3,18 @@ package org.asdfformat.asdf.ndarray;
 import org.asdfformat.asdf.Asdf;
 import org.asdfformat.asdf.AsdfFile;
 import org.asdfformat.asdf.standard.AsdfStandardType;
-import org.asdfformat.asdf.testing.TestConstants;
 import org.asdfformat.asdf.testing.TestFileType;
 import org.asdfformat.asdf.testing.TestFiles;
-import org.asdfformat.asdf.util.Version;
 import org.junit.jupiter.api.Tag;
 import org.junitpioneer.jupiter.cartesian.CartesianTest;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static org.asdfformat.asdf.testing.TestCategories.INTEGRATION_TEST;
+import static org.asdfformat.asdf.testing.TestCategories.REFERENCE_TESTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Tag(INTEGRATION_TEST)
+@Tag(REFERENCE_TESTS)
 public class NdArrayFloat64Test {
     @CartesianTest
     public void test1d(
