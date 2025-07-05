@@ -15,7 +15,7 @@ import static org.asdfformat.asdf.testing.TestCategories.REFERENCE_TESTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Tag(REFERENCE_TESTS)
-public class NdArrayFloat64Test {
+public class NdArrayFloat64ReferenceTest {
     @CartesianTest
     public void test1d(
             @CartesianTest.Enum(value = TestFileType.class, names = {"NDARRAY_FLOAT64_1D_BLOCK_BIG", "NDARRAY_FLOAT64_1D_BLOCK_LITTLE", "NDARRAY_FLOAT64_1D_INLINE"}) final TestFileType testFileType,
