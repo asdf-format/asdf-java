@@ -8,9 +8,11 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 
 
@@ -38,14 +40,28 @@ public class NumberAsdfNode extends AsdfNodeBase {
         BIG_INTEGER_CONVERTERS.put(Byte.class, o -> BigInteger.valueOf((Byte) o));
     }
 
+    private static final Set<Class<? extends Number>> PRIMITIVE_INTEGRAL_CLASSES = new HashSet<>();
+    static {
+        PRIMITIVE_INTEGRAL_CLASSES.add(Byte.class);
+        PRIMITIVE_INTEGRAL_CLASSES.add(Short.class);
+        PRIMITIVE_INTEGRAL_CLASSES.add(Integer.class);
+        PRIMITIVE_INTEGRAL_CLASSES.add(Long.class);
+    }
+
+    private static final Set<Class<? extends Number>> PRIMITIVE_DECIMAL_CLASSES = new HashSet<>();
+    static {
+        PRIMITIVE_DECIMAL_CLASSES.add(Float.class);
+        PRIMITIVE_DECIMAL_CLASSES.add(Double.class);
+    }
+
     public static NumberAsdfNode of(final ScalarNode scalarNode, final Number value) {
         return new NumberAsdfNode(scalarNode.getTag().getValue(), scalarNode.getValue(), value);
     }
 
     public static NumberAsdfNode of(final Number value) {
-        if (value instanceof Byte || value instanceof Short || value instanceof Integer || value instanceof Long || value instanceof BigInteger) {
+        if (PRIMITIVE_INTEGRAL_CLASSES.contains(value.getClass()) || value.getClass().equals(BigInteger.class)) {
             return new NumberAsdfNode(Tag.INT.getValue(), value.toString(), value);
-        } else if (value instanceof Float || value instanceof Double || value instanceof BigDecimal) {
+        } else if (PRIMITIVE_DECIMAL_CLASSES.contains(value.getClass()) || value.getClass().equals(BigDecimal.class)) {
             return new NumberAsdfNode(Tag.FLOAT.getValue(), value.toString(), value);
         } else {
             throw new IllegalArgumentException("Unexpected Number subclass: " + value.getClass().getName());
@@ -76,7 +92,7 @@ public class NumberAsdfNode extends AsdfNodeBase {
     public BigDecimal asBigDecimal() {
         final Function<Object, BigDecimal> converter = BIG_DECIMAL_CONVERTERS.get(value.getClass());
         if (converter == null) {
-            throw new RuntimeException("Node cannot be represented as BigDecimal");
+            throw new IllegalStateException("Node cannot be represented as BigDecimal");
         }
         return converter.apply(value);
     }
@@ -85,14 +101,18 @@ public class NumberAsdfNode extends AsdfNodeBase {
     public BigInteger asBigInteger() {
         final Function<Object, BigInteger> converter = BIG_INTEGER_CONVERTERS.get(value.getClass());
         if (converter == null) {
-            throw new RuntimeException("Node cannot be represented as BigInteger");
+            throw new IllegalStateException("Node cannot be represented as BigInteger");
         }
         return converter.apply(value);
     }
 
     @Override
     public byte asByte() {
-        return value.byteValue();
+        if (value instanceof Byte) {
+            return (Byte)value;
+        } else {
+            throw new IllegalStateException("Node cannot be represented as byte");
+        }
     }
 
     @Override
@@ -107,12 +127,20 @@ public class NumberAsdfNode extends AsdfNodeBase {
 
     @Override
     public int asInt() {
-        return value.intValue();
+        if (value instanceof Byte || value instanceof Short || value instanceof Integer) {
+            return value.intValue();
+        } else {
+            throw new IllegalStateException("Node cannot be represented as long");
+        }
     }
 
     @Override
     public long asLong() {
-        return value.longValue();
+        if (value instanceof Byte || value instanceof Short || value instanceof Integer || value instanceof Long) {
+            return value.longValue();
+        } else {
+            throw new IllegalStateException("Node cannot be represented as long");
+        }
     }
 
     @Override
@@ -122,7 +150,11 @@ public class NumberAsdfNode extends AsdfNodeBase {
 
     @Override
     public short asShort() {
-        return value.shortValue();
+        if (value instanceof Byte || value instanceof Short) {
+            return value.shortValue();
+        } else {
+            throw new IllegalStateException("Node cannot be represented as short");
+        }
     }
 
     @Override
