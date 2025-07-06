@@ -42,13 +42,17 @@ public class NodeUtils {
 
         stringBuilder.append(node.getClass().getSimpleName());
         stringBuilder.append("(");
-        for (int i = 0; i < fields.size(); i+= 2) {
-            stringBuilder.append(fields.get(i));
-            stringBuilder.append("=");
-            stringBuilder.append(fields.get(i + 1));
-            stringBuilder.append(", ");
+
+        if (fields.size() > 0) {
+            for (int i = 0; i < fields.size(); i += 2) {
+                stringBuilder.append(fields.get(i));
+                stringBuilder.append("=");
+                stringBuilder.append(fields.get(i + 1));
+                stringBuilder.append(", ");
+            }
+            stringBuilder.setLength(stringBuilder.length() - 2);
         }
-        stringBuilder.setLength(stringBuilder.length() - 2);
+
         stringBuilder.append(")");
 
         return stringBuilder.toString();
