@@ -71,14 +71,14 @@ public class BooleanAsdfNode extends AsdfNodeBase {
 
     @Override
     public int hashCode() {
-        return Objects.hash(tag, value);
+        return Objects.hash(tag, asBoolean());
     }
 
     @Override
     public String toString() {
         final List<String> fields = new ArrayList<>();
 
-        if (!tag.equals(Tag.STR.getValue())) {
+        if (!tag.equals(Tag.BOOL.getValue())) {
             fields.add("tag");
             fields.add(tag);
         }

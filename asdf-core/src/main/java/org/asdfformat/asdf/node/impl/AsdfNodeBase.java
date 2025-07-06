@@ -50,6 +50,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     }
 
     @Override
+    public boolean isTimestamp() {
+        return getNodeType() == AsdfNodeType.TIMESTAMP;
+    }
+
+    @Override
     public boolean containsKey(final String key) {
         return containsKey(StringAsdfNode.of(key));
     }

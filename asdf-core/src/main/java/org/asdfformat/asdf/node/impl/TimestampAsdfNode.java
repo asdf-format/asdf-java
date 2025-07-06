@@ -28,7 +28,7 @@ public class TimestampAsdfNode extends AsdfNodeBase {
 
     @Override
     public AsdfNodeType getNodeType() {
-        return AsdfNodeType.STRING;
+        return AsdfNodeType.TIMESTAMP;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class TimestampAsdfNode extends AsdfNodeBase {
     public String toString() {
         final List<String> fields = new ArrayList<>();
 
-        if (!tag.equals(Tag.STR.getValue())) {
+        if (!tag.equals(Tag.TIMESTAMP.getValue())) {
             fields.add("tag");
             fields.add(tag);
         }

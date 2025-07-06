@@ -43,7 +43,13 @@ public class NumberAsdfNode extends AsdfNodeBase {
     }
 
     public static NumberAsdfNode of(final Number value) {
-        return new NumberAsdfNode(Tag.INT.getValue(), value.toString(), value);
+        if (value instanceof Byte || value instanceof Short || value instanceof Integer || value instanceof BigInteger) {
+            return new NumberAsdfNode(Tag.INT.getValue(), value.toString(), value);
+        } else if (value instanceof Float || value instanceof Double || value instanceof BigDecimal) {
+            return new NumberAsdfNode(Tag.FLOAT.getValue(), value.toString(), value);
+        } else {
+            throw new IllegalArgumentException("Unexpected Number subclass: " + value.getClass().getName());
+        }
     }
 
     private final String tag;

@@ -71,6 +71,12 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     boolean isString();
 
     /**
+     * Is this a TIMESTAMP type node?
+     * @return true if TIMESTAMP
+     */
+    boolean isTimestamp();
+
+    /**
      * Does this MAPPING node contain the specified String key?
      * @param key mapping key
      * @return true if key is present
