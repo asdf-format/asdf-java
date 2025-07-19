@@ -103,36 +103,36 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public Optional<AsdfNode> getOptional(final String key) {
         if (containsKey(key)) {
-            return Optional.empty();
-        } else {
             return Optional.of(get(key));
+        } else {
+            return Optional.empty();
         }
     }
 
     @Override
     public Optional<AsdfNode> getOptional(final long key) {
         if (containsKey(key)) {
-            return Optional.empty();
-        } else {
             return Optional.of(get(key));
+        } else {
+            return Optional.empty();
         }
     }
 
     @Override
     public Optional<AsdfNode> getOptional(final boolean key) {
         if (containsKey(key)) {
-            return Optional.empty();
-        } else {
             return Optional.of(get(key));
+        } else {
+            return Optional.empty();
         }
     }
 
     @Override
     public Optional<AsdfNode> getOptional(final AsdfNode key) {
         if (containsKey(key)) {
-            return Optional.empty();
-        } else {
             return Optional.of(get(key));
+        } else {
+            return Optional.empty();
         }
     }
 
