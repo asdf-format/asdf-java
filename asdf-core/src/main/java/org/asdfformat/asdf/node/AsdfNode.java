@@ -196,34 +196,6 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     BigDecimal getBigDecimal(AsdfNode key);
 
     /**
-     * Get a NUMBER mapping value as BigDecimal, indexed by String key.
-     * @param key mapping key
-     * @return value
-     */
-    Optional<BigDecimal> getBigDecimalOptional(String key);
-
-    /**
-     * Get a NUMBER sequence value or mapping value as BigDecimal, indexed by long key.
-     * @param key sequence index or mapping key
-     * @return value
-     */
-    Optional<BigDecimal> getBigDecimalOptional(long key);
-
-    /**
-     * Get a NUMBER mapping value as BigDecimal, indexed by boolean key.
-     * @param key mapping key
-     * @return value
-     */
-    Optional<BigDecimal> getBigDecimalOptional(boolean key);
-
-    /**
-     * Get a NUMBER sequence value or mapping value as BigDecimal, indexed by AsdfNode key.
-     * @param key mapping key
-     * @return value
-     */
-    Optional<BigDecimal> getBigDecimalOptional(AsdfNode key);
-
-    /**
      * Get a NUMBER mapping value as BigInteger, indexed by String key.
      * @param key mapping key
      * @return value
