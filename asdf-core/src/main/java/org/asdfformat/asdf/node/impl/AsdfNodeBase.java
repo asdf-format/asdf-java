@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public abstract class AsdfNodeBase implements AsdfNode {
 
@@ -97,6 +98,42 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public AsdfNode get(final AsdfNode key) {
         throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+    }
+
+    @Override
+    public Optional<AsdfNode> getOptional(final String key) {
+        if (containsKey(key)) {
+            return Optional.empty();
+        } else {
+            return Optional.of(get(key));
+        }
+    }
+
+    @Override
+    public Optional<AsdfNode> getOptional(final long key) {
+        if (containsKey(key)) {
+            return Optional.empty();
+        } else {
+            return Optional.of(get(key));
+        }
+    }
+
+    @Override
+    public Optional<AsdfNode> getOptional(final boolean key) {
+        if (containsKey(key)) {
+            return Optional.empty();
+        } else {
+            return Optional.of(get(key));
+        }
+    }
+
+    @Override
+    public Optional<AsdfNode> getOptional(final AsdfNode key) {
+        if (containsKey(key)) {
+            return Optional.empty();
+        } else {
+            return Optional.of(get(key));
+        }
     }
 
     @Override
