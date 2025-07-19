@@ -52,7 +52,7 @@ public class BooleanAsdfNode extends AsdfNodeBase {
     public boolean asBoolean() {
         final Boolean result = BOOLEAN_VALUES.get(value.toLowerCase());
         if (result == null) {
-            throw new RuntimeException(String.format("Unrecognized boolean value: %s", result));
+            throw new RuntimeException(String.format("Unrecognized boolean value: %s", value));
         }
         return result;
     }
