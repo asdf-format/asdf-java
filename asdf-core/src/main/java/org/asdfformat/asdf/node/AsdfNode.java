@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 /**
@@ -137,6 +138,34 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @return value
      */
     AsdfNode get(AsdfNode key);
+
+    /**
+     * Get an optional mapping value as AsdfNode, indexed by String key.
+     * @param key mapping key
+     * @return value
+     */
+    Optional<AsdfNode> getOptional(String key);
+
+    /**
+     * Get an optional sequence value or mapping value as AsdfNode, indexed by long key.
+     * @param key sequence index or mapping key
+     * @return value
+     */
+    Optional<AsdfNode> getOptional(long key);
+
+    /**
+     * Get an optional mapping value as AsdfNode, indexed by boolean key.
+     * @param key mapping key
+     * @return value
+     */
+    Optional<AsdfNode> getOptional(boolean key);
+
+    /**
+     * Get an optional mapping value as AsdfNode, indexed by AsdfNode key.
+     * @param key mapping key
+     * @return value
+     */
+    Optional<AsdfNode> getOptional(AsdfNode key);
 
     /**
      * Get a NUMBER mapping value as BigDecimal, indexed by String key.
