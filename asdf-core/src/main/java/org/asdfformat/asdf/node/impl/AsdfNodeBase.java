@@ -103,7 +103,12 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public Optional<AsdfNode> getOptional(final String key) {
         if (containsKey(key)) {
-            return Optional.of(get(key));
+            final AsdfNode node = get(key);
+            if (node.isNull()) {
+                return Optional.empty();
+            } else {
+                return Optional.of(node);
+            }
         } else {
             return Optional.empty();
         }
@@ -112,7 +117,12 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public Optional<AsdfNode> getOptional(final long key) {
         if (containsKey(key)) {
-            return Optional.of(get(key));
+            final AsdfNode node = get(key);
+            if (node.isNull()) {
+                return Optional.empty();
+            } else {
+                return Optional.of(node);
+            }
         } else {
             return Optional.empty();
         }
@@ -121,7 +131,12 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public Optional<AsdfNode> getOptional(final boolean key) {
         if (containsKey(key)) {
-            return Optional.of(get(key));
+            final AsdfNode node = get(key);
+            if (node.isNull()) {
+                return Optional.empty();
+            } else {
+                return Optional.of(node);
+            }
         } else {
             return Optional.empty();
         }
@@ -130,7 +145,12 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public Optional<AsdfNode> getOptional(final AsdfNode key) {
         if (containsKey(key)) {
-            return Optional.of(get(key));
+            final AsdfNode node = get(key);
+            if (node.isNull()) {
+                return Optional.empty();
+            } else {
+                return Optional.of(node);
+            }
         } else {
             return Optional.empty();
         }
@@ -517,7 +537,7 @@ public abstract class AsdfNodeBase implements AsdfNode {
 
     @Override
     public String asString() {
-        throw new IllegalStateException(makeAsErrorMessage("short"));
+        throw new IllegalStateException(makeAsErrorMessage("String"));
     }
 
     @Override
