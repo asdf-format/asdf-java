@@ -187,9 +187,6 @@
               <goals>
                 <goal>sign</goal>
               </goals>
-              <configuration>
-                <signer>bc</signer>
-              </configuration>
             </execution>
           </executions>
         </plugin>
@@ -200,6 +197,8 @@
           <extensions>true</extensions>
           <configuration>
             <publishingServerId>central</publishingServerId>
+            <autoPublish>true</autoPublish>
+            <waitUntil>published</waitUntil>
           </configuration>
         </plugin>
       </plugins>
