@@ -3,8 +3,8 @@ package org.asdfformat.asdf.ndarray;
 import org.asdfformat.asdf.Asdf;
 import org.asdfformat.asdf.AsdfFile;
 import org.asdfformat.asdf.standard.AsdfStandardType;
-import org.asdfformat.asdf.testing.TestFileType;
-import org.asdfformat.asdf.testing.TestFiles;
+import org.asdfformat.asdf.testing.CoreReferenceFileType;
+import org.asdfformat.asdf.testing.ReferenceFileUtils;
 import org.junit.jupiter.api.Tag;
 import org.junitpioneer.jupiter.cartesian.CartesianTest;
 
@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class NdArrayFloat64ReferenceTest {
     @CartesianTest
     public void test1d(
-            @CartesianTest.Enum(value = TestFileType.class, names = {"NDARRAY_FLOAT64_1D_BLOCK_BIG", "NDARRAY_FLOAT64_1D_BLOCK_LITTLE", "NDARRAY_FLOAT64_1D_INLINE"}) final TestFileType testFileType,
+            @CartesianTest.Enum(value = CoreReferenceFileType.class, names = {"NDARRAY_FLOAT64_1D_BLOCK_BIG", "NDARRAY_FLOAT64_1D_BLOCK_LITTLE", "NDARRAY_FLOAT64_1D_INLINE"}) final CoreReferenceFileType coreTestFileType,
             @CartesianTest.Enum(AsdfStandardType.class) final AsdfStandardType asdfStandardType
     ) throws IOException {
-        final Path path = TestFiles.getPath(testFileType, asdfStandardType.getVersion());
+        final Path path = ReferenceFileUtils.getPath(coreTestFileType, asdfStandardType.getVersion());
 
         try (final AsdfFile asdfFile = Asdf.open(path)) {
             final DoubleNdArray doubleNdArray = asdfFile.getTree().get("arr").asNdArray().asDoubleNdArray();

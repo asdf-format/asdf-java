@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class TestFiles {
+public class ReferenceFileUtils {
     private static final String PYTHON_PATH = System.getenv("ASDF_JAVA_TESTS_PYTHON_PATH");
     private static final Path TEST_FILE_GENERATOR_PY_PATH = getTestFileGeneratorPyPath();
 
@@ -26,8 +26,8 @@ public class TestFiles {
         final Path path = file.toPath();
 
         try (
-                final InputStream inputStream = Optional.ofNullable(TestFiles.class.getResourceAsStream("/generation/test_file_generator.py"))
-                        .orElseThrow(() -> new RuntimeException("Missing generation/test_file_generator.py"));
+                final InputStream inputStream = Optional.ofNullable(ReferenceFileUtils.class.getResourceAsStream("/testing/reference_file_generator.py"))
+                        .orElseThrow(() -> new RuntimeException("Missing testing/reference_file_generator.py"));
                 final OutputStream outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE)
         ) {
             IOUtils.transferTo(inputStream, outputStream);
@@ -38,24 +38,24 @@ public class TestFiles {
 
     private static final Map<String, Path> TEST_FILES = new HashMap<>();
 
-    public static Path getPath(final TestFileType testFileType, final Version asdfStandardVersion) {
-        final String key = makeKey(testFileType, asdfStandardVersion);
+    public static Path getPath(final ReferenceFile testfile, final Version asdfStandardVersion) {
+        final String key = makeKey(testfile, asdfStandardVersion);
 
         if (!TEST_FILES.containsKey(key)) {
-            TEST_FILES.put(key, generateTestFile(testFileType, asdfStandardVersion));
+            TEST_FILES.put(key, generateTestFile(testfile, asdfStandardVersion));
         }
 
         return TEST_FILES.get(key);
     }
 
     @SneakyThrows(IOException.class)
-    private static Path generateTestFile(final TestFileType testFileType, final Version asdfStandardVersion) {
-        try (final InputStream scriptInputStream = TestFiles.class.getResourceAsStream(testFileType.getScriptResourceName())) {
+    private static Path generateTestFile(final ReferenceFile referenceFile, final Version asdfStandardVersion) {
+        try (final InputStream scriptInputStream = referenceFile.openScript()) {
             if (scriptInputStream == null) {
-                throw new RuntimeException("Missing generator script for " + testFileType);
+                throw new RuntimeException("Missing generator script for " + referenceFile.getName());
             }
 
-            final File file = File.createTempFile(testFileType + "-", ".asdf");
+            final File file = File.createTempFile(referenceFile.getName() + "-", ".asdf");
             file.deleteOnExit();
             final Path path = file.toPath();
 
@@ -75,7 +75,7 @@ public class TestFiles {
         }
     }
 
-    private static String makeKey(final TestFileType testFileType, final Version asdfStandardVersion) {
-        return String.format("%s:%s", testFileType, asdfStandardVersion);
+    private static String makeKey(final ReferenceFile referenceFile, final Version asdfStandardVersion) {
+        return String.format("%s:%s", referenceFile, asdfStandardVersion);
     }
 }

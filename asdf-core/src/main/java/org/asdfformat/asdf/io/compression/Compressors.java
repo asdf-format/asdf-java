@@ -23,6 +23,11 @@ public class Compressors {
                     .moduleName("asdf-compression-commons-compress")
                     .build(),
             OptionalCompressor.builder()
+                    .className("org.asdfformat.asdf.io.compression.Lz4Compressor")
+                    .identifier(new byte[] {108, 122, 52, 0})
+                    .moduleName("asdf-compression-commons-compress")
+                    .build(),
+            OptionalCompressor.builder()
                     .className("org.asdfformat.asdf.io.compression.Lz4FrameCompressor")
                     .identifier("lz4f".getBytes(StandardCharsets.UTF_8))
                     .moduleName("asdf-compression-commons-compress")
