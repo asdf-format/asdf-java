@@ -33,7 +33,7 @@ jobs:
 
       - name: Install reference file generator requirements
         run: |
-          pip install asdf numpy
+          pip install asdf numpy lz4
 
       - name: Locate Python
         id: locate-python
