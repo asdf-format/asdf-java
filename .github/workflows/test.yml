@@ -31,7 +31,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install test file generator requirements
+      - name: Install reference file generator requirements
         run: |
           pip install asdf numpy
 
