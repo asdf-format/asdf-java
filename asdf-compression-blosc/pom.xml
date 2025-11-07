@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>asdf</artifactId>
-        <groupId>org.asdfformat</groupId>
+        <groupId>org.asdf-format</groupId>
         <version>${revision}</version>
     </parent>
 
@@ -14,7 +14,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.asdfformat</groupId>
+            <groupId>org.asdf-format</groupId>
             <artifactId>asdf-core</artifactId>
             <version>${revision}</version>
         </dependency>
