@@ -109,7 +109,9 @@ public class NumberAsdfNode extends AsdfNodeBase {
     @Override
     public byte asByte() {
         if (value instanceof Byte) {
-            return (Byte)value;
+            return (Byte) value;
+        } else if (value instanceof Integer && (int)value >= Byte.MIN_VALUE && (int)value <= Byte.MAX_VALUE) {
+            return value.byteValue();
         } else {
             throw new IllegalStateException("Node cannot be represented as byte");
         }
@@ -152,7 +154,9 @@ public class NumberAsdfNode extends AsdfNodeBase {
     public short asShort() {
         if (value instanceof Byte || value instanceof Short) {
             return value.shortValue();
-        } else {
+        } else if (value instanceof Integer && (int)value >= Short.MIN_VALUE && (int)value <= Short.MAX_VALUE) {
+            return value.shortValue();
+        }else {
             throw new IllegalStateException("Node cannot be represented as short");
         }
     }
@@ -162,16 +166,39 @@ public class NumberAsdfNode extends AsdfNodeBase {
         if (this == other) {
             return true;
         }
-        if (other == null || getClass() != other.getClass()) {
+
+        if (!(other instanceof NumberAsdfNode)) {
             return false;
         }
-        final NumberAsdfNode typedOther = (NumberAsdfNode) other;
-        return Objects.equals(tag, typedOther.tag) && Objects.equals(value, typedOther.value);
+
+        final NumberAsdfNode otherNode = (NumberAsdfNode)other;
+
+        if (!Objects.equals(this.tag, otherNode.tag)) {
+            return false;
+        }
+
+        if (this.value == null || otherNode.value == null) {
+            return this.value == otherNode.value;
+        }
+
+        if (this.value.getClass() == otherNode.value.getClass() && this.value.equals(otherNode.value)) {
+            return true;
+        }
+
+        if (isSpecialFloatingPointValue(this.value) || isSpecialFloatingPointValue(otherNode.value)) {
+            return Double.compare(this.value.doubleValue(), otherNode.value.doubleValue()) == 0;
+        }
+
+        return asBigDecimal().compareTo(otherNode.asBigDecimal()) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tag, value);
+        if (isSpecialFloatingPointValue(value)) {
+            return Double.hashCode(value.doubleValue());
+        }
+
+        return asBigDecimal().stripTrailingZeros().hashCode();
     }
 
     @Override
@@ -187,5 +214,10 @@ public class NumberAsdfNode extends AsdfNodeBase {
         fields.add(rawValue);
 
         return NodeUtils.nodeToString(this, fields);
+    }
+
+    private boolean isSpecialFloatingPointValue(final Number number) {
+        return (number instanceof Double && (((Double)number).isInfinite() || ((Double)number).isNaN())) ||
+                (number instanceof Float && (((Float)number).isInfinite() || ((Float)number).isNaN()));
     }
 }

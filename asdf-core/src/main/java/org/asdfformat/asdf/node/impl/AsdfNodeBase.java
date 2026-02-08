@@ -7,6 +7,7 @@ import org.asdfformat.asdf.node.AsdfNodeType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -76,6 +77,18 @@ public abstract class AsdfNodeBase implements AsdfNode {
     }
 
     @Override
+    public boolean containsKey(final Object... keys) {
+        if (keys.length == 0) {
+            return true;
+        }
+
+        final AsdfNode currentKey = constructKeyNode(keys[0]);
+
+        return getOptional(currentKey).map(node -> node.containsKey(Arrays.copyOfRange(keys, 1, keys.length)))
+                .orElse(false);
+    }
+
+    @Override
     public int size() {
         return 0;
     }
@@ -98,6 +111,17 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public AsdfNode get(final AsdfNode key) {
         throw new IllegalStateException(makeGetErrorMessage("AsdfNode"));
+    }
+
+    @Override
+    public AsdfNode get(final Object... keys) {
+        if (keys.length == 0) {
+            return this;
+        }
+
+        final AsdfNode currentKey = constructKeyNode(keys[0]);
+
+        return get(currentKey).get(Arrays.copyOfRange(keys, 1, keys.length));
     }
 
     @Override
@@ -157,6 +181,17 @@ public abstract class AsdfNodeBase implements AsdfNode {
     }
 
     @Override
+    public Optional<AsdfNode> getOptional(final Object... keys) {
+        if (keys.length == 0) {
+            return Optional.of(this);
+        }
+
+        final AsdfNode currentKey = constructKeyNode(keys[0]);
+
+        return getOptional(currentKey).flatMap(node -> node.getOptional(Arrays.copyOfRange(keys, 1, keys.length)));
+    }
+
+    @Override
     public BigDecimal getBigDecimal(final String key) {
         return get(key).asBigDecimal();
     }
@@ -174,6 +209,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public BigDecimal getBigDecimal(final AsdfNode key) {
         return get(key).asBigDecimal();
+    }
+
+    @Override
+    public BigDecimal getBigDecimal(final Object... keys) {
+        return get(keys).asBigDecimal();
     }
 
     @Override
@@ -197,6 +237,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     }
 
     @Override
+    public BigInteger getBigInteger(final Object... keys) {
+        return get(keys).asBigInteger();
+    }
+
+    @Override
     public boolean getBoolean(final String key) {
         return get(key).asBoolean();
     }
@@ -214,6 +259,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public boolean getBoolean(final AsdfNode key) {
         return get(key).asBoolean();
+    }
+
+    @Override
+    public boolean getBoolean(final Object... keys) {
+        return get(keys).asBoolean();
     }
 
     @Override
@@ -237,6 +287,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     }
 
     @Override
+    public byte getByte(final Object... keys) {
+        return get(keys).asByte();
+    }
+
+    @Override
     public double getDouble(final String key) {
         return get(key).asDouble();
     }
@@ -254,6 +309,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public double getDouble(final AsdfNode key) {
         return get(key).asDouble();
+    }
+
+    @Override
+    public double getDouble(final Object... keys) {
+        return get(keys).asDouble();
     }
 
     @Override
@@ -277,6 +337,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     }
 
     @Override
+    public float getFloat(final Object... keys) {
+        return get(keys).asFloat();
+    }
+
+    @Override
     public Instant getInstant(final String key) {
         return get(key).asInstant();
     }
@@ -294,6 +359,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public Instant getInstant(final AsdfNode key) {
         return get(key).asInstant();
+    }
+
+    @Override
+    public Instant getInstant(final Object... keys) {
+        return get(keys).asInstant();
     }
 
     @Override
@@ -317,6 +387,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     }
 
     @Override
+    public int getInt(final Object... keys) {
+        return get(keys).asInt();
+    }
+
+    @Override
     public <T> List<T> getList(final String key, final Class<T> elementClass) {
         return get(key).asList(elementClass);
     }
@@ -334,6 +409,31 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public <T> List<T> getList(final AsdfNode key, final Class<T> elementClass) {
         return get(key).asList(elementClass);
+    }
+
+    @Override
+    public <T> List<T> getList(final Class<T> elementClass, final String key) {
+        return get(key).asList(elementClass);
+    }
+
+    @Override
+    public <T> List<T> getList(final Class<T> elementClass, final long key) {
+        return get(key).asList(elementClass);
+    }
+
+    @Override
+    public <T> List<T> getList(final Class<T> elementClass, final boolean key) {
+        return get(key).asList(elementClass);
+    }
+
+    @Override
+    public <T> List<T> getList(final Class<T> elementClass, final AsdfNode key) {
+        return get(key).asList(elementClass);
+    }
+
+    @Override
+    public <T> List<T> getList(final Class<T> elementClass, final Object... keys) {
+        return get(keys).asList(elementClass);
     }
 
     @Override
@@ -357,6 +457,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     }
 
     @Override
+    public long getLong(final Object... keys) {
+        return get(keys).asLong();
+    }
+
+    @Override
     public Number getNumber(final String key) {
         return get(key).asNumber();
     }
@@ -374,6 +479,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public Number getNumber(final AsdfNode key) {
         return get(key).asNumber();
+    }
+
+    @Override
+    public Number getNumber(final Object... keys) {
+        return get(keys).asNumber();
     }
 
     @Override
@@ -397,6 +507,31 @@ public abstract class AsdfNodeBase implements AsdfNode {
     }
 
     @Override
+    public <K, V> Map<K, V> getMap(final Class<K> keyClass, final Class<V> valueClass, final String key) {
+        return get(key).asMap(keyClass, valueClass);
+    }
+
+    @Override
+    public <K, V> Map<K, V> getMap(final Class<K> keyClass, final Class<V> valueClass, final long key) {
+        return get(key).asMap(keyClass, valueClass);
+    }
+
+    @Override
+    public <K, V> Map<K, V> getMap(final Class<K> keyClass, final Class<V> valueClass, final boolean key) {
+        return get(key).asMap(keyClass, valueClass);
+    }
+
+    @Override
+    public <K, V> Map<K, V> getMap(final Class<K> keyClass, final Class<V> valueClass, final AsdfNode key) {
+        return get(key).asMap(keyClass, valueClass);
+    }
+
+    @Override
+    public <K, V> Map<K, V> getMap(final Class<K> keyClass, final Class<V> valueClass, final Object... keys) {
+        return get(keys).asMap(keyClass, valueClass);
+    }
+
+    @Override
     public NdArray<?> getNdArray(final String key) {
         return get(key).asNdArray();
     }
@@ -414,6 +549,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public NdArray<?> getNdArray(final AsdfNode key) {
         return get(key).asNdArray();
+    }
+
+    @Override
+    public NdArray<?> getNdArray(final Object... keys) {
+        return get(keys).asNdArray();
     }
 
     @Override
@@ -437,6 +577,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     }
 
     @Override
+    public short getShort(final Object... keys) {
+        return get(keys).asShort();
+    }
+
+    @Override
     public String getString(final String key) {
         return get(key).asString();
     }
@@ -454,6 +599,11 @@ public abstract class AsdfNodeBase implements AsdfNode {
     @Override
     public String getString(final AsdfNode key) {
         return get(key).asString();
+    }
+
+    @Override
+    public String getString(final Object... keys) {
+        return get(keys).asString();
     }
 
     @Override
@@ -551,5 +701,19 @@ public abstract class AsdfNodeBase implements AsdfNode {
 
     protected String makeAsErrorMessage(final String asType) {
         return String.format("%s node cannot be represented as %s", getNodeType(), asType);
+    }
+
+    protected AsdfNode constructKeyNode(final Object key) {
+        if (key instanceof String) {
+            return StringAsdfNode.of((String)key);
+        } else if (key instanceof AsdfNode) {
+            return (AsdfNode)key;
+        } else if (key instanceof Number) {
+            return NumberAsdfNode.of((Number)key);
+        } else if (key instanceof Boolean) {
+            return BooleanAsdfNode.of((Boolean)key);
+        } else {
+            throw new IllegalArgumentException("Unhandled key class: " + key.getClass().getSimpleName());
+        }
     }
 }

@@ -14,6 +14,7 @@ import java.time.temporal.ChronoUnit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -63,6 +64,7 @@ public class TimestampAsdfNodeTest {
         final String value = "2001-12-15T02:59:43.100Z";
         final Instant instant = Instant.parse(value);
 
+        @Test
         void testBasic() {
             final ScalarNode snakeYamlNode = new ScalarNode(Tag.TIMESTAMP, value, null, null, DumperOptions.ScalarStyle.LITERAL);
             final TimestampAsdfNode asdfNode = TimestampAsdfNode.of(snakeYamlNode, instant);
@@ -98,7 +100,8 @@ public class TimestampAsdfNodeTest {
 
     @Test
     void testBaseMethods() {
-        final TimestampAsdfNode node = TimestampAsdfNode.of(Instant.now());
+        final Instant instant = Instant.now();
+        final TimestampAsdfNode node = TimestampAsdfNode.of(instant);
 
         assertFalse(node.isBoolean());
         assertFalse(node.isMapping());
@@ -113,6 +116,8 @@ public class TimestampAsdfNodeTest {
         assertFalse(node.containsKey(1L));
         assertFalse(node.containsKey(false));
         assertFalse(node.containsKey(node));
+        assertFalse(node.containsKey("foo", 1L, false, node));
+        assertTrue(node.containsKey());
 
         assertEquals(0, node.size());
 
@@ -122,81 +127,113 @@ public class TimestampAsdfNodeTest {
         assertThrows(IllegalStateException.class, () -> node.get(1L));
         assertThrows(IllegalStateException.class, () -> node.get(false));
         assertThrows(IllegalStateException.class, () -> node.get(node));
+        assertThrows(IllegalStateException.class, () -> node.get("foo", 1L, false, node));
+        assertSame(node, node.get());
 
         assertThrows(IllegalStateException.class, () -> node.getBigDecimal("foo"));
         assertThrows(IllegalStateException.class, () -> node.getBigDecimal(1L));
         assertThrows(IllegalStateException.class, () -> node.getBigDecimal(false));
         assertThrows(IllegalStateException.class, () -> node.getBigDecimal(node));
+        assertThrows(IllegalStateException.class, () -> node.getBigDecimal("foo", 1L, false, node));
+        assertThrows(IllegalStateException.class, node::getBigDecimal);
 
         assertThrows(IllegalStateException.class, () -> node.getBigInteger("foo"));
         assertThrows(IllegalStateException.class, () -> node.getBigInteger(1L));
         assertThrows(IllegalStateException.class, () -> node.getBigInteger(false));
         assertThrows(IllegalStateException.class, () -> node.getBigInteger(node));
+        assertThrows(IllegalStateException.class, () -> node.getBigInteger("foo", 1L, false, node));
+        assertThrows(IllegalStateException.class, node::getBigInteger);
 
         assertThrows(IllegalStateException.class, () -> node.getBoolean("foo"));
         assertThrows(IllegalStateException.class, () -> node.getBoolean(1L));
         assertThrows(IllegalStateException.class, () -> node.getBoolean(false));
         assertThrows(IllegalStateException.class, () -> node.getBoolean(node));
+        assertThrows(IllegalStateException.class, () -> node.getBoolean("foo", 1L, false, node));
+        assertThrows(IllegalStateException.class, node::getBoolean);
 
         assertThrows(IllegalStateException.class, () -> node.getByte("foo"));
         assertThrows(IllegalStateException.class, () -> node.getByte(1L));
         assertThrows(IllegalStateException.class, () -> node.getByte(false));
         assertThrows(IllegalStateException.class, () -> node.getByte(node));
+        assertThrows(IllegalStateException.class, () -> node.getByte("foo", 1L, false, node));
+        assertThrows(IllegalStateException.class, node::getByte);
 
         assertThrows(IllegalStateException.class, () -> node.getDouble("foo"));
         assertThrows(IllegalStateException.class, () -> node.getDouble(1L));
         assertThrows(IllegalStateException.class, () -> node.getDouble(false));
         assertThrows(IllegalStateException.class, () -> node.getDouble(node));
+        assertThrows(IllegalStateException.class, () -> node.getDouble("foo", 1L, false, node));
+        assertThrows(IllegalStateException.class, node::getDouble);
 
         assertThrows(IllegalStateException.class, () -> node.getFloat("foo"));
         assertThrows(IllegalStateException.class, () -> node.getFloat(1L));
         assertThrows(IllegalStateException.class, () -> node.getFloat(false));
         assertThrows(IllegalStateException.class, () -> node.getFloat(node));
+        assertThrows(IllegalStateException.class, () -> node.getFloat("foo", 1L, false, node));
+        assertThrows(IllegalStateException.class, node::getFloat);
 
         assertThrows(IllegalStateException.class, () -> node.getInstant("foo"));
         assertThrows(IllegalStateException.class, () -> node.getInstant(1L));
         assertThrows(IllegalStateException.class, () -> node.getInstant(false));
         assertThrows(IllegalStateException.class, () -> node.getInstant(node));
+        assertThrows(IllegalStateException.class, () -> node.getInstant("foo", 1L, false, node));
+        assertEquals(instant, node.getInstant());
 
         assertThrows(IllegalStateException.class, () -> node.getInt("foo"));
         assertThrows(IllegalStateException.class, () -> node.getInt(1L));
         assertThrows(IllegalStateException.class, () -> node.getInt(false));
         assertThrows(IllegalStateException.class, () -> node.getInt(node));
+        assertThrows(IllegalStateException.class, () -> node.getInt("foo", 1L, false, node));
+        assertThrows(IllegalStateException.class, node::getInt);
 
-        assertThrows(IllegalStateException.class, () -> node.getList("foo", String.class));
-        assertThrows(IllegalStateException.class, () -> node.getList(1L, String.class));
-        assertThrows(IllegalStateException.class, () -> node.getList(false, String.class));
-        assertThrows(IllegalStateException.class, () -> node.getList(node, String.class));
+        assertThrows(IllegalStateException.class, () -> node.getList(String.class, "foo"));
+        assertThrows(IllegalStateException.class, () -> node.getList(String.class, 1L));
+        assertThrows(IllegalStateException.class, () -> node.getList(String.class, false));
+        assertThrows(IllegalStateException.class, () -> node.getList(String.class, node));
+        assertThrows(IllegalStateException.class, () -> node.getList(String.class, "foo", 1L, false, node));
+        assertThrows(IllegalStateException.class, () -> node.getList(String.class));
 
         assertThrows(IllegalStateException.class, () -> node.getLong("foo"));
         assertThrows(IllegalStateException.class, () -> node.getLong(1L));
         assertThrows(IllegalStateException.class, () -> node.getLong(false));
         assertThrows(IllegalStateException.class, () -> node.getLong(node));
+        assertThrows(IllegalStateException.class, () -> node.getLong("foo", 1L, false, node));
+        assertThrows(IllegalStateException.class, node::getLong);
 
         assertThrows(IllegalStateException.class, () -> node.getNumber("foo"));
         assertThrows(IllegalStateException.class, () -> node.getNumber(1L));
         assertThrows(IllegalStateException.class, () -> node.getNumber(false));
         assertThrows(IllegalStateException.class, () -> node.getNumber(node));
+        assertThrows(IllegalStateException.class, () -> node.getNumber("foo", 1L, false, node));
+        assertThrows(IllegalStateException.class, node::getNumber);
 
-        assertThrows(IllegalStateException.class, () -> node.getMap("foo", String.class, String.class));
-        assertThrows(IllegalStateException.class, () -> node.getMap(1L, String.class, String.class));
-        assertThrows(IllegalStateException.class, () -> node.getMap(false, String.class, String.class));
-        assertThrows(IllegalStateException.class, () -> node.getMap(node, String.class, String.class));
+        assertThrows(IllegalStateException.class, () -> node.getMap(String.class, String.class, "foo"));
+        assertThrows(IllegalStateException.class, () -> node.getMap(String.class, String.class, 1L));
+        assertThrows(IllegalStateException.class, () -> node.getMap(String.class, String.class, false));
+        assertThrows(IllegalStateException.class, () -> node.getMap(String.class, String.class, node));
+        assertThrows(IllegalStateException.class, () -> node.getMap(String.class, String.class, "foo", 1L, false, node));
+        assertThrows(IllegalStateException.class, () -> node.getMap(String.class, String.class));
 
         assertThrows(IllegalStateException.class, () -> node.getNdArray("foo"));
         assertThrows(IllegalStateException.class, () -> node.getNdArray(1L));
         assertThrows(IllegalStateException.class, () -> node.getNdArray(false));
         assertThrows(IllegalStateException.class, () -> node.getNdArray(node));
+        assertThrows(IllegalStateException.class, () -> node.getNdArray("foo", 1L, false, node));
+        assertThrows(IllegalStateException.class, node::getNdArray);
 
         assertThrows(IllegalStateException.class, () -> node.getShort("foo"));
         assertThrows(IllegalStateException.class, () -> node.getShort(1L));
         assertThrows(IllegalStateException.class, () -> node.getShort(false));
         assertThrows(IllegalStateException.class, () -> node.getShort(node));
+        assertThrows(IllegalStateException.class, () -> node.getShort("foo", 1L, false, node));
+        assertThrows(IllegalStateException.class, node::getShort);
 
         assertThrows(IllegalStateException.class, () -> node.getString("foo"));
         assertThrows(IllegalStateException.class, () -> node.getString(1L));
         assertThrows(IllegalStateException.class, () -> node.getString(false));
         assertThrows(IllegalStateException.class, () -> node.getString(node));
+        assertThrows(IllegalStateException.class, () -> node.getString("foo", 1L, false, node));
+        assertThrows(IllegalStateException.class, node::getString);
 
         assertThrows(IllegalStateException.class, node::asBigDecimal);
         assertThrows(IllegalStateException.class, node::asBigInteger);

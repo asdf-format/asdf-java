@@ -10,10 +10,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import static org.junit.Assume.assumeTrue;
 
 public class ReferenceFileUtils {
     private static final String PYTHON_PATH = System.getenv("ASDF_JAVA_TESTS_PYTHON_PATH");
@@ -59,6 +62,13 @@ public class ReferenceFileUtils {
             file.deleteOnExit();
             final Path path = file.toPath();
 
+            assumeTrue(
+                    "ASDF_JAVA_TESTS_PYTHON_PATH missing or unset",
+                    Optional.ofNullable(PYTHON_PATH)
+                            .map(p -> p.isEmpty() ? null : p)
+                            .map(p -> Files.exists(Paths.get(p)))
+                            .orElse(false)
+            );
             final Process process = new ProcessBuilder(PYTHON_PATH, TEST_FILE_GENERATOR_PY_PATH.toString(), "--version", asdfStandardVersion.toString()).start();
             try (final OutputStream outputStream = process.getOutputStream()) {
                 IOUtils.transferTo(scriptInputStream, outputStream);

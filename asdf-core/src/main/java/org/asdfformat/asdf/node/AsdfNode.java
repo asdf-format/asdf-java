@@ -106,6 +106,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     boolean containsKey(AsdfNode key);
 
     /**
+     * Does the chain of MAPPING nodes contain the specified keys?
+     * @param keys mapping key for each successive node
+     * @return true if all keys are present
+     */
+    boolean containsKey(Object... keys);
+
+    /**
      * Get the size of this MAPPING or SEQUENCE node.
      * @return size
      */
@@ -140,6 +147,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     AsdfNode get(AsdfNode key);
 
     /**
+     * Get a sequence value or mapping value as AsdfNode, indexed by a chain of keys.
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     */
+    AsdfNode get(Object... keys);
+
+    /**
      * Get an optional mapping value as AsdfNode, indexed by String key.
      * @param key mapping key
      * @return value
@@ -166,6 +180,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @return value
      */
     Optional<AsdfNode> getOptional(AsdfNode key);
+
+    /**
+     * Get an optional sequence value or mapping value as AsdfNode, indexed by a chain of keys.
+     * @param keys sequences indexes and mapping keys
+     * @return value
+     */
+    Optional<AsdfNode> getOptional(Object... keys);
 
     /**
      * Get a NUMBER mapping value as BigDecimal, indexed by String key.
@@ -196,6 +217,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     BigDecimal getBigDecimal(AsdfNode key);
 
     /**
+     * Get a NUMBER sequence value or mapping value as BigDecimal, indexed by a chain of keys.
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     */
+    BigDecimal getBigDecimal(Object... keys);
+
+    /**
      * Get a NUMBER mapping value as BigInteger, indexed by String key.
      * @param key mapping key
      * @return value
@@ -222,6 +250,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @return value
      */
     BigInteger getBigInteger(AsdfNode key);
+
+    /**
+     * Get a NUMBER sequence value or mapping value as BigInteger, indexed by a chain of keys.
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     */
+    BigInteger getBigInteger(Object... keys);
 
     /**
      * Get a BOOLEAN mapping value as boolean, indexed by String key.
@@ -252,6 +287,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     boolean getBoolean(AsdfNode key);
 
     /**
+     * Get a BOOLEAN sequence value or mapping value as boolean, indexed by a chain of keys.
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     */
+    boolean getBoolean(Object... keys);
+
+    /**
      * Get a NUMBER mapping value as byte, indexed by String key.
      * @param key mapping key
      * @return value
@@ -278,6 +320,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @return value
      */
     byte getByte(AsdfNode key);
+
+    /**
+     * Get a NUMBER sequence value or mapping value as byte, indexed by a chain of keys.
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     */
+    byte getByte(Object... keys);
 
     /**
      * Get a NUMBER mapping value as double, indexed by String key.
@@ -308,6 +357,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     double getDouble(AsdfNode key);
 
     /**
+     * Get a NUMBER sequence value or mapping value as double, indexed by a chain of keys.
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     */
+    double getDouble(Object... keys);
+
+    /**
      * Get a NUMBER mapping value as float, indexed by String key.
      * @param key mapping key
      * @return value
@@ -334,6 +390,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @return value
      */
     float getFloat(AsdfNode key);
+
+    /**
+     * Get a NUMBER sequence value or mapping value as float, indexed by a chain of keys.
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     */
+    float getFloat(Object... keys);
 
     /**
      * Get a TIMESTAMP mapping value as Instant, indexed by String key.
@@ -364,6 +427,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     Instant getInstant(AsdfNode key);
 
     /**
+     * Get a TIMESTAMP sequence value or mapping value as Instant, indexed by a chain of keys.
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     */
+    Instant getInstant(Object... keys);
+
+    /**
      * Get a NUMBER mapping value as int, indexed by String key.
      * @param key mapping key
      * @return value
@@ -392,12 +462,22 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     int getInt(AsdfNode key);
 
     /**
+     * Get a NUMBER sequence value or mapping value as int, indexed by a chain of keys.
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     */
+    int getInt(Object... keys);
+
+    /**
      * Get a SEQUENCE mapping value as List, indexed by String key.
      * @param key mapping key
      * @param elementClass element class
      * @return value
      * @param <T> List element
+     *
+     * @deprecated in favor of {@link #getList(Class, String)}
      */
+    @Deprecated
     <T> List<T> getList(String key, Class<T> elementClass);
 
     /**
@@ -406,7 +486,10 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @param elementClass element class
      * @return value
      * @param <T> List element
+     *
+     * @deprecated in favor of {@link #getList(Class, long)}
      */
+    @Deprecated
     <T> List<T> getList(long key, Class<T> elementClass);
 
     /**
@@ -415,7 +498,10 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @param elementClass element class
      * @return value
      * @param <T> List element
+     *
+     * @deprecated in favor of {@link #getList(Class, boolean)}
      */
+    @Deprecated
     <T> List<T> getList(boolean key, Class<T> elementClass);
 
     /**
@@ -424,8 +510,56 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @param elementClass element class
      * @return value
      * @param <T> List element
+     *
+     * @deprecated in favor of {@link #getList(Class, AsdfNode)}
      */
+    @Deprecated
     <T> List<T> getList(AsdfNode key, Class<T> elementClass);
+
+    /**
+     * Get a SEQUENCE mapping value as List, indexed by String key.
+     * @param elementClass element class
+     * @param key mapping key
+     * @return value
+     * @param <T> List element
+     */
+    <T> List<T> getList(Class<T> elementClass, String key);
+
+    /**
+     * Get a SEQUENCE sequence value or mapping value as List, indexed by long key.
+     * @param key sequence index or mapping key
+     * @param elementClass element class
+     * @return value
+     * @param <T> List element
+     */
+    <T> List<T> getList(Class<T> elementClass, long key);
+
+    /**
+     * Get a SEQUENCE mapping value as List, indexed by boolean key.
+     * @param key mapping key
+     * @param elementClass element class
+     * @return value
+     * @param <T> List element
+     */
+    <T> List<T> getList(Class<T> elementClass, boolean key);
+
+    /**
+     * Get a SEQUENCE sequence value or mapping value as List, indexed by AsdfNode key.
+     * @param key sequence index or mapping key
+     * @param elementClass element class
+     * @return value
+     * @param <T> List element
+     */
+    <T> List<T> getList(Class<T> elementClass, AsdfNode key);
+
+    /**
+     * Get a SEQUENCE sequence value or mapping value as List, indexed by a chain of keys.
+     * @param elementClass element class
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     * @param <T> List element
+     */
+    <T> List<T> getList(Class<T> elementClass, Object... keys);
 
     /**
      * Get a NUMBER mapping value as long, indexed by String key.
@@ -456,6 +590,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     long getLong(AsdfNode key);
 
     /**
+     * Get a NUMBER sequence value or mapping value as long, indexed by a chain of keys.
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     */
+    long getLong(Object... keys);
+
+    /**
      * Get a NUMBER mapping value as a Number, indexed by String key.
      * @param key mapping key
      * @return value
@@ -484,6 +625,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     Number getNumber(AsdfNode key);
 
     /**
+     * Get a NUMBER sequence value or mapping value as Number, indexed by a chain of keys.
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     */
+    Number getNumber(Object... keys);
+
+    /**
      * Get a MAPPING mapping value as Map, indexed by String key.
      * @param key mapping key
      * @param keyClass key class
@@ -491,7 +639,10 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @return value
      * @param <K> Map key
      * @param <V> Map value
+     *
+     * @deprecated in favor of {@link #getMap(Class, Class, String)}
      */
+    @Deprecated
     <K, V> Map<K, V> getMap(String key, Class<K> keyClass, Class<V> valueClass);
 
     /**
@@ -502,7 +653,10 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @return value
      * @param <K> Map key
      * @param <V> Map value
+     *
+     * @deprecated in favor of {@link #getMap(Class, Class, long)}
      */
+    @Deprecated
     <K, V> Map<K, V> getMap(long key, Class<K> keyClass, Class<V> valueClass);
 
     /**
@@ -513,7 +667,10 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @return value
      * @param <K> Map key
      * @param <V> Map value
+     *
+     * @deprecated in favor of {@link #getMap(Class, Class, boolean)}
      */
+    @Deprecated
     <K, V> Map<K, V> getMap(boolean key, Class<K> keyClass, Class<V> valueClass);
 
     /**
@@ -524,8 +681,66 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @return value
      * @param <K> Map key
      * @param <V> Map value
+     *
+     * @deprecated in favor of {@link #getMap(Class, Class, AsdfNode)}
      */
+    @Deprecated
     <K, V> Map<K, V> getMap(AsdfNode key, Class<K> keyClass, Class<V> valueClass);
+
+    /**
+     * Get a MAPPING mapping value as Map, indexed by String key.
+     * @param keyClass key class
+     * @param valueClass value class
+     * @param key mapping key
+     * @return value
+     * @param <K> Map key
+     * @param <V> Map value
+     */
+    <K, V> Map<K, V> getMap(Class<K> keyClass, Class<V> valueClass, String key);
+
+    /**
+     * Get a MAPPING sequence value or mapping value as Map, indexed by long key.
+     * @param keyClass key class
+     * @param valueClass value class
+     * @param key sequence index or mapping key
+     * @return value
+     * @param <K> Map key
+     * @param <V> Map value
+     */
+    <K, V> Map<K, V> getMap(Class<K> keyClass, Class<V> valueClass, long key);
+
+    /**
+     * Get a MAPPING mapping value as Map, indexed by String key.
+     * @param keyClass key class
+     * @param valueClass value class
+     * @param key mapping key
+     * @return value
+     * @param <K> Map key
+     * @param <V> Map value
+     */
+    <K, V> Map<K, V> getMap(Class<K> keyClass, Class<V> valueClass, boolean key);
+
+    /**
+     * Get a MAPPING mapping value as Map, indexed by AsdfNode key.
+     * @param keyClass key class
+     * @param valueClass value class
+     * @param key sequence index or mapping key
+     * @return value
+     * @param <K> Map key
+     * @param <V> Map value
+     */
+    <K, V> Map<K, V> getMap(Class<K> keyClass, Class<V> valueClass, AsdfNode key);
+
+    /**
+     * Get a MAPPING sequence value or mapping value as Map, indexed by a chain of keys.
+     * @param keyClass key class
+     * @param valueClass value class
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     * @param <K> Map key
+     * @param <V> Map value     *
+     */
+    <K, V> Map<K, V> getMap(Class<K> keyClass, Class<V> valueClass, Object... keys);
 
     /**
      * Get a NDARRAY mapping value, indexed by String key.
@@ -556,6 +771,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     NdArray<?> getNdArray(AsdfNode key);
 
     /**
+     * Get a NDARRAY sequence value or mapping value, indexed by a chain of keys.
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     */
+    NdArray<?> getNdArray(Object... keys);
+
+    /**
      * Get a NUMBER mapping value as short, indexed by String key.
      * @param key mapping key
      * @return value
@@ -584,6 +806,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
     short getShort(AsdfNode key);
 
     /**
+     * Get a NUMBER sequence value or mapping value as short, indexed by a chain of keys.
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     */
+    short getShort(Object... keys);
+
+    /**
      * Get a STRING mapping value, indexed by String key.
      * @param key mapping key
      * @return value
@@ -610,6 +839,13 @@ public interface AsdfNode extends Iterable<AsdfNode> {
      * @return value
      */
     String getString(AsdfNode key);
+
+    /**
+     * Get a STRING sequence value or mapping value, indexed by a chain of keys.
+     * @param keys sequence indexes and mapping keys
+     * @return value
+     */
+    String getString(Object... keys);
 
     /**
      * Get this NUMBER node's value as BigDecimal.
