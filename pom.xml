@@ -37,6 +37,7 @@
     <maven.compiler.release>8</maven.compiler.release>
     <revision>dev</revision>
     <lombok.version>1.18.36</lombok.version>
+    <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
     <snakeyaml.version>2.4</snakeyaml.version>
     <maven-clean-plugin.version>3.4.0</maven-clean-plugin.version>
     <flatten-maven-plugin.version>1.7.0</flatten-maven-plugin.version>
@@ -167,6 +168,7 @@
           <version>${maven-javadoc-plugin.version}</version>
           <configuration>
             <source>8</source>
+            <sourcepath>${project.build.directory}/generated-sources/delombok</sourcepath>
           </configuration>
           <executions>
             <execution>
@@ -200,6 +202,23 @@
             <autoPublish>true</autoPublish>
             <waitUntil>published</waitUntil>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.projectlombok</groupId>
+          <artifactId>lombok-maven-plugin</artifactId>
+          <version>${lombok-maven-plugin.version}</version> <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>delombok</goal>
+            </goals>
+            <configuration>
+              <sourceDirectory>src/main/java</sourceDirectory>
+              <outputDirectory>${project.build.directory}/generated-sources/delombok</outputDirectory>
+              <addOutputDirectory>false</addOutputDirectory>
+            </configuration>
+          </execution>
+        </executions>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -248,6 +267,10 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
