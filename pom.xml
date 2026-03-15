@@ -206,18 +206,26 @@
         <plugin>
           <groupId>org.projectlombok</groupId>
           <artifactId>lombok-maven-plugin</artifactId>
-          <version>${lombok-maven-plugin.version}</version> <executions>
-          <execution>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>delombok</goal>
-            </goals>
-            <configuration>
-              <sourceDirectory>src/main/java</sourceDirectory>
-              <outputDirectory>${project.build.directory}/generated-sources/delombok</outputDirectory>
-              <addOutputDirectory>false</addOutputDirectory>
-            </configuration>
-          </execution>
+          <version>${lombok-maven-plugin.version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </dependency>
+          </dependencies>
+          <executions>
+            <execution>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>delombok</goal>
+              </goals>
+              <configuration>
+                <sourceDirectory>src/main/java</sourceDirectory>
+                <outputDirectory>${project.build.directory}/generated-sources/delombok</outputDirectory>
+                <addOutputDirectory>false</addOutputDirectory>
+              </configuration>
+            </execution>
         </executions>
         </plugin>
       </plugins>
