@@ -2,9 +2,9 @@ package org.asdfformat.asdf.testing;
 
 import lombok.SneakyThrows;
 import org.asdfformat.asdf.io.util.IOUtils;
+import org.asdfformat.asdf.util.FileUtils;
 import org.asdfformat.asdf.util.Version;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,9 +24,7 @@ public class ReferenceFileUtils {
 
     @SneakyThrows(IOException.class)
     private static Path getTestFileGeneratorPyPath() {
-        final File file = File.createTempFile("test_file_generator_", ".py");
-        file.deleteOnExit();
-        final Path path = file.toPath();
+        final Path path = FileUtils.createTempFile("test_file_generator_", ".py");
 
         try (
                 final InputStream inputStream = Optional.ofNullable(ReferenceFileUtils.class.getResourceAsStream("/testing/reference_file_generator.py"))
@@ -58,9 +56,7 @@ public class ReferenceFileUtils {
                 throw new RuntimeException("Missing generator script for " + referenceFile.getName());
             }
 
-            final File file = File.createTempFile(referenceFile.getName() + "-", ".asdf");
-            file.deleteOnExit();
-            final Path path = file.toPath();
+            final Path path = FileUtils.createTempFile(referenceFile.getName() + "-", ".asdf");
 
             assumeTrue(
                     "ASDF_JAVA_TESTS_PYTHON_PATH missing or unset",

@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.io.compression.Compressor;
 import org.asdfformat.asdf.io.compression.Compressors;
+import org.asdfformat.asdf.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -97,8 +98,7 @@ public class BlockV1_0_0 implements Block {
         if (decompressedFile == null) {
             final Compressor compressor = Compressors.of(compression);
 
-            final File file = File.createTempFile("asdf-decompressed-block-", ".dat");
-            file.deleteOnExit();
+            final File file = FileUtils.createTempFile("asdf-decompressed-block-", ".dat").toFile();
 
             try (final RandomAccessFile tempFile = new RandomAccessFile(file, "rw")) {
                 compressor.decompress(getOriginalDataBuffer(), tempFile.getChannel().map(MapMode.READ_WRITE, 0, dataSize));

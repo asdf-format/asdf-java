@@ -1,5 +1,6 @@
 package org.asdfformat.asdf;
 
+import lombok.Getter;
 import org.asdfformat.asdf.impl.AsdfFileImpl;
 import org.asdfformat.asdf.io.LowLevelFormat;
 import org.asdfformat.asdf.io.LowLevelFormats;
@@ -18,11 +19,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
+import java.util.function.Consumer;
 
 /**
  * Main entry into this ASDF library.
  */
 public class Asdf {
+    @Getter
+    private static volatile AsdfConfig config = AsdfConfig.DEFAULT;
+
     /**
      * Read an ASDF file from the specified filesystem path.
      * @param path path to a .asdf file
@@ -47,5 +52,15 @@ public class Asdf {
             IOUtils.closeQuietly(file);
             throw e;
         }
+    }
+
+    /**
+     * Customize global ASDF configuration properties.
+     * @param customizer consumer that accepts a config builder
+     */
+    public static synchronized void configure(final Consumer<AsdfConfig.AsdfConfigBuilder> customizer) {
+        final AsdfConfig.AsdfConfigBuilder builder = config.toBuilder();
+        customizer.accept(builder);
+        config = builder.build();
     }
 }
