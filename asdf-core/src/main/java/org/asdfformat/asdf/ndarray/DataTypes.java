@@ -58,6 +58,12 @@ public class DataTypes {
             new HashSet<>(Arrays.asList(Long.TYPE, BigInteger.class))
     );
 
+    public static final DataType FLOAT16 = new SimpleDataTypeImpl(
+            DataTypeFamilyType.FLOAT,
+            2,
+            new HashSet<>(Arrays.asList(Float.TYPE, Double.TYPE, BigDecimal.class))
+    );
+
     public static final DataType FLOAT32 = new SimpleDataTypeImpl(
             DataTypeFamilyType.FLOAT,
             4,

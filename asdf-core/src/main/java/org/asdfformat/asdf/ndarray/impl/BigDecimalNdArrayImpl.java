@@ -12,6 +12,8 @@ import java.nio.ByteOrder;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import static org.asdfformat.asdf.ndarray.impl.Float16Utils.float16ToFloat;
+
 public class BigDecimalNdArrayImpl extends NdArrayBase<BigDecimalNdArray> implements BigDecimalNdArray {
     public BigDecimalNdArrayImpl(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final Block block) {
         super(dataType, shape, byteOrder, strides, offset, block);
@@ -46,6 +48,8 @@ public class BigDecimalNdArrayImpl extends NdArrayBase<BigDecimalNdArray> implem
             } else {
                 throw new RuntimeException("Unhandled datatype: " + dataType);
             }
+        } else if (dataType.equals(DataTypes.FLOAT16)) {
+            return BigDecimal.valueOf(float16ToFloat(byteBuffer.getShort()));
         } else if (dataType.equals(DataTypes.FLOAT32)) {
             return BigDecimal.valueOf(byteBuffer.getFloat());
         } else if (dataType.equals(DataTypes.FLOAT64)) {
@@ -82,6 +86,12 @@ public class BigDecimalNdArrayImpl extends NdArrayBase<BigDecimalNdArray> implem
                 for (int i = 0; i < length; i++) {
                     byteGetter.accept(byteBuffer, buffer);
                     arr[index + i] = valueCreator.apply(buffer);
+                }
+            };
+        } else if (dataType.equals(DataTypes.FLOAT16)) {
+            setter = (byteBuffer, arr, index, length) -> {
+                for (int i = 0; i < length; i++) {
+                    arr[index + i] = BigDecimal.valueOf(float16ToFloat(byteBuffer.getShort()));
                 }
             };
         } else if (dataType.equals(DataTypes.FLOAT32)) {

@@ -8,6 +8,8 @@ import org.asdfformat.asdf.ndarray.DoubleNdArray;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import static org.asdfformat.asdf.ndarray.impl.Float16Utils.float16ToFloat;
+
 public class DoubleNdArrayImpl extends NdArrayBase<DoubleNdArray> implements DoubleNdArray {
     public DoubleNdArrayImpl(final DataType dataType, final int[] shape, final ByteOrder byteOrder, final int[] strides, final int offset, final Block block) {
         super(dataType, shape, byteOrder, strides, offset, block);
@@ -34,6 +36,8 @@ public class DoubleNdArrayImpl extends NdArrayBase<DoubleNdArray> implements Dou
             return byteBuffer.getDouble();
         } else if (dataType.equals(DataTypes.FLOAT32)) {
             return byteBuffer.getFloat();
+        } else if (dataType.equals(DataTypes.FLOAT16)) {
+            return float16ToFloat(byteBuffer.getShort());
         } else {
             throw new RuntimeException("Unhandled datatype: " + dataType);
         }
@@ -50,6 +54,12 @@ public class DoubleNdArrayImpl extends NdArrayBase<DoubleNdArray> implements Dou
                 byteBuffer.asFloatBuffer().get(floatArr);
                 for (int i = 0; i < length; i++) {
                     arr[index + i] = floatArr[i];
+                }
+            };
+        } else if (dataType.equals(DataTypes.FLOAT16)) {
+            setter = (byteBuffer, arr, index, length) -> {
+                for (int i = 0; i < length; i++) {
+                    arr[index + i] = float16ToFloat(byteBuffer.getShort());
                 }
             };
         } else {
