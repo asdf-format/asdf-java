@@ -35,6 +35,7 @@ public class NdArrayHandler_1_x implements NdArrayHandler {
         SIMPLE_DATA_TYPES.put("uint8", DataTypes.UINT8);
         SIMPLE_DATA_TYPES.put("uint16", DataTypes.UINT16);
         SIMPLE_DATA_TYPES.put("uint32", DataTypes.UINT32);
+        SIMPLE_DATA_TYPES.put("float16", DataTypes.FLOAT16);
         SIMPLE_DATA_TYPES.put("float32", DataTypes.FLOAT32);
         SIMPLE_DATA_TYPES.put("float64", DataTypes.FLOAT64);
         SIMPLE_DATA_TYPES.put("complex64", DataTypes.COMPLEX64);

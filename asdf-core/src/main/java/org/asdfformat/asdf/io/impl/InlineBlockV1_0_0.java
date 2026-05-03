@@ -4,6 +4,7 @@ import org.asdfformat.asdf.io.Block;
 import org.asdfformat.asdf.ndarray.DataType;
 import org.asdfformat.asdf.ndarray.DataTypeFamilyType;
 import org.asdfformat.asdf.ndarray.DataTypes;
+import org.asdfformat.asdf.ndarray.impl.Float16Utils;
 import org.asdfformat.asdf.node.AsdfNode;
 import org.asdfformat.asdf.util.AsdfCharsets;
 
@@ -25,6 +26,7 @@ public class InlineBlockV1_0_0 implements Block {
         SIMPLE_VALUE_WRITERS.put(DataTypes.INT32, (b, n) -> b.putInt(n.asInt()));
         SIMPLE_VALUE_WRITERS.put(DataTypes.UINT64, (b, n) -> b.putLong(n.asLong()));
         SIMPLE_VALUE_WRITERS.put(DataTypes.INT64, (b, n) -> b.putLong(n.asLong()));
+        SIMPLE_VALUE_WRITERS.put(DataTypes.FLOAT16, (b, n) -> b.putShort(Float16Utils.floatToFloat16(n.asFloat())));
         SIMPLE_VALUE_WRITERS.put(DataTypes.FLOAT32, (b, n) -> b.putFloat(n.asFloat()));
         SIMPLE_VALUE_WRITERS.put(DataTypes.FLOAT64, (b, n) -> b.putDouble(n.asDouble()));
         SIMPLE_VALUE_WRITERS.put(DataTypes.BOOL8, (b, n) -> b.put((byte)(n.asBoolean() ? 1 : 0)));
