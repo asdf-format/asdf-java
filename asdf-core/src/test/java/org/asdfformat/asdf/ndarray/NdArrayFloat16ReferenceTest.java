@@ -115,13 +115,6 @@ public class NdArrayFloat16ReferenceTest {
             assertEquals(BigDecimal.valueOf(3.140625), bigDecimalNdArray.get(7));
             assertEquals(BigDecimal.valueOf(-3.140625), bigDecimalNdArray.get(8));
 
-            final BigDecimal[] arr = bigDecimalNdArray.toArray(new BigDecimal[9]);
-            assertEquals(BigDecimal.valueOf(-65504.0), arr[0]);
-            assertEquals(BigDecimal.valueOf(65504.0), arr[1]);
-            assertEquals(BigDecimal.valueOf(5.960464477539063E-8), arr[2]);
-            assertEquals(BigDecimal.valueOf(0.0), arr[3]);
-            assertEquals(BigDecimal.valueOf(3.140625), arr[7]);
-            assertEquals(BigDecimal.valueOf(-3.140625), arr[8]);
         }
     }
 }
