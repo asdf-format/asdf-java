@@ -5,12 +5,17 @@ import org.asdfformat.asdf.AsdfFile;
 import org.asdfformat.asdf.standard.AsdfStandardType;
 import org.asdfformat.asdf.testing.CoreReferenceFileType;
 import org.asdfformat.asdf.testing.ReferenceFileUtils;
+import org.asdfformat.asdf.util.Version;
 import org.junit.jupiter.api.Tag;
-import org.junitpioneer.jupiter.cartesian.CartesianTest;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 import static org.asdfformat.asdf.testing.TestCategories.REFERENCE_TESTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,11 +23,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag(REFERENCE_TESTS)
 public class NdArrayFloat16ReferenceTest {
-    @CartesianTest
-    public void testFloat1d(
-            @CartesianTest.Enum(value = CoreReferenceFileType.class, names = {"NDARRAY_FLOAT16_1D_BLOCK_BIG", "NDARRAY_FLOAT16_1D_BLOCK_LITTLE", "NDARRAY_FLOAT16_1D_INLINE"}) final CoreReferenceFileType coreTestFileType,
-            @CartesianTest.Enum(AsdfStandardType.class) final AsdfStandardType asdfStandardType
-    ) throws IOException {
+    private static final Version FLOAT16_MIN_VERSION = new Version(1, 6, 0);
+
+    private static final CoreReferenceFileType[] FILE_TYPES = {
+            CoreReferenceFileType.NDARRAY_FLOAT16_1D_BLOCK_BIG,
+            CoreReferenceFileType.NDARRAY_FLOAT16_1D_BLOCK_LITTLE,
+            CoreReferenceFileType.NDARRAY_FLOAT16_1D_INLINE,
+    };
+
+    private static Stream<Arguments> float16Args() {
+        return Arrays.stream(FILE_TYPES)
+                .flatMap(fileType -> Arrays.stream(AsdfStandardType.values())
+                        .filter(std -> std.getVersion().compareTo(FLOAT16_MIN_VERSION) >= 0)
+                        .map(std -> Arguments.of(fileType, std)));
+    }
+
+    @ParameterizedTest
+    @MethodSource("float16Args")
+    public void testFloat1d(final CoreReferenceFileType coreTestFileType, final AsdfStandardType asdfStandardType) throws IOException {
         final Path path = ReferenceFileUtils.getPath(coreTestFileType, asdfStandardType.getVersion());
 
         try (final AsdfFile asdfFile = Asdf.open(path)) {
@@ -51,11 +69,9 @@ public class NdArrayFloat16ReferenceTest {
         }
     }
 
-    @CartesianTest
-    public void testDouble1d(
-            @CartesianTest.Enum(value = CoreReferenceFileType.class, names = {"NDARRAY_FLOAT16_1D_BLOCK_BIG", "NDARRAY_FLOAT16_1D_BLOCK_LITTLE", "NDARRAY_FLOAT16_1D_INLINE"}) final CoreReferenceFileType coreTestFileType,
-            @CartesianTest.Enum(AsdfStandardType.class) final AsdfStandardType asdfStandardType
-    ) throws IOException {
+    @ParameterizedTest
+    @MethodSource("float16Args")
+    public void testDouble1d(final CoreReferenceFileType coreTestFileType, final AsdfStandardType asdfStandardType) throws IOException {
         final Path path = ReferenceFileUtils.getPath(coreTestFileType, asdfStandardType.getVersion());
 
         try (final AsdfFile asdfFile = Asdf.open(path)) {
@@ -84,11 +100,9 @@ public class NdArrayFloat16ReferenceTest {
         }
     }
 
-    @CartesianTest
-    public void testBigDecimal1d(
-            @CartesianTest.Enum(value = CoreReferenceFileType.class, names = {"NDARRAY_FLOAT16_1D_BLOCK_BIG", "NDARRAY_FLOAT16_1D_BLOCK_LITTLE", "NDARRAY_FLOAT16_1D_INLINE"}) final CoreReferenceFileType coreTestFileType,
-            @CartesianTest.Enum(AsdfStandardType.class) final AsdfStandardType asdfStandardType
-    ) throws IOException {
+    @ParameterizedTest
+    @MethodSource("float16Args")
+    public void testBigDecimal1d(final CoreReferenceFileType coreTestFileType, final AsdfStandardType asdfStandardType) throws IOException {
         final Path path = ReferenceFileUtils.getPath(coreTestFileType, asdfStandardType.getVersion());
 
         try (final AsdfFile asdfFile = Asdf.open(path)) {
