@@ -131,8 +131,10 @@ public class NumberAsdfNode extends AsdfNodeBase {
     public int asInt() {
         if (value instanceof Byte || value instanceof Short || value instanceof Integer) {
             return value.intValue();
+        } else if (value instanceof Long && (long) value >= Integer.MIN_VALUE && (long) value <= Integer.MAX_VALUE) {
+            return value.intValue();
         } else {
-            throw new IllegalStateException("Node cannot be represented as long");
+            throw new IllegalStateException("Node cannot be represented as int");
         }
     }
 
