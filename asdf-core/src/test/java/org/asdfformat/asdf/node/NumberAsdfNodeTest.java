@@ -351,6 +351,24 @@ public class NumberAsdfNodeTest {
     }
 
     @Test
+    void testAsIntFromLongInRange() {
+        assertEquals(0, NumberAsdfNode.of(0L).asInt());
+        assertEquals(1, NumberAsdfNode.of(1L).asInt());
+        assertEquals(180, NumberAsdfNode.of(180L).asInt());
+        assertEquals(-1, NumberAsdfNode.of(-1L).asInt());
+        assertEquals(Integer.MAX_VALUE, NumberAsdfNode.of((long) Integer.MAX_VALUE).asInt());
+        assertEquals(Integer.MIN_VALUE, NumberAsdfNode.of((long) Integer.MIN_VALUE).asInt());
+    }
+
+    @Test
+    void testAsIntFromLongOutOfRange() {
+        assertThrows(IllegalStateException.class, NumberAsdfNode.of((long) Integer.MAX_VALUE + 1)::asInt);
+        assertThrows(IllegalStateException.class, NumberAsdfNode.of((long) Integer.MIN_VALUE - 1)::asInt);
+        assertThrows(IllegalStateException.class, NumberAsdfNode.of(Long.MAX_VALUE)::asInt);
+        assertThrows(IllegalStateException.class, NumberAsdfNode.of(Long.MIN_VALUE)::asInt);
+    }
+
+    @Test
     void testConversionFromBigInteger() {
         final BigInteger value = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
         final NumberAsdfNode node = NumberAsdfNode.of(value);

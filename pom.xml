@@ -52,7 +52,7 @@
     <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
     <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
     <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
-    <central-publishing-plugin.version>0.7.0</central-publishing-plugin.version>
+    <central-publishing-plugin.version>0.11.0</central-publishing-plugin.version>
     <junit.version>5.11.4</junit.version>
     <junit-pioneer.version>2.3.0</junit-pioneer.version>
     <jacoco-plugin.version>0.8.13</jacoco-plugin.version>
